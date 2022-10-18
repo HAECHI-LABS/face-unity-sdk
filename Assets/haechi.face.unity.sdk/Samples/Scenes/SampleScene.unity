@@ -258,12 +258,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2433099133944683961, guid: 07a49728b8881447b8ff1cdad4640376, type: 3}
+      propertyPath: webviewUri
+      value: http://localhost:3000
+      objectReference: {fileID: 0}
     - target: {fileID: 5851588606500888773, guid: 07a49728b8881447b8ff1cdad4640376, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5851588606500888773, guid: 07a49728b8881447b8ff1cdad4640376, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5851588606500888773, guid: 07a49728b8881447b8ff1cdad4640376, type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5851588606500888773, guid: 07a49728b8881447b8ff1cdad4640376, type: 3}

@@ -13815,7 +13815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: def69e5530ce4b468548adda5eacf3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  webviewUri: https://sample-webview.facewallet.xyz/
+  webviewUri: https://native-webview.netlify.app
   initializeBtn: {fileID: 5925285803087683293}
   loginBtn: {fileID: 7687615700292383143}
   logoutBtn: {fileID: 7509362687234489419}

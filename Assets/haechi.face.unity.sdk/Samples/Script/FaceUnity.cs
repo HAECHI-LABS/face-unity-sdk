@@ -52,10 +52,11 @@ namespace haechi.face.unity.sdk.Samples.Script
          */
         public async void InitializeFace()
         {
+            string apiKey = ""; // TODO: receive from text field
             string blockchain = this.blockchainDrd.captionText.text;
             string profile = this.profileDrd.captionText.text;
             FaceEnvironments environments =
-                new FaceEnvironments(NetworkResolver.GetNetwork(blockchain, profile), profile);
+                new FaceEnvironments(NetworkResolver.GetNetwork(blockchain, profile), profile, apiKey);
             await this._face.wallet.InitializeFaceSdk(environments);
         }
 

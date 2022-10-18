@@ -15,10 +15,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             this._client = client;
         }
 
-        public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments request)
+        public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
         {
             FaceRpcRequest<FaceEnvironments> rpcRequest =
-                new FaceRpcRequest<FaceEnvironments>(FaceRpcMethod.wallet_initialize, request);
+                new FaceRpcRequest<FaceEnvironments>(FaceRpcMethod.wallet_initialize, env);
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 

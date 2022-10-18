@@ -26,7 +26,6 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             {
                 return;
             }
-
             UniWebView.SetJavaScriptEnabled(true);
             UniWebView.SetAllowJavaScriptOpenWindow(true);
             UniWebView.SetWebContentsDebuggingEnabled(true);
@@ -35,6 +34,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             this._webView.SetTransparencyClickingThroughEnabled(true);
             this._webView.BackgroundColor = Color.clear;
             this._webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+            this._webView.AddUrlScheme("facewebview");
             this._webView.SetUserAgent(
                 "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1");
             this._webView.SetSupportMultipleWindows(true, true);

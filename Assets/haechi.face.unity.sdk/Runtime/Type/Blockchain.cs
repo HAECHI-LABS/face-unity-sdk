@@ -18,9 +18,9 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.ETHEREUM, new Dictionary<Profile, Network>
                     {
-                        { Profile.StageTest, Network.ROPSTEN },
+                        { Profile.StageTest, Network.GOERLI },
                         { Profile.StageMainnet, Network.ETHEREUM },
-                        { Profile.ProdTest, Network.ROPSTEN },
+                        { Profile.ProdTest, Network.GOERLI },
                         { Profile.ProdMainnet, Network.ETHEREUM },
                     }
                 },
