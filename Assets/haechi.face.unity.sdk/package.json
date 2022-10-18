@@ -1,0 +1,8 @@
+{
+  "name": "haechi.face.unity.sdk",
+  "version": "1.0.0",
+  "displayName": "Face Unity SDK",
+  "unity": "2021.3",
+  "dependencies": {
+  }
+}
