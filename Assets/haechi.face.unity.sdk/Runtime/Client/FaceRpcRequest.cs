@@ -1,25 +1,42 @@
 using System;
 using JetBrains.Annotations;
+using Nethereum.JsonRpc.Client.RpcMessages;
+using Newtonsoft.Json;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
     [Serializable]
-    public class FaceRpcRequest<T>
+    [JsonObject]
+    public class FaceRpcRequest<T> : RpcRequestMessage
     {
-        [SerializeField] internal int id;
-        [SerializeField] [CanBeNull] internal string jsonrpc = "2.0";
-        [SerializeField] internal string method;
-        [SerializeField] [CanBeNull] internal string userId;
-        [SerializeField] [CanBeNull] internal string blockchain;
-        [SerializeField] internal T[] @params;
-
-        public FaceRpcRequest(FaceRpcMethod method, params T[] parameters)
+        private static int _generateId()
         {
-            this.id = Random.Range(1, 100000);
-            this.method = Enum.GetName(typeof(FaceRpcMethod), method);
-            this.@params = parameters;
+            return Random.Range(1, 100000);
         }
+
+        private static object[] _parameterize(params T[] parameterList)
+        {
+            object[] result = new object[parameterList.Length];
+            parameterList.CopyTo(result, 0);
+            return result;
+        }
+
+        public FaceRpcRequest(FaceRpcMethod method, params T[] parameterList) 
+            : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method), 
+                _parameterize(parameterList))
+        {
+            this.From = "FACE_NATIVE_SDK";
+        }
+        
+        public FaceRpcRequest(string method, params T[] parameterList) 
+            : base(_generateId(), method, _parameterize(parameterList))
+        {
+            this.From = "FACE_NATIVE_SDK";
+        }
+        
+        [JsonProperty("from", Required = Required.Always)]
+        public string From { get; private set; }
     }
 }

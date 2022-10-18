@@ -60,21 +60,15 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams, TResult>(FaceRpcRequest<TParams> request)
         {
-            object[] parameters = new object[request.@params.Length];
-            request.@params.CopyTo(parameters, 0);
-            RpcResponseMessage response =
-                await this.SendAsync(new RpcRequestMessage(request.id, request.method, parameters));
-            return new FaceRpcResponse(response.Id.ToString(), request.method,
+            RpcResponseMessage response = await this.SendAsync(request);
+            return new FaceRpcResponse(response.Id.ToString(), request.Method,
                 JsonUtility.FromJson<TResult>(response.Result.ToString()), response.Error);
         }
 
         internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams>(FaceRpcRequest<TParams> request)
         {
-            object[] parameters = new object[request.@params.Length];
-            request.@params.CopyTo(parameters, 0);
-            RpcResponseMessage response =
-                await this.SendAsync(new RpcRequestMessage(request.id, request.method, parameters));
-            return new FaceRpcResponse(response.Id.ToString(), request.method, response.Result, response.Error);
+            RpcResponseMessage response = await this.SendAsync(request);
+            return new FaceRpcResponse(response.Id.ToString(), request.Method, response.Result, response.Error);
         }
     }
 }

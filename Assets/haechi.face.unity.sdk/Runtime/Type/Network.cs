@@ -7,7 +7,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
     public enum Network
     {
         ETHEREUM,
-        ROPSTEN,
+        GOERLI,
         POLYGON,
         MUMBAI,
         BNB_SMART_CHAIN,
@@ -36,7 +36,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 throw new ArgumentException($"Unknown env {profile}");
             }
 
-            return network.ToString();
+            return network.ToString().ToLower();
         }
 
         public static int GetChainId(this Network network)
@@ -45,8 +45,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
             {
                 case Network.ETHEREUM:
                     return 1;
-                case Network.ROPSTEN:
-                    return 3;
+                case Network.GOERLI:
+                    return 5;
                 case Network.POLYGON:
                     return 137;
                 case Network.MUMBAI:
