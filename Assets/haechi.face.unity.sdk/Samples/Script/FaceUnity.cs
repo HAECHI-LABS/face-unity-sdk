@@ -19,7 +19,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         [SerializeField] internal string webviewUri;
 
-        [SerializeField] internal Button initializeBtn, loginBtn, logoutBtn, getBalanceBtn;
+        [SerializeField] internal Button loginBtn, logoutBtn, getBalanceBtn;
 
         [SerializeField] internal Button sendNativeCoinTransactionBtn,
             sendErc20TransactionBtn,
@@ -29,9 +29,9 @@ namespace haechi.face.unity.sdk.Samples.Script
             signMessageBtn;
 
         public TMP_Dropdown profileDrd, blockchainDrd;
-        public TMP_InputField to, value, gasLimit;
+        public TMP_InputField to, value;
         public TMP_InputField erc1155To, erc1155TokenId, erc1155Quantity, erc1155NftAddress;
-        public TMP_InputField erc20To, erc20Value, erc20TokenAddress, erc20GasLimit, erc20BalanceInquiryAddress;
+        public TMP_InputField erc20To, erc20Value, erc20TokenAddress, erc20BalanceInquiryAddress, erc20Balance;
         public TMP_InputField erc721To, erc721TokenId, erc721NftAddress;
         public TMP_InputField messageToSign;
         public TMP_Text loginedAddress, loginedId, coinBalance, result;
@@ -50,7 +50,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         /**
          * Should initialize Face first for webview client to use Face SDK
          */
-        public async void InitializeFace()
+        public async Task InitializeFace()
         {
             string blockchain = this.blockchainDrd.captionText.text;
             string profile = this.profileDrd.captionText.text;
@@ -70,6 +70,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void LoginAndGetBalance()
         {
+            await this.InitializeFace();
+            
             FaceRpcResponse loginResponse = await this._face.wallet.LoginWithCredential();
             this.loginedId.text = ((FaceLoginResponse)loginResponse.result).faceUserId;
 
@@ -106,7 +108,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 NumberFormatter.DecimalStringToHexadecimal(
                     NumberFormatter.DecimalStringToIntegerString(this.value.text, 18));
             RawTransaction request = new RawTransaction(this.loginedAddress.text, this.to.text,
-                string.Format($"0x{amount}"), null, this.gasLimit.text);
+                string.Format($"0x{amount}"), null);
             FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
             this.result.text = string.Format($"TX Hash - {response.result}");
 
@@ -122,7 +124,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                     decimals);
             // FIXME: after fix server(price api) to accept token address ignore case, remove ToLower() method.
             RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc20TokenAddress.text.ToLower(), "0x0",
-                data, this.erc20GasLimit.text);
+                data);
             FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
             this.result.text = string.Format($"ERC20 tx Hash - {response.result}");
 
@@ -134,9 +136,9 @@ namespace haechi.face.unity.sdk.Samples.Script
             string data =
                 this._face.dataFactory.CreateErc20GetBalanceData(this.erc20BalanceInquiryAddress.text,
                     this.loginedAddress.text);
-            RawTransaction request = new RawTransaction(null, this.erc20BalanceInquiryAddress.text, "0x0", data, null);
+            RawTransaction request = new RawTransaction(null, this.erc20BalanceInquiryAddress.text, "0x0", data);
             FaceRpcResponse response = await this._face.wallet.Call(request);
-            this.result.text = NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18);
+            this.erc20Balance.text = NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18);
         }
 
         public async void SendErc721Transaction()
@@ -144,7 +146,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string data = this._face.dataFactory.CreateErc721SendData(this.erc721NftAddress.text,
                 this.loginedAddress.text, this.erc721To.text, this.erc721TokenId.text);
             RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc721NftAddress.text, "0x0",
-                data, null);
+                data);
             FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
             this.result.text = string.Format($"ERC721 tx Hash - {response.result}");
 
@@ -156,7 +158,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string data = this._face.dataFactory.CreateErc1155SendBatchData(this.erc1155NftAddress.text,
                 this.loginedAddress.text, this.erc1155To.text, this.erc1155TokenId.text, this.erc1155Quantity.text);
             RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc1155NftAddress.text, "0x0",
-                data, null);
+                data);
             FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
             this.result.text = string.Format($"ERC1155 tx Hash - {response.result}");
 
@@ -178,7 +180,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<int> GetErc20Decimals()
         {
             string data = this._face.dataFactory.CreateErc20GetDecimalsData(this.erc20TokenAddress.text);
-            RawTransaction request = new RawTransaction(null, this.erc20TokenAddress.text, "0x0", data, null);
+            RawTransaction request = new RawTransaction(null, this.erc20TokenAddress.text, "0x0", data);
             FaceRpcResponse response = await this._face.wallet.Call(request);
             return int.Parse(NumberFormatter.HexadecimalToDecimal(response.result.ToString()).ToStringInvariant());
         }
