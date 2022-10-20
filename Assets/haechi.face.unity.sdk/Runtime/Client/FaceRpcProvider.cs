@@ -11,26 +11,13 @@ using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
-    public interface IWebviewController
-    {
-        void DispatchEvent(string id, string data, Func<FaceRpcResponse, bool> handler);
-    }
-
-    public class FakeWebivewController : IWebviewController
-    {
-        public void DispatchEvent(string id, string data, Func<FaceRpcResponse, bool> handler)
-        {
-            return;
-        }
-    }
-    
     public class FaceRpcProvider : ClientBase, IUnityRpcRequestClient
     {
-        private readonly IWebviewController _webview;
+        private readonly FakeWebviewController _webview;
 
         public FaceRpcProvider(string uri)
         {
-            this._webview = new FakeWebivewController();
+            this._webview = new FakeWebviewController();
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
         }
 
@@ -45,22 +32,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         protected override async Task<RpcResponseMessage> SendAsync(RpcRequestMessage request, string route = null)
         {
-            string serialize = JsonConvert.SerializeObject(request, this.JsonSerializerSettings);
             TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-
-            this._webview.DispatchEvent(request.Id.ToString(), serialize, message =>
-            {
-                Debug.Log($"FaceRpcProvider Handler: {message.result}");
-                FaceRpcError error = message.error;
-                if (error != null)
-                {
-                    return promise.TrySetException(
-                        new Exception($"Face responded with an error: {JsonUtility.ToJson(error)}"));
-                }
-
-                RpcResponseMessage response = new RpcResponseMessage(message.id, JToken.FromObject(message.result));
-                return promise.TrySetResult(response);
-            });
+            
+            this._webview.SendMessage(request.Id.ToString(), request, response => promise.TrySetResult(response));
 
             return await promise.Task;
         }
