@@ -11,13 +11,26 @@ using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
+    public interface IWebviewController
+    {
+        void DispatchEvent(string id, string data, Func<FaceRpcResponse, bool> handler);
+    }
+
+    public class FakeWebivewController : IWebviewController
+    {
+        public void DispatchEvent(string id, string data, Func<FaceRpcResponse, bool> handler)
+        {
+            return;
+        }
+    }
+    
     public class FaceRpcProvider : ClientBase, IUnityRpcRequestClient
     {
-        private readonly WebviewController _webview;
+        private readonly IWebviewController _webview;
 
         public FaceRpcProvider(string uri)
         {
-            this._webview = new WebviewController(uri);
+            this._webview = new FakeWebivewController();
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
         }
 

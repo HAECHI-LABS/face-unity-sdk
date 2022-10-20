@@ -1,7 +1,6 @@
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Module;
-using haechi.face.unity.sdk.Runtime.Client;
 using Nethereum.Web3;
 
 namespace haechi.face.unity.sdk.Runtime
