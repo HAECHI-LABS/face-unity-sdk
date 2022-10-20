@@ -24,12 +24,17 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         {
         }
 
-        public RawTransaction(string from, string to, string value, string data)
+        private RawTransaction(string from, string to, string value, string data)
         {
             this.from = from;
             this.to = to;
             this.value = value;
             this.data = data;
+        }
+
+        public static RawTransaction Of(string from, string to, string value, string data)
+        {
+            return new RawTransaction(from, to, value, data);
         }
     }
 }
