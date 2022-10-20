@@ -19,20 +19,17 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         [SerializeField] [JsonProperty("data")]
         internal string data;
 
-        [SerializeField] [JsonProperty("gas")] internal string gas;
-
         [JsonConstructor]
         private RawTransaction()
         {
         }
 
-        public RawTransaction(string from, string to, string value, string data, string gas)
+        public RawTransaction(string from, string to, string value, string data)
         {
             this.from = from;
             this.to = to;
             this.value = value;
             this.data = data;
-            this.gas = gas == "" ? null : gas;
         }
     }
 }
