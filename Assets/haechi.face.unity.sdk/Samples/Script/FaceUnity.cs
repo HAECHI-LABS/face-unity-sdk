@@ -66,15 +66,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private async Task GetMainAccount()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
             this.dataDesignator.SetLoggedInAddress(((FaceArrayResponse)getAddressesResponse.result).response[0]);
@@ -82,15 +74,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void Logout()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             await this._face.wallet.Logout();
             this.dataDesignator.Initialize();
@@ -98,15 +82,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         public async Task GetBalance()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             FaceRpcResponse response = await this._face.wallet.GetBalance(this.dataDesignator.loggedInAddress.text);
             this.dataDesignator.SetCoinBalance(NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18));
@@ -114,15 +90,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void SendNativeCoinTransaction()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             string amount =
                 NumberFormatter.DecimalStringToHexadecimal(
@@ -138,15 +106,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void SendErc20Transaction()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             string amount = this.inputDesignator.erc20Amount.text;
             int decimals = await this.GetErc20Decimals();
@@ -166,15 +126,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void GetErc20Balance()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             string data =
                 this._face.dataFactory.CreateErc20GetBalanceData(this.inputDesignator.erc20BalanceInquiryAddress.text,
@@ -187,15 +139,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void SendErc721Transaction()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             string data = this._face.dataFactory.CreateErc721SendData(this.inputDesignator.erc721NftAddress.text,
                 this.dataDesignator.loggedInAddress.text, this.inputDesignator.erc721To.text,
@@ -212,15 +156,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void SendErc1155Transaction()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             string data = this._face.dataFactory.CreateErc1155SendBatchData(this.inputDesignator.erc1155NftAddress.text,
                 this.dataDesignator.loggedInAddress.text, this.inputDesignator.erc1155To.text,
@@ -238,15 +174,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public async void SignMessage()
         {
-            try
-            {
-                this.ValidateIsLoggedIn();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                Debug.Log(e);
-                return;
-            }
+            this.ValidateIsLoggedIn();
 
             FaceRpcResponse response = await this._face.wallet.Sign(this.inputDesignator.messageToSign.text);
             this.dataDesignator.SetResult(string.Format($"Signed Message - {response.result}"));
@@ -263,7 +191,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private void ValidateIsLoggedIn()
         {
-            if (!this.dataDesignator.loggedInAddress)
+            string loggedInAddress = this.dataDesignator.loggedInAddress.text;
+            if (String.IsNullOrEmpty(loggedInAddress))
             {
                 throw new UnauthorizedAccessException("Not logged in yet.");
             }
