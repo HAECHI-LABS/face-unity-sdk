@@ -28,7 +28,7 @@ namespace haechi.face.unity.sdk.Runtime.Contract
                         NumberFormatter.DecimalStringToIntegerString(amount, decimals));
                 return transferFunction.GetData(to, value);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Debug.LogError(e);
                 throw new DataException("Failed to create erc20 send data");
@@ -43,7 +43,7 @@ namespace haechi.face.unity.sdk.Runtime.Contract
                 Function transferFunction = erc20.GetFunction("balanceOf");
                 return transferFunction.GetData(address);
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Debug.LogError(e);
                 throw new DataException("Failed to create erc20 get balance data");
@@ -58,7 +58,7 @@ namespace haechi.face.unity.sdk.Runtime.Contract
                 Function transferFunction = erc20.GetFunction("decimals");
                 return transferFunction.GetData();
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Debug.LogError(e);
                 throw new DataException("Failed to create erc20 get decimals data");
@@ -73,7 +73,7 @@ namespace haechi.face.unity.sdk.Runtime.Contract
                 Function transferFunction = erc721.GetFunction("safeTransferFrom");
                 return transferFunction.GetData(from, to, int.Parse(tokenId));
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Debug.LogError(e);
                 throw new DataException("Failed to create erc721 send data");
@@ -90,7 +90,7 @@ namespace haechi.face.unity.sdk.Runtime.Contract
                 return transferFunction.GetData(from, to, int.Parse(tokenId), int.Parse(quantity),
                     new HexBigInteger(0).ToHexByteArray());
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 Debug.LogError(e);
                 throw new DataException("Failed to create erc1155 send data");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -40,12 +41,17 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             Dictionary<string, string> queryParameters = _parseQuery(uri.Query);
             if (!queryParameters.TryGetValue("response", out string encodedResponse))
             {
-                // TODO: Throw exception
+                throw new InvalidWebviewMessageException();
             }
             string responseData = HttpUtility.UrlDecode(encodedResponse);
-            // TODO: error handling 
-            // ref: https://stackoverflow.com/questions/26264547/what-exceptions-does-newtonsoft-json-deserializeobject-throw
-            return JsonConvert.DeserializeObject<RpcResponseMessage>(responseData);
+            try
+            {
+                return JsonConvert.DeserializeObject<RpcResponseMessage>(responseData);
+            }
+            catch (JsonException e)
+            {
+                throw new InvalidRpcResponse(e);
+            }
         }
         
         private static Dictionary<string, string> _parseQuery(string text)

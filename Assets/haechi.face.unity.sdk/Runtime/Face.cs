@@ -28,14 +28,5 @@ namespace haechi.face.unity.sdk.Runtime
             this.dataFactory = new ContractDataFactory(this._web3);
             this.wallet = new Wallet(this._client);
         }
-
-        // public Face(string webviewUri)
-        // {
-        //     this._factory = new FaceProviderFactory(webviewUri);
-        //     this._client = (FaceRpcProvider)this._factory.CreateUnityRpcClient();
-        //     this._web3 = new Web3(this._client);
-        //     this.dataFactory = new ContractDataFactory(this._web3);
-        //     this.wallet = new Wallet(this._client);
-        // }
     }
 }

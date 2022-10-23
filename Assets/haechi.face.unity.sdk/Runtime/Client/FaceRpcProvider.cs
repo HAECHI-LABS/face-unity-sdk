@@ -22,7 +22,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         }
 
         public JsonSerializerSettings JsonSerializerSettings { get; }
-        public Exception Exception { get; set; }
+        public System.Exception Exception { get; set; }
         public RpcResponseMessage Result { get; set; }
 
         public IEnumerator SendRequest(RpcRequest request)

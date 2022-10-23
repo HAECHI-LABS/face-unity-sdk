@@ -42,14 +42,6 @@ public class SafeWebviewTest : MonoBehaviour
     {
         Task<FaceRpcResponse> response = this._face.wallet.LoginWithCredential();
         Debug.Log(response);
-        // FaceRpcRequest<string> req = new FaceRpcRequest<string>(FaceRpcMethod.face_logInSignUp);
-        // this.swc.SendMessage(req.Id.ToString(), req, response =>
-        // {
-        //     Debug.Log($"Response ToString: {response.ToString()}");
-        //     this._enqueue(() => this._handleLogin(response));
-        //     
-        //     return true;
-        // });
     }
 
     private void _handleLogin(RpcResponseMessage response)
