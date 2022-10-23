@@ -13,7 +13,7 @@ namespace haechi.face.unity.sdk.Runtime.Exception
 
         public static readonly ErrorCode INVALLID_RPC_RESPONSE =
             new ErrorCode { Value = "U0002", Message = "Invalid rpc response" };
-    }
+}
 
     public class FaceException : System.Exception
     {
