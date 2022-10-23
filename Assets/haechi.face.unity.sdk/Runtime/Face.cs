@@ -1,3 +1,4 @@
+using System;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Module;
@@ -23,5 +24,14 @@ namespace haechi.face.unity.sdk.Runtime
             this.dataFactory = new ContractDataFactory(new Web3(client));
             this.wallet = new Wallet(client);
         }
+
+        // public Face(string webviewUri)
+        // {
+        //     this._factory = new FaceProviderFactory(webviewUri);
+        //     this._client = (FaceRpcProvider)this._factory.CreateUnityRpcClient();
+        //     this._web3 = new Web3(this._client);
+        //     this.dataFactory = new ContractDataFactory(this._web3);
+        //     this.wallet = new Wallet(this._client);
+        // }
     }
 }

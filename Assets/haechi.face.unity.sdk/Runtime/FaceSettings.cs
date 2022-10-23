@@ -20,7 +20,7 @@ namespace haechi.face.unity.sdk.Runtime.Settings
         #endregion
 
         public string ApiKey;
-
+            
         #region Tooltip
 
         [Tooltip("Environment")]
@@ -29,7 +29,7 @@ namespace haechi.face.unity.sdk.Runtime.Settings
 
         [SerializeField]
         private string env;
-
+        
         #region Tooltip
 
         [Tooltip("Blockchain")]

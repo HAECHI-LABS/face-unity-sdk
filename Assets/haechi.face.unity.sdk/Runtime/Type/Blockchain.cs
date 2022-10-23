@@ -13,6 +13,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
     public static class Blockchains
     {
+        public static Blockchain ValueOf(string value)
+        {
+            return EnumUtils.FindEquals<Blockchain>(value);
+        }
+        
         public static Dictionary<Blockchain, Dictionary<Profile, Network>> Map =
             new Dictionary<Blockchain, Dictionary<Profile, Network>>
             {
@@ -57,10 +62,5 @@ namespace haechi.face.unity.sdk.Runtime.Type
                     }
                 }
             };
-
-        public static Blockchain ValueOf(string value)
-        {
-            return EnumUtils.FindEquals<Blockchain>(value);
-        }
     }
 }
