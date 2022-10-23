@@ -6,18 +6,18 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
     public class FaceRpcProvider : ClientBase, IUnityRpcRequestClient
     {
-        private readonly FakeWebviewController _webview;
+        private readonly SafeWebviewController _webview;
+        // HTTP Client
 
-        public FaceRpcProvider(string uri)
+        public FaceRpcProvider(SafeWebviewController safeWebviewController)
         {
-            this._webview = new FakeWebviewController();
+            this._webview = safeWebviewController;
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
         }
 

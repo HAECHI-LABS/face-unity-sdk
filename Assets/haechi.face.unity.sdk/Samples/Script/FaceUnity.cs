@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
@@ -44,7 +45,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.blockchainDrd.ClearOptions();
             this.blockchainDrd.AddOptions(Enum.GetNames(typeof(Blockchain)).ToList());
 
-            this._face = new Face(this.webviewUri);
+            this._face = GetComponent<Face>();
         }
 
         /**

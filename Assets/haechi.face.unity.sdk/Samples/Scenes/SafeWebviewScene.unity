@@ -258,10 +258,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4096659638463119159, guid: b54f30fa477804e8cb5b7d57fce97294, type: 3}
-      propertyPath: swc
-      value: 
-      objectReference: {fileID: 1351418801}
     - target: {fileID: 7394570919697541674, guid: b54f30fa477804e8cb5b7d57fce97294, type: 3}
       propertyPath: m_Name
       value: SafeWebviewTest
@@ -336,48 +332,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1351418800
+--- !u!1 &713756657 stripped
 GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7394570919697541674, guid: b54f30fa477804e8cb5b7d57fce97294, type: 3}
+  m_PrefabInstance: {fileID: 280152609}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1351418802}
-  - component: {fileID: 1351418801}
-  m_Layer: 0
-  m_Name: SafeWebviewController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1351418801
+--- !u!114 &713756662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351418800}
+  m_GameObject: {fileID: 713756657}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18dcc2121281484caa37226304f3f024, type: 3}
+  m_Script: {fileID: 11500000, guid: 739618d557f747faa8b1a99b1429eb3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _serviceUrl: https://a402-211-51-23-61.jp.ngrok.io
---- !u!4 &1351418802
-Transform:
+  _webviewUri: 
+--- !u!114 &713756663
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1351418800}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 713756657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 191cf229499d45c38f7d006f3bc14780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ApiKey: 
+  Env: Dev
+  Blockchain: ETHEREUM
