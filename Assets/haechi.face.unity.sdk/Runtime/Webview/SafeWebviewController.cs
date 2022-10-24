@@ -23,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         }
 #if UNITY_IOS
         [DllImport("__Internal")]
-        private static extern void web3auth_launch(string url, string redirectUri, string objectName);
+        extern static void web3auth_launch(string url, string redirectUri, string objectName);
 #endif
 
         private static void LaunchUrl(string url, string objectName = null)
