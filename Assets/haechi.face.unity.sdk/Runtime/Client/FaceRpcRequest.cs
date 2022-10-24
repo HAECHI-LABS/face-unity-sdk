@@ -9,7 +9,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
     [JsonObject]
     public class FaceRpcRequest<T> : RpcRequestMessage
     {
-        private FaceRpcRequest(FaceRpcMethod method, params T[] parameterList)
+        public FaceRpcRequest(FaceRpcMethod method, params T[] parameterList)
             : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method),
                 _parameterize(parameterList))
         {
@@ -33,11 +33,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
             object[] result = new object[parameterList.Length];
             parameterList.CopyTo(result, 0);
             return result;
-        }
-
-        public static FaceRpcRequest<T> Of(FaceRpcMethod method, params T[] parameterList)
-        {
-            return new FaceRpcRequest<T>(method, parameterList);
         }
     }
 }
