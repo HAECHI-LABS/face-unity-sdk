@@ -1,4 +1,5 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Utils;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Module;
@@ -11,22 +12,18 @@ namespace haechi.face.unity.sdk.Runtime
 {
     [RequireComponent(typeof(FaceSettings))]
     [RequireComponent(typeof(SafeWebviewController))]
+    [RequireComponent(typeof(ActionQueue))]
     public class Face : MonoBehaviour
     {
-        private FaceRpcProvider _client;
-        private FaceProviderFactory _factory;
-        private Web3 _web3;
         internal ContractDataFactory dataFactory;
         internal Wallet wallet;
 
         private void Awake()
         {
-            SafeWebviewController safeWebviewController = this.GetComponent<SafeWebviewController>();
-            this._factory = new FaceProviderFactory(safeWebviewController);
-            this._client = (FaceRpcProvider)this._factory.CreateUnityRpcClient();
-            this._web3 = new Web3(this._client);
-            this.dataFactory = new ContractDataFactory(this._web3);
-            this.wallet = new Wallet(this._client);
+            FaceProviderFactory factory = new FaceProviderFactory(this.GetComponent<SafeWebviewController>());
+            FaceRpcProvider client = (FaceRpcProvider)factory.CreateUnityRpcClient();
+            this.dataFactory = new ContractDataFactory(new Web3(client));
+            this.wallet = new Wallet(client, this.GetComponent<ActionQueue>());
         }
     }
 }

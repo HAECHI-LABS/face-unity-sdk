@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
+using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Settings;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -12,7 +13,7 @@ using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
-    public class SafeWebviewController : MonoBehaviour, ISafeWebview
+    public class SafeWebviewController : MonoBehaviour
     {
 #if UNITY_IOS
         [DllImport("__Internal")]
@@ -37,8 +38,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 #endif
         }
         
-        private readonly Dictionary<string, Func<RpcResponseMessage, bool>> _handlerDictionary
-            = new Dictionary<string, Func<RpcResponseMessage, bool>>();
+        private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
+            = new Dictionary<string, Func<FaceRpcResponse, bool>>();
         
         private void Awake()
         {
@@ -55,7 +56,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         }
         
         // TODO: remove `id` parameter. Get ID from `message`
-        public void SendMessage(string id, RpcRequestMessage message, Func<RpcResponseMessage, bool> callbackHandler)
+        public void SendMessage(string id, RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
         {
             Debug.Log($"Register Handler with ID: {id}");
             this._handlerDictionary.Add(id, callbackHandler);
@@ -81,9 +82,9 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         private void _handleDeepLink(Uri uri)
         {
             Debug.Log($"URI Receive: {uri}");
-            RpcResponseMessage response = SafeWebviewProtocol.DecodeQueryParams(uri);
+            FaceRpcResponse response = SafeWebviewProtocol.DecodeQueryParams(uri);
 
-            if (!this._handlerDictionary.TryGetValue(response.Id.ToString(), out Func<RpcResponseMessage, bool> callback))
+            if (!this._handlerDictionary.TryGetValue(response.Id.ToString(), out Func<FaceRpcResponse, bool> callback))
             {
                 Debug.Log($"Cannot find handler by id: {response.Id}");
                 return;

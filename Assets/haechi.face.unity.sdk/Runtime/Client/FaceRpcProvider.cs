@@ -32,7 +32,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         protected override async Task<RpcResponseMessage> SendAsync(RpcRequestMessage request, string route = null)
         {
-            TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
+            TaskCompletionSource<FaceRpcResponse> promise = new TaskCompletionSource<FaceRpcResponse>();
             
             this._webview.SendMessage(request.Id.ToString(), request, response => promise.TrySetResult(response));
 
@@ -47,15 +47,12 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams, TResult>(FaceRpcRequest<TParams> request)
         {
-            RpcResponseMessage response = await this.SendAsync(request);
-            return new FaceRpcResponse(response.Id.ToString(), request.Method,
-                JsonUtility.FromJson<TResult>(response.Result.ToString()), response.Error);
+            return (FaceRpcResponse) await this.SendAsync(request);
         }
 
         internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams>(FaceRpcRequest<TParams> request)
         {
-            RpcResponseMessage response = await this.SendAsync(request);
-            return new FaceRpcResponse(response.Id.ToString(), request.Method, response.Result, response.Error);
+            return (FaceRpcResponse) await this.SendAsync(request);
         }
     }
 }

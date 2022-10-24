@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
+using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -18,8 +20,6 @@ public class SafeWebviewTest : MonoBehaviour
 {
     [SerializeField] private TMP_Text responseText;
 
-    private static readonly Queue<Action> _executionQueue = new Queue<Action>();
-
     private Face _face;
 
     private void Awake()
@@ -27,42 +27,12 @@ public class SafeWebviewTest : MonoBehaviour
         _face = this.GetComponent<Face>();
     }
 
-    private void Update()
-    {
-        lock (_executionQueue)
-        {
-            while (_executionQueue.Count > 0)
-            {
-                _executionQueue.Dequeue().Invoke();
-            }
-        }
-    }
-
     public void OnClickLogin()
     {
-        Task<FaceRpcResponse> response = this._face.wallet.LoginWithCredential();
-        Debug.Log(response);
-    }
-
-    private void _handleLogin(RpcResponseMessage response)
-    {
-        Debug.Log($"Response2 ToString: {response.ToString()}");
-        this.responseText.text = response.Result.ToString();
-    }
-    
-    private void _enqueue(Action action)
-    {
-        lock (_executionQueue)
+        this._face.wallet.LoginWithCredential(response =>
         {
-            _executionQueue.Enqueue(() => {
-                StartCoroutine(ActionWrapper(action));
-            });
-        }
-    }
-
-    private IEnumerator ActionWrapper(Action a)
-    {
-        a();
-        yield return null;
+            FaceLoginResponse faceLoginResponse = response.Result.ToObject<FaceLoginResponse>();
+            this.responseText.text = faceLoginResponse.faceUserId;
+        });
     }
 }

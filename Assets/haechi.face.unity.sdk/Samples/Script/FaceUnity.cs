@@ -67,27 +67,27 @@ namespace haechi.face.unity.sdk.Samples.Script
             string profile = this.profileDrd.captionText.text;
             await this._face.wallet.SwitchNetwork(NetworkResolver.GetNetwork(blockchain, profile));
 
-            this.GetBalance();
+            // this.GetBalance();
         }
 
         public async void LoginAndGetBalance()
         {
             await this.InitializeFace();
             
-            FaceRpcResponse loginResponse = await this._face.wallet.LoginWithCredential();
-            this.loginedId.text = ((FaceLoginResponse)loginResponse.result).faceUserId;
+            // FaceRpcResponse loginResponse = await this._face.wallet.LoginWithCredential();
+            // this.loginedId.text = ((FaceLoginResponse)loginResponse.result).faceUserId;
+            //
+            // FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
+            // this.loginedAddress.text = ((FaceArrayResponse)getAddressesResponse.result).response[0];
 
-            FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
-            this.loginedAddress.text = ((FaceArrayResponse)getAddressesResponse.result).response[0];
-
-            this.GetBalance();
+            // this.GetBalance();
         }
 
-        public async void GetMainAccount()
-        {
-            FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
-            this.loginedAddress.text = ((FaceArrayResponse)getAddressesResponse.result).response[0];
-        }
+        // public async void GetMainAccount()
+        // {
+        //     FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
+        //     this.loginedAddress.text = ((FaceArrayResponse)getAddressesResponse.Result.ToObject()).response[0];
+        // }
 
         public async void Logout()
         {
@@ -98,93 +98,93 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.result.text = null;
         }
 
-        public async void GetBalance()
-        {
-            FaceRpcResponse response = await this._face.wallet.GetBalance(this.loginedAddress.text);
-            this.coinBalance.text = NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18);
-        }
-
-        public async void SendNativeCoinTransaction()
-        {
-            string amount =
-                NumberFormatter.DecimalStringToHexadecimal(
-                    NumberFormatter.DecimalStringToIntegerString(this.value.text, 18));
-            RawTransaction request = new RawTransaction(this.loginedAddress.text, this.to.text,
-                string.Format($"0x{amount}"), null);
-            FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
-            this.result.text = string.Format($"TX Hash - {response.result}");
-
-            this.GetBalance();
-        }
-
-        public async void SendErc20Transaction()
-        {
-            string amount = this.erc20Value.text;
-            int decimals = await this.GetErc20Decimals();
-            string data =
-                this._face.dataFactory.CreateErc20SendData(this.erc20TokenAddress.text, this.erc20To.text, amount,
-                    decimals);
-            // FIXME: after fix server(price api) to accept token address ignore case, remove ToLower() method.
-            RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc20TokenAddress.text.ToLower(), "0x0",
-                data);
-            FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
-            this.result.text = string.Format($"ERC20 tx Hash - {response.result}");
-
-            this.GetBalance();
-        }
-
-        public async void GetErc20Balance()
-        {
-            string data =
-                this._face.dataFactory.CreateErc20GetBalanceData(this.erc20BalanceInquiryAddress.text,
-                    this.loginedAddress.text);
-            RawTransaction request = new RawTransaction(null, this.erc20BalanceInquiryAddress.text, "0x0", data);
-            FaceRpcResponse response = await this._face.wallet.Call(request);
-            this.erc20Balance.text = NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18);
-        }
-
-        public async void SendErc721Transaction()
-        {
-            string data = this._face.dataFactory.CreateErc721SendData(this.erc721NftAddress.text,
-                this.loginedAddress.text, this.erc721To.text, this.erc721TokenId.text);
-            RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc721NftAddress.text, "0x0",
-                data);
-            FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
-            this.result.text = string.Format($"ERC721 tx Hash - {response.result}");
-
-            this.GetBalance();
-        }
-
-        public async void SendErc1155Transaction()
-        {
-            string data = this._face.dataFactory.CreateErc1155SendBatchData(this.erc1155NftAddress.text,
-                this.loginedAddress.text, this.erc1155To.text, this.erc1155TokenId.text, this.erc1155Quantity.text);
-            RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc1155NftAddress.text, "0x0",
-                data);
-            FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
-            this.result.text = string.Format($"ERC1155 tx Hash - {response.result}");
-
-            this.GetBalance();
-        }
-
-        public async void SignMessage()
-        {
-            FaceRpcResponse response = await this._face.wallet.Sign(this.messageToSign.text);
-            this.result.text = string.Format($"Signed Message - {response.result}");
-        }
-
-        private async Task<bool> IsLoggedIn()
-        {
-            FaceRpcResponse response = await this._face.wallet.IsLoggedIn();
-            return bool.Parse(response.result.ToString());
-        }
-
-        private async Task<int> GetErc20Decimals()
-        {
-            string data = this._face.dataFactory.CreateErc20GetDecimalsData(this.erc20TokenAddress.text);
-            RawTransaction request = new RawTransaction(null, this.erc20TokenAddress.text, "0x0", data);
-            FaceRpcResponse response = await this._face.wallet.Call(request);
-            return int.Parse(NumberFormatter.HexadecimalToDecimal(response.result.ToString()).ToStringInvariant());
-        }
+        // public async void GetBalance()
+        // {
+        //     FaceRpcResponse response = await this._face.wallet.GetBalance(this.loginedAddress.text);
+        //     this.coinBalance.text = NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18);
+        // }
+        //
+        // public async void SendNativeCoinTransaction()
+        // {
+        //     string amount =
+        //         NumberFormatter.DecimalStringToHexadecimal(
+        //             NumberFormatter.DecimalStringToIntegerString(this.value.text, 18));
+        //     RawTransaction request = new RawTransaction(this.loginedAddress.text, this.to.text,
+        //         string.Format($"0x{amount}"), null);
+        //     FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        //     this.result.text = string.Format($"TX Hash - {response.result}");
+        //
+        //     this.GetBalance();
+        // }
+        //
+        // public async void SendErc20Transaction()
+        // {
+        //     string amount = this.erc20Value.text;
+        //     int decimals = await this.GetErc20Decimals();
+        //     string data =
+        //         this._face.dataFactory.CreateErc20SendData(this.erc20TokenAddress.text, this.erc20To.text, amount,
+        //             decimals);
+        //     // FIXME: after fix server(price api) to accept token address ignore case, remove ToLower() method.
+        //     RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc20TokenAddress.text.ToLower(), "0x0",
+        //         data);
+        //     FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        //     this.result.text = string.Format($"ERC20 tx Hash - {response.result}");
+        //
+        //     this.GetBalance();
+        // }
+        //
+        // public async void GetErc20Balance()
+        // {
+        //     string data =
+        //         this._face.dataFactory.CreateErc20GetBalanceData(this.erc20BalanceInquiryAddress.text,
+        //             this.loginedAddress.text);
+        //     RawTransaction request = new RawTransaction(null, this.erc20BalanceInquiryAddress.text, "0x0", data);
+        //     FaceRpcResponse response = await this._face.wallet.Call(request);
+        //     this.erc20Balance.text = NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18);
+        // }
+        //
+        // public async void SendErc721Transaction()
+        // {
+        //     string data = this._face.dataFactory.CreateErc721SendData(this.erc721NftAddress.text,
+        //         this.loginedAddress.text, this.erc721To.text, this.erc721TokenId.text);
+        //     RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc721NftAddress.text, "0x0",
+        //         data);
+        //     FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        //     this.result.text = string.Format($"ERC721 tx Hash - {response.result}");
+        //
+        //     this.GetBalance();
+        // }
+        //
+        // public async void SendErc1155Transaction()
+        // {
+        //     string data = this._face.dataFactory.CreateErc1155SendBatchData(this.erc1155NftAddress.text,
+        //         this.loginedAddress.text, this.erc1155To.text, this.erc1155TokenId.text, this.erc1155Quantity.text);
+        //     RawTransaction request = new RawTransaction(this.loginedAddress.text, this.erc1155NftAddress.text, "0x0",
+        //         data);
+        //     FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        //     this.result.text = string.Format($"ERC1155 tx Hash - {response.result}");
+        //
+        //     this.GetBalance();
+        // }
+        //
+        // public async void SignMessage()
+        // {
+        //     FaceRpcResponse response = await this._face.wallet.Sign(this.messageToSign.text);
+        //     this.result.text = string.Format($"Signed Message - {response.result}");
+        // }
+        //
+        // private async Task<bool> IsLoggedIn()
+        // {
+        //     FaceRpcResponse response = await this._face.wallet.IsLoggedIn();
+        //     return bool.Parse(response.result.ToString());
+        // }
+        //
+        // private async Task<int> GetErc20Decimals()
+        // {
+        //     string data = this._face.dataFactory.CreateErc20GetDecimalsData(this.erc20TokenAddress.text);
+        //     RawTransaction request = new RawTransaction(null, this.erc20TokenAddress.text, "0x0", data);
+        //     FaceRpcResponse response = await this._face.wallet.Call(request);
+        //     return int.Parse(NumberFormatter.HexadecimalToDecimal(response.result.ToString()).ToStringInvariant());
+        // }
     }
 }

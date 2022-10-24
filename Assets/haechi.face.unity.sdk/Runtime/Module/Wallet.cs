@@ -1,18 +1,24 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Type;
+using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
     public class Wallet
     {
         private readonly FaceRpcProvider _client;
+        private readonly ActionQueue _actionQueue;
 
-        internal Wallet(FaceRpcProvider client)
+        internal Wallet(FaceRpcProvider client, ActionQueue actionQueue)
         {
             this._client = client;
+            this._actionQueue = actionQueue;
         }
 
         public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
@@ -29,10 +35,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
-        public async Task<FaceRpcResponse> LoginWithCredential()
+        public void LoginWithCredential(Action<FaceRpcResponse> onComplete) // Action<FaceRpcResponse> -> Action<FaceLoginResponse> 
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceRpcMethod.face_logInSignUp);
-            return await this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
+            Task<FaceRpcResponse> responseTask = this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
+            this._actionQueue.Enqueue(onComplete, responseTask);
         }
 
         public async Task<FaceRpcResponse> IsLoggedIn()
@@ -55,9 +62,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task<FaceRpcResponse> GetBalance(string account = null)
         {
-            string address = account ?? ((FaceArrayResponse)(await this.GetAddresses()).result).response[0];
-            return await this._client.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceRpcMethod.eth_getBalance, address,
-                "latest"));
+            // string address = account ?? ((FaceArrayResponse)(await this.GetAddresses()).result).response[0];
+            // return await this._client.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceRpcMethod.eth_getBalance, address,
+            //     "latest"));
+            return null;
         }
 
         public async Task<FaceRpcResponse> SendTransaction(RawTransaction request)
@@ -79,5 +87,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
+        
+        
     }
 }

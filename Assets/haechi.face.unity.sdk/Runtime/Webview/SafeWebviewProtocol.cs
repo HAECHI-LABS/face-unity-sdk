@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web;
+using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using Nethereum.JsonRpc.Client.RpcMessages;
@@ -36,7 +37,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"blockchain={parameters.Blockchain}";
         }
         
-        public static RpcResponseMessage DecodeQueryParams(Uri uri) 
+        public static FaceRpcResponse DecodeQueryParams(Uri uri) 
         {
             Dictionary<string, string> queryParameters = _parseQuery(uri.Query);
             if (!queryParameters.TryGetValue("response", out string encodedResponse))
@@ -46,7 +47,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             string responseData = HttpUtility.UrlDecode(encodedResponse);
             try
             {
-                return JsonConvert.DeserializeObject<RpcResponseMessage>(responseData);
+                return JsonConvert.DeserializeObject<FaceRpcResponse>(responseData);
             }
             catch (JsonException e)
             {
