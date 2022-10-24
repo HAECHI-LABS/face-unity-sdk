@@ -8,12 +8,10 @@ namespace haechi.face.unity.sdk.Runtime.Exception
 
     public static class ErrorCodes
     {
-        public static readonly ErrorCode INVALID_WEBVIEW_MESSAGE = new ErrorCode
-            { Value = "U0001", Message = "Invalid message comes from webview" };
-
-        public static readonly ErrorCode INVALLID_RPC_RESPONSE =
-            new ErrorCode { Value = "U0002", Message = "Invalid rpc response" };
-}
+        public static readonly ErrorCode INVALID_WEBVIEW_MESSAGE = new ErrorCode { Value = "U0001", Message = "Invalid message comes from webview" };
+        public static readonly ErrorCode INVALLID_RPC_RESPONSE = new ErrorCode { Value = "U0002", Message = "Invalid rpc response" };
+        public static readonly ErrorCode INVALLID_RPC_METHOD = new ErrorCode { Value = "U0003", Message = "Invalid rpc method" };
+    }
 
     public class FaceException : System.Exception
     {

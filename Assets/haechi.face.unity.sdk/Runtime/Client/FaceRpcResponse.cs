@@ -5,36 +5,42 @@ using Newtonsoft.Json.Linq;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
+    [JsonObject]
     [Serializable]
     public class FaceRpcResponse : RpcResponseMessage
     {
         [JsonConstructor]
-        public FaceRpcResponse()
+        public FaceRpcResponse(): base()
         {
         }
 
         public FaceRpcResponse(object id) : base(id)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
+            // this.From = "FACE_IFRAME";
+            // this.To = "FACE_NATIVE_SDK";
         }
         
         public FaceRpcResponse(object id, RpcError error) : base(id, error)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
+            // this.From = "FACE_IFRAME";
+            // this.To = "FACE_NATIVE_SDK";
         }
 
         public FaceRpcResponse(object id, JToken result) : base(id, result)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
+            // this.From = "FACE_IFRAME";
+            // this.To = "FACE_NATIVE_SDK";
         }
 
-        [JsonProperty("from", Required = Required.Always)]
-        public string From { get; private set; }
-        
-        [JsonProperty("to", Required = Required.Always)]
-        public string To { get; private set; }
+        public FaceRpcResponse(object id, JValue result) : base(id, result)
+        {
+            
+        }
+
+        // [JsonProperty("from", Required = Required.Always)]
+        // public string From { get; private set; }
+        //
+        // [JsonProperty("to", Required = Required.Always)]
+        // public string To { get; private set; }
     }
 }

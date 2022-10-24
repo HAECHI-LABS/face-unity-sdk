@@ -1,63 +1,33 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Settings
 {
-    public class FaceSettings : MonoBehaviour
+    public class FaceSettings
     {
-        #region Header SETTINGS
+        private static FaceSettings instance;
 
-        [Space(10)]
-        [Header("SETTINGS")]
+        public static FaceSettings Instance => instance;
 
-        #endregion
+        public static void Init(string apiKey, string env, string blockchain)
+        {
+            instance = new FaceSettings(apiKey, env, blockchain);
+        }
 
-        #region Tooltip
-
-        [Tooltip("API KEY")]
-
-        #endregion
+        private FaceSettings(string apiKey, string env, string blockchain)
+        {
+            this.ApiKey = apiKey;
+            this.env = env;
+            this.blockchain = blockchain;
+        }
 
         public string ApiKey;
-            
-        #region Tooltip
-
-        [Tooltip("Environment")]
-
-        #endregion
-
-        [SerializeField]
-        private string env;
         
-        #region Tooltip
-
-        [Tooltip("Blockchain")]
-
-        #endregion
-
-        [SerializeField]
+        private string env;
+    
         private string blockchain;
-
-        private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
-        {
-            { Profile.Dev, "https://app.dev.facewallet.xyz" }
-            // TODO: Setup other environment webview host
-        };
-
-        public static FaceSettings Instance { get; private set; }
-
-        private void Awake()
-        {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(this.gameObject);
-            }
-        }
 
         public void Environment(string env)
         {
@@ -78,10 +48,26 @@ namespace haechi.face.unity.sdk.Runtime.Settings
         {
             return Blockchains.ValueOf(this.blockchain);
         }
+        
+        private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
+        {
+            { Profile.Dev, "https://app.dev.facewallet.xyz" },
+            // TODO: Setup other environment webview host
+        };
+
+        private readonly Dictionary<Profile, string> _serverHostMap = new Dictionary<Profile, string>
+        {
+            { Profile.Dev, "http://localhost:8881" },
+        };
 
         public string WebviewHostURL()
         {
-            return this._webviewHostMap.GetValueOrDefault(this.Environment(), "https://app.dev.facewallet.xyz");
+            return this._webviewHostMap.GetValueOrDefault(this.Environment(), this._webviewHostMap[Profile.Dev]);
+        }
+
+        public string ServerHostURL()
+        {
+            return this._serverHostMap.GetValueOrDefault(this.Environment(), this._serverHostMap[Profile.Dev]);
         }
     }
 }
