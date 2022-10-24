@@ -10,14 +10,9 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BNB_SMART_CHAIN,
         KLAYTN
     }
-    
+
     public static class Blockchains
     {
-        public static Blockchain ValueOf(string value)
-        {
-            return EnumUtils.FindEquals<Blockchain>(value);
-        }
-        
         public static Dictionary<Blockchain, Dictionary<Profile, Network>> Map =
             new Dictionary<Blockchain, Dictionary<Profile, Network>>
             {
@@ -28,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageTest, Network.GOERLI },
                         { Profile.StageMainnet, Network.ETHEREUM },
                         { Profile.ProdTest, Network.GOERLI },
-                        { Profile.ProdMainnet, Network.ETHEREUM },
+                        { Profile.ProdMainnet, Network.ETHEREUM }
                     }
                 },
                 {
@@ -38,7 +33,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageTest, Network.BAOBAB },
                         { Profile.StageMainnet, Network.KLAYTN },
                         { Profile.ProdTest, Network.BAOBAB },
-                        { Profile.ProdMainnet, Network.KLAYTN },
+                        { Profile.ProdMainnet, Network.KLAYTN }
                     }
                 },
                 {
@@ -48,7 +43,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageTest, Network.BNB_SMART_CHAIN_TESTNET },
                         { Profile.StageMainnet, Network.BNB_SMART_CHAIN },
                         { Profile.ProdTest, Network.BNB_SMART_CHAIN_TESTNET },
-                        { Profile.ProdMainnet, Network.BNB_SMART_CHAIN },
+                        { Profile.ProdMainnet, Network.BNB_SMART_CHAIN }
                     }
                 },
                 {
@@ -58,9 +53,14 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageTest, Network.MUMBAI },
                         { Profile.StageMainnet, Network.POLYGON },
                         { Profile.ProdTest, Network.MUMBAI },
-                        { Profile.ProdMainnet, Network.POLYGON },
+                        { Profile.ProdMainnet, Network.POLYGON }
                     }
-                },
+                }
             };
+
+        public static Blockchain ValueOf(string value)
+        {
+            return EnumUtils.FindEquals<Blockchain>(value);
+        }
     }
 }

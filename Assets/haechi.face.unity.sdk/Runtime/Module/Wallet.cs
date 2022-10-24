@@ -1,12 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Type;
-using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -22,7 +18,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
         {
             FaceRpcRequest<FaceEnvironments> rpcRequest =
-                new FaceRpcRequest<FaceEnvironments>(FaceRpcMethod.wallet_initialize, env);
+                FaceRpcRequest<FaceEnvironments>.Of(FaceRpcMethod.wallet_initialize, env);
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
@@ -35,7 +31,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public Task<FaceRpcResponse> LoginWithCredential() // Action<FaceRpcResponse> -> Action<FaceLoginResponse> 
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceRpcMethod.face_logInSignUp);
+            FaceRpcRequest<string> request = FaceRpcRequest<string>.Of(FaceRpcMethod.face_logInSignUp);
             return this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
         }
 
@@ -67,7 +63,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task<FaceRpcResponse> SendTransaction(RawTransaction request)
         {
-            FaceRpcRequest<RawTransaction> rpcRequest = FaceRpcRequest<RawTransaction>.Of(FaceRpcMethod.eth_sendTransaction, request);
+            FaceRpcRequest<RawTransaction> rpcRequest =
+                FaceRpcRequest<RawTransaction>.Of(FaceRpcMethod.eth_sendTransaction, request);
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
@@ -83,7 +80,5 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
-        
-        
     }
 }

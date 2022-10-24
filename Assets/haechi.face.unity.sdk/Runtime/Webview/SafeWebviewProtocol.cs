@@ -13,14 +13,6 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 {
     internal static class SafeWebviewProtocol
     {
-        public struct Parameters
-        {
-            public RpcRequestMessage Request;
-            public string ApiKey;
-            public Profile Env;
-            public Blockchain Blockchain;
-
-        }
         public static string Scheme = "facewebview";
 
         public static string EncodeQueryParams(Parameters parameters)
@@ -36,14 +28,15 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"env={parameters.Env}&" +
                    $"blockchain={parameters.Blockchain}";
         }
-        
-        public static FaceRpcResponse DecodeQueryParams(Uri uri) 
+
+        public static FaceRpcResponse DecodeQueryParams(Uri uri)
         {
             Dictionary<string, string> queryParameters = _parseQuery(uri.Query);
             if (!queryParameters.TryGetValue("response", out string encodedResponse))
             {
                 throw new InvalidWebviewMessageException();
             }
+
             string responseData = HttpUtility.UrlDecode(encodedResponse);
             try
             {
@@ -54,11 +47,13 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 throw new InvalidRpcResponse(e);
             }
         }
-        
+
         private static Dictionary<string, string> _parseQuery(string text)
         {
             if (text.Length > 0 && text[0] == '?')
+            {
                 text = text.Remove(0, 1);
+            }
 
             var parts = text.Split('&').Where(x => !string.IsNullOrEmpty(x)).ToList();
 
@@ -73,6 +68,14 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             }
 
             return result;
+        }
+
+        public struct Parameters
+        {
+            public RpcRequestMessage Request;
+            public string ApiKey;
+            public Profile Env;
+            public Blockchain Blockchain;
         }
     }
 }

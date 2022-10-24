@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -9,25 +8,25 @@ namespace haechi.face.unity.sdk.Samples.Script
         public TMP_Text loggedInAddress, loggedInId, coinBalance, result;
         public TMP_Text landscapeLoggedInAddress, landscapeLoggedInId, landscapeCoinBalance, landscapeResult;
         public TMP_InputField erc20Balance, landscapeErc20Balance;
-        
+
         public void SetLoggedInAddress(string address)
         {
             this.loggedInAddress.text = address;
             this.landscapeLoggedInAddress.text = address;
         }
-        
+
         public void SetLoggedInId(string userId)
         {
             this.loggedInId.text = userId;
             this.landscapeLoggedInId.text = userId;
         }
-        
+
         public void SetCoinBalance(string balance)
         {
             this.coinBalance.text = balance;
             this.landscapeCoinBalance.text = balance;
         }
-        
+
         public void SetResult(string response)
         {
             this.result.text = response;

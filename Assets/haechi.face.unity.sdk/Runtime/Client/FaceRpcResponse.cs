@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -20,22 +18,22 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this.From = "FACE_IFRAME";
             this.To = "FACE_NATIVE_SDK";
         }
-        
+
         public FaceRpcResponse(object id, RpcError error) : base(id, error)
         {
             this.From = "FACE_IFRAME";
             this.To = "FACE_NATIVE_SDK";
         }
-        
+
         public FaceRpcResponse(object id, JToken result) : base(id, result)
         {
             this.From = "FACE_IFRAME";
             this.To = "FACE_NATIVE_SDK";
         }
-        
+
         [JsonProperty("from", Required = Required.Always)]
         public string From { get; private set; }
-        
+
         [JsonProperty("to", Required = Required.Always)]
         public string To { get; private set; }
     }

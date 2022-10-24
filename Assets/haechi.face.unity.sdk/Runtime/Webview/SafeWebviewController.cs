@@ -1,25 +1,31 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Text;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Settings;
 using Nethereum.JsonRpc.Client.RpcMessages;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
     public class SafeWebviewController : MonoBehaviour
     {
+        private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
+            = new Dictionary<string, Func<FaceRpcResponse, bool>>();
+
+        private void Awake()
+        {
+            Application.deepLinkActivated += this.onDeepLinkActivated;
+            if (!string.IsNullOrEmpty(Application.absoluteURL))
+            {
+                this.onDeepLinkActivated(Application.absoluteURL);
+            }
+        }
 #if UNITY_IOS
         [DllImport("__Internal")]
-        extern static void web3auth_launch(string url, string redirectUri, string objectName);
+        private static extern void web3auth_launch(string url, string redirectUri, string objectName);
 #endif
-        
+
         private static void LaunchUrl(string url, string objectName = null)
         {
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
@@ -37,46 +43,33 @@ namespace haechi.face.unity.sdk.Runtime.Webview
     web3auth_launch(url, SafeWebviewProtocol.Scheme, objectName);
 #endif
         }
-        
-        private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
-            = new Dictionary<string, Func<FaceRpcResponse, bool>>();
-        
-        private void Awake()
-        {
-            Application.deepLinkActivated += this.onDeepLinkActivated;
-            if (!string.IsNullOrEmpty(Application.absoluteURL))
-            {
-                this.onDeepLinkActivated(Application.absoluteURL);   
-            }
-        }
 
         public void onDeepLinkActivated(string url)
         {
             this._handleDeepLink(new Uri(url));
         }
-        
+
         // TODO: remove `id` parameter. Get ID from `message`
         public void SendMessage(string id, RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
         {
             Debug.Log($"Register Handler with ID: {id}");
             this._handlerDictionary.Add(id, callbackHandler);
-            
+
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
             {
                 Request = message,
                 ApiKey = FaceSettings.Instance.ApiKey,
                 Env = FaceSettings.Instance.Environment(),
-                Blockchain = FaceSettings.Instance.Blockchain(),
-                
+                Blockchain = FaceSettings.Instance.Blockchain()
             });
             UriBuilder uriBuilder = new UriBuilder(FaceSettings.Instance.WebviewHostURL())
             {
                 Query = queryParams
             };
             Debug.Log($"URL: {uriBuilder}");
-            
+
             // Launch browser
-            LaunchUrl(uriBuilder.ToString(), gameObject.name);
+            LaunchUrl(uriBuilder.ToString(), this.gameObject.name);
         }
 
         private void _handleDeepLink(Uri uri)
@@ -89,7 +82,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Debug.Log($"Cannot find handler by id: {response.Id}");
                 return;
             }
-            
+
             callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
         }

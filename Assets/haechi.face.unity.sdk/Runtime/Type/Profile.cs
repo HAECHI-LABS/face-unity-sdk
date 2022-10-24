@@ -16,6 +16,6 @@ namespace haechi.face.unity.sdk.Runtime.Type
         public static Profile ValueOf(string value)
         {
             return EnumUtils.FindEquals<Profile>(value);
-        }   
+        }
     }
 }
