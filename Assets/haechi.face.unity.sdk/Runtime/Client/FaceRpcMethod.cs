@@ -1,3 +1,8 @@
+using System;
+using System.Threading.Tasks;
+using face_unity.haechi.face.unity.sdk.Runtime.Utils;
+using Nethereum.JsonRpc.Client.RpcMessages;
+
 namespace haechi.face.unity.sdk.Runtime.Client
 {
     public enum FaceRpcMethod
@@ -15,5 +20,17 @@ namespace haechi.face.unity.sdk.Runtime.Client
         eth_sendTransaction,
         eth_call,
         personal_sign
+    }
+    
+    public static class FaceRpcMethods {
+        public static bool Contains(string value)
+        {
+            return Enum.IsDefined(typeof(FaceRpcMethod), value);
+        }
+        
+        public static FaceRpcMethod ValueOf(string value)
+        {
+            return EnumUtils.FindEquals<FaceRpcMethod>(value);
+        }
     }
 }

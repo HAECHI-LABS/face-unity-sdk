@@ -7,7 +7,8 @@ namespace face_unity.haechi.face.unity.sdk.Runtime.Utils
 {
     public class EnumUtils
     {
-        public static IEnumerable<T> GetValues<T>() {
+        public static IEnumerable<T> GetValues<T>()
+        {
             return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
