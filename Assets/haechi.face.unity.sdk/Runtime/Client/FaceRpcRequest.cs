@@ -1,8 +1,6 @@
 using System;
-using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace haechi.face.unity.sdk.Runtime.Client
@@ -11,6 +9,20 @@ namespace haechi.face.unity.sdk.Runtime.Client
     [JsonObject]
     public class FaceRpcRequest<T> : RpcRequestMessage
     {
+        public FaceRpcRequest(FaceRpcMethod method, params T[] parameterList)
+            : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method),
+                _parameterize(parameterList))
+        {
+            this.From = "FACE_NATIVE_SDK";
+            this.To = "FACE_IFRAME";
+        }
+
+        [JsonProperty("from", Required = Required.Always)]
+        public string From { get; private set; }
+
+        [JsonProperty("to", Required = Required.Always)]
+        public string To { get; private set; }
+
         private static int _generateId()
         {
             return Random.Range(1, 100000);
@@ -22,26 +34,5 @@ namespace haechi.face.unity.sdk.Runtime.Client
             parameterList.CopyTo(result, 0);
             return result;
         }
-
-        public FaceRpcRequest(FaceRpcMethod method, params T[] parameterList) 
-            : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method), 
-                _parameterize(parameterList))
-        {
-            this.From = "FACE_NATIVE_SDK";
-            this.To = "FACE_IFRAME";
-        }
-        
-        public FaceRpcRequest(string method, params T[] parameterList) 
-            : base(_generateId(), method, _parameterize(parameterList))
-        {
-            this.From = "FACE_NATIVE_SDK";
-            this.To = "FACE_IFRAME";
-        }
-        
-        [JsonProperty("from", Required = Required.Always)]
-        public string From { get; private set; }
-        
-        [JsonProperty("to", Required = Required.Always)]
-        public string To { get; private set; }
     }
 }

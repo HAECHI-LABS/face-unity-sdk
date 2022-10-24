@@ -1,4 +1,3 @@
-using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.Unity.Rpc;
 

@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Contracts;

@@ -11,9 +11,8 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         [SerializeField] [JsonProperty("network")]
         internal string network;
 
-        [SerializeField] [JsonProperty("env")]
-        internal string env;
-        
+        [SerializeField] [JsonProperty("env")] internal string env;
+
         [SerializeField] [JsonProperty("apiKey")]
         internal string apiKey;
 
