@@ -10,37 +10,39 @@ namespace haechi.face.unity.sdk.Runtime.Client
     public class FaceRpcResponse : RpcResponseMessage
     {
         [JsonConstructor]
-        public FaceRpcResponse(): base()
+        public FaceRpcResponse()
         {
+            this.From = "FACE_IFRAME";
+            this.To = "FACE_NATIVE_SDK";
         }
 
         public FaceRpcResponse(object id) : base(id)
         {
-            // this.From = "FACE_IFRAME";
-            // this.To = "FACE_NATIVE_SDK";
+            this.From = "FACE_IFRAME";
+            this.To = "FACE_NATIVE_SDK";
         }
         
         public FaceRpcResponse(object id, RpcError error) : base(id, error)
         {
-            // this.From = "FACE_IFRAME";
-            // this.To = "FACE_NATIVE_SDK";
+            this.From = "FACE_IFRAME";
+            this.To = "FACE_NATIVE_SDK";
         }
 
         public FaceRpcResponse(object id, JToken result) : base(id, result)
         {
-            // this.From = "FACE_IFRAME";
-            // this.To = "FACE_NATIVE_SDK";
+            this.From = "FACE_IFRAME";
+            this.To = "FACE_NATIVE_SDK";
         }
 
-        public FaceRpcResponse(object id, JValue result) : base(id, result)
+        public T CastResult<T>()
         {
-            
+            return (T) Result.ToObject(typeof(T));
         }
 
-        // [JsonProperty("from", Required = Required.Always)]
-        // public string From { get; private set; }
-        //
-        // [JsonProperty("to", Required = Required.Always)]
-        // public string To { get; private set; }
+        [JsonProperty("from")]
+        public string From { get; private set; }
+        
+        [JsonProperty("to")]
+        public string To { get; private set; }
     }
 }

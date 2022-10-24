@@ -7,46 +7,52 @@ namespace haechi.face.unity.sdk.Runtime.Settings
 {
     public class FaceSettings
     {
+        public struct Parameters
+        {
+            public string ApiKey;
+            public string Environment;
+            public string Blockchain;
+        }
+        
         private static FaceSettings instance;
 
         public static FaceSettings Instance => instance;
 
-        public static void Init(string apiKey, string env, string blockchain)
+        public static void Init(Parameters parameters)
         {
-            instance = new FaceSettings(apiKey, env, blockchain);
+            instance = new FaceSettings(parameters);
         }
 
-        private FaceSettings(string apiKey, string env, string blockchain)
+        private FaceSettings(Parameters parameters)
         {
-            this.ApiKey = apiKey;
-            this.env = env;
-            this.blockchain = blockchain;
+            this._parameters = parameters;
         }
 
-        public string ApiKey;
+        private Parameters _parameters;
         
-        private string env;
-    
-        private string blockchain;
-
         public void Environment(string env)
         {
-            this.env = env;
+            this._parameters.Environment = env;
         }
 
         public Profile Environment()
         {
-            return Profiles.ValueOf(this.env);
+            return Profiles.ValueOf(this._parameters.Environment);
         }
 
         public void Blockchain(string blockchain)
         {
-            this.blockchain = blockchain;
+            this._parameters.Blockchain = blockchain;
+        }
+
+        public string ApiKey()
+        {
+            return this._parameters.ApiKey;
         }
 
         public Blockchain Blockchain()
         {
-            return Blockchains.ValueOf(this.blockchain);
+            return Blockchains.ValueOf(this._parameters.Blockchain);
         }
         
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
@@ -57,7 +63,7 @@ namespace haechi.face.unity.sdk.Runtime.Settings
 
         private readonly Dictionary<Profile, string> _serverHostMap = new Dictionary<Profile, string>
         {
-            { Profile.Dev, "http://localhost:8881" },
+            { Profile.Dev, "https://dev.facewallet.xyz" },
         };
 
         public string WebviewHostURL()

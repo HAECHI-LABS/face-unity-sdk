@@ -40,7 +40,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.face_logInSignUp);
-            return this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
+            return this._client.SendFaceRpcAsync(request);
         }
 
         public async Task<FaceRpcResponse> IsLoggedIn()
@@ -59,14 +59,14 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task<FaceRpcResponse> GetAddresses()
         {
-            return await this._client.SendFaceRpcAsync<string, FaceArrayResponse>(
+            return await this._client.SendFaceRpcAsync(
                 new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_accounts));
         }
 
-        public async Task<RpcResponseMessage> GetBalance(string account = null)
+        public async Task<FaceRpcResponse> GetBalance(string account = null)
         {
             // TODO: Get address from the cache
-            return await this._client.SendFaceRpcTestAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+            return await this._client.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.eth_getBalance, 
                 "0xDD9724Ecd92487633EC0191Ba7737009127D260e",
                 "latest"));

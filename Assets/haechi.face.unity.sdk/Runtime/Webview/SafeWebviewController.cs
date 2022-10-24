@@ -58,7 +58,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
             {
                 Request = message,
-                ApiKey = FaceSettings.Instance.ApiKey,
+                ApiKey = FaceSettings.Instance.ApiKey(),
                 Env = FaceSettings.Instance.Environment(),
                 Blockchain = FaceSettings.Instance.Blockchain()
             });

@@ -24,14 +24,14 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this._httpClient = httpClient;
             this._httpClient.BaseAddress = baseUrl;
             this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Hostname", "http://localhost:3000"); // TODO: FIXME
-            this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey);
+            this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey());
         }
         
         protected override async Task<RpcResponseMessage> SendAsync(
             RpcRequestMessage request,
             string route = null)
         {
-            RpcResponseMessage rpcResponseMessage;
+            FaceRpcResponse rpcResponseMessage;
             try
             {
                 StringContent content = new StringContent(JsonConvert.SerializeObject((object) request, this._jsonSerializerSettings), Encoding.UTF8, "application/json");
@@ -43,7 +43,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 using (StreamReader reader1 = new StreamReader(await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false)))
                 {
                     using (JsonTextReader reader2 = new JsonTextReader((TextReader) reader1))
-                        rpcResponseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<RpcResponseMessage>((JsonReader) reader2);
+                        rpcResponseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<FaceRpcResponse>((JsonReader) reader2);
                 }
             }
             catch (TaskCanceledException ex)
@@ -66,11 +66,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private readonly HttpClient _httpClient;
 
-        public async Task<RpcResponseMessage> SendRequest(
+        public async Task<FaceRpcResponse> SendRequest(
             RpcRequestMessage request,
             string route = null)
         {
-            return await SendAsync(request, route);
+            return (FaceRpcResponse) await SendAsync(request, route);
         }
     }
 }

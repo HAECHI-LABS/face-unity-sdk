@@ -23,11 +23,14 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private readonly MethodHandlers _methodHandlers;
 
+        private readonly IRequestSender _defaultRequestSender;
+
         public FaceRpcProvider(SafeWebviewController safeWebviewController, Uri uri)
         {
             this._webview = safeWebviewController;
             this._httpRpcClient = new FaceHttpRpcClient(uri, new HttpClient());
             this._methodHandlers = new MethodHandlers(this);
+            this._defaultRequestSender = new WebviewRequestSender(this);
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
         }
 
@@ -44,7 +47,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             if (!this._methodHandlers.TryGetRequestSender(request.Method, out IRequestSender sender))
             {
-                throw new InvalidRpcMethodException();
+                return await this._defaultRequestSender.SendRequest(request);
             }
 
             return await sender.SendRequest(request);
@@ -56,16 +59,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
             throw new NotImplementedException();
         }
 
-        internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams, TResult>(FaceRpcRequest<TParams> request)
-        {
-            return (FaceRpcResponse)await this.SendAsync(request);
-        }
-
-        internal async Task<RpcResponseMessage> SendFaceRpcTestAsync<TParams>(FaceRpcRequest<TParams> request)
-        {
-            return await this.SendAsync(request);
-        }
-        
         internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams>(FaceRpcRequest<TParams> request)
         {
             return (FaceRpcResponse)await this.SendAsync(request);
@@ -131,9 +124,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-                RpcResponseMessage response = await this._provider._httpRpcClient.SendRequest(request, "/api/v1/rpc");
-                string responseStr = JsonConvert.SerializeObject(response);
-                Debug.Log($"responseStr: {responseStr}");
+                FaceRpcResponse response = await this._provider._httpRpcClient.SendRequest(request, "/api/v1/rpc");
                 promise.TrySetResult(response);
                 return await promise.Task;
             }

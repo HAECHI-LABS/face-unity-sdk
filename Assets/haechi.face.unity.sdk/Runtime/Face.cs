@@ -17,11 +17,9 @@ namespace haechi.face.unity.sdk.Runtime
         internal Wallet wallet;
         internal FaceRpcProvider client;
 
-        private void Awake()
+        public void Initialize(FaceSettings.Parameters parameters)
         {
-            FaceSettings.Init(
-                "bx89CFIGB12EYcSjcAmgeBRViLr4QSwfce/kCfLj7FLa9w83fh5sd7qGTjv5w8ib9Iq9jXERZD8oxAkknroVQCjlulivVgeLn7wI6Pg0hQiAKWG9GSpvcXpqUpkL1bzNZKNfZNulMlxws6OkVFqbmUHoX4VF1TXrDSZeQetPjK4u4pJH/NosXFn1CaVFCHneM7wc/9ry9p0MmNhXe5t9Nai6UD4JlLyheW8MIuxqTXU=",
-                "Dev", "ETHEREUM");
+            FaceSettings.Init(parameters);
             
             SafeWebviewController safeWebviewController = this.GetComponent<SafeWebviewController>();
             FaceProviderFactory factory = new FaceProviderFactory(safeWebviewController, FaceSettings.Instance.ServerHostURL());
