@@ -60,16 +60,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             FaceRpcResponse loginResponse = await this._face.wallet.LoginWithCredential();
             this.dataDesignator.SetLoggedInId(((FaceLoginResponse)loginResponse.result).faceUserId);
 
-            await this.GetMainAccount();
+            this.GetMainAccount();
             this.GetBalance();
-        }
-
-        private async Task GetMainAccount()
-        {
-            this.ValidateIsLoggedIn();
-
-            FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
-            this.dataDesignator.SetLoggedInAddress(((FaceArrayResponse)getAddressesResponse.result).response[0]);
         }
 
         public async void Logout()
@@ -178,6 +170,12 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             FaceRpcResponse response = await this._face.wallet.Sign(this.inputDesignator.messageToSign.text);
             this.dataDesignator.SetResult(string.Format($"Signed Message - {response.result}"));
+        }
+        
+        private async void GetMainAccount()
+        {
+            FaceRpcResponse getAddressesResponse = await this._face.wallet.GetAddresses();
+            this.dataDesignator.SetLoggedInAddress(((FaceArrayResponse)getAddressesResponse.result).response[0]);
         }
 
         private async Task<int> GetErc20Decimals()
