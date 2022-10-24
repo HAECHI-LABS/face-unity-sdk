@@ -28,15 +28,20 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 _parameterize(parameterList))
         {
             this.From = "FACE_NATIVE_SDK";
+            this.To = "FACE_IFRAME";
         }
         
         public FaceRpcRequest(string method, params T[] parameterList) 
             : base(_generateId(), method, _parameterize(parameterList))
         {
             this.From = "FACE_NATIVE_SDK";
+            this.To = "FACE_IFRAME";
         }
         
         [JsonProperty("from", Required = Required.Always)]
         public string From { get; private set; }
+        
+        [JsonProperty("to", Required = Required.Always)]
+        public string To { get; private set; }
     }
 }
