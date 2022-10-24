@@ -1,18 +1,24 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Type;
+using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
     public class Wallet
     {
         private readonly FaceRpcProvider _client;
+        private readonly ActionQueue _actionQueue;
 
-        internal Wallet(FaceRpcProvider client)
+        internal Wallet(FaceRpcProvider client, ActionQueue actionQueue)
         {
             this._client = client;
+            this._actionQueue = actionQueue;
         }
 
         public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
@@ -80,5 +86,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
+        
+        
     }
 }
