@@ -25,7 +25,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         [DllImport("__Internal")]
         extern static void web3auth_launch(string url, string redirectUri, string objectName);
 #endif
-
+        
         private static void LaunchUrl(string url, string objectName = null)
         {
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
@@ -54,11 +54,11 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         {
             Debug.Log($"Register Handler with ID: {id}");
             this._handlerDictionary.Add(id, callbackHandler);
-
+            
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
             {
                 Request = message,
-                ApiKey = FaceSettings.Instance.ApiKey,
+                ApiKey = FaceSettings.Instance.ApiKey(),
                 Env = FaceSettings.Instance.Environment(),
                 Blockchain = FaceSettings.Instance.Blockchain()
             });

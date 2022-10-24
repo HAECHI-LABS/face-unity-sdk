@@ -11,10 +11,13 @@ namespace haechi.face.unity.sdk.Runtime.Exception
         }
     }
 
-    public class InvalidRpcResponse : FaceException
+    public class InvalidRpcResponseException : FaceException
     {
-        public InvalidRpcResponse(System.Exception exception) : base(ErrorCodes.INVALLID_RPC_RESPONSE, exception)
-        {
-        }
+        public InvalidRpcResponseException(System.Exception exception) : base(ErrorCodes.INVALLID_RPC_RESPONSE, exception) {}
+    }
+    
+    public class InvalidRpcMethodException : FaceException
+    {
+        public InvalidRpcMethodException() : base(ErrorCodes.INVALLID_RPC_METHOD) {}
     }
 }

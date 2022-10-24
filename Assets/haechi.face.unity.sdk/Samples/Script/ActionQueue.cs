@@ -7,7 +7,7 @@ using UnityEngine;
 public class ActionQueue : MonoBehaviour
 {
     private static readonly Queue<Action> _executionQueue = new Queue<Action>();
-
+    
     private void Update()
     {
         lock (_executionQueue)
@@ -23,7 +23,9 @@ public class ActionQueue : MonoBehaviour
     {
         lock (_executionQueue)
         {
-            _executionQueue.Enqueue(() => { this.StartCoroutine(this._actionWrapper(a, task)); });
+            _executionQueue.Enqueue(() => {
+                StartCoroutine(_actionWrapper(a, task));
+            });
         }
     }
 
@@ -33,8 +35,7 @@ public class ActionQueue : MonoBehaviour
         {
             yield return null;
         }
-
         a.Invoke(task.Result);
         yield return null;
     }
-}
+}   

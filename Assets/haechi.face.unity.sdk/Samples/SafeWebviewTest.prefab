@@ -384,7 +384,7 @@ GameObject:
   - component: {fileID: 4096659638463119159}
   - component: {fileID: 6312491619463332608}
   - component: {fileID: 713756662}
-  - component: {fileID: 713756663}
+  - component: {fileID: 5494791885682755980}
   m_Layer: 0
   m_Name: SafeWebviewTest
   m_TagString: Untagged
@@ -445,7 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739618d557f747faa8b1a99b1429eb3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &713756663
+--- !u!114 &5494791885682755980
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -454,12 +454,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7394570919697541674}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 191cf229499d45c38f7d006f3bc14780, type: 3}
+  m_Script: {fileID: 11500000, guid: 45ace99b7140489aa68b4bcb7d89e61c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApiKey: bx89CFIGB12EYcSjcAmgeBRViLr4QSwfce/kCfLj7FLa9w83fh5sd7qGTjv5w8ib9Iq9jXERZD8oxAkknroVQCjlulivVgeLn7wI6Pg0hQiAKWG9GSpvcXpqUpkL1bzNZKNfZNulMlxws6OkVFqbmUHoX4VF1TXrDSZeQetPjK4u4pJH/NosXFn1CaVFCHneM7wc/9ry9p0MmNhXe5t9Nai6UD4JlLyheW8MIuxqTXU=
-  env: Dev
-  blockchain: ETHEREUM
 --- !u!1 &8042396393441680234
 GameObject:
   m_ObjectHideFlags: 0
@@ -584,7 +581,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4096659638463119159}
         m_TargetAssemblyTypeName: SafeWebviewTest, FaceSDK-CSharp
-        m_MethodName: OnClickLogin
+        m_MethodName: OnClickBalance
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

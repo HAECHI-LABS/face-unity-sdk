@@ -1,8 +1,14 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Type;
+using haechi.face.unity.sdk.Runtime.Utils;
+using Nethereum.JsonRpc.Client.RpcMessages;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -18,65 +24,71 @@ namespace haechi.face.unity.sdk.Runtime.Module
         public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
         {
             FaceRpcRequest<FaceEnvironments> rpcRequest =
-                new FaceRpcRequest<FaceEnvironments>(FaceRpcMethod.wallet_initialize, env);
+                new FaceRpcRequest<FaceEnvironments>(FaceSettings.Instance.Blockchain(), 
+                    FaceRpcMethod.wallet_initialize, env);
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
         public async Task<FaceRpcResponse> SwitchNetwork(string network)
         {
-            FaceRpcRequest<int> rpcRequest = new FaceRpcRequest<int>(FaceRpcMethod.wallet_switchEthereumChain,
-                NetworkResolver.GetChainId(network));
+            FaceRpcRequest<int> rpcRequest = new FaceRpcRequest<int>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.wallet_switchEthereumChain, NetworkResolver.GetChainId(network));
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
-
-        public Task<FaceRpcResponse> LoginWithCredential() // Action<FaceRpcResponse> -> Action<FaceLoginResponse> 
+        
+        public Task<FaceRpcResponse> LoginWithCredential() 
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceRpcMethod.face_logInSignUp);
-            return this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+                FaceRpcMethod.face_logInSignUp);
+            return this._client.SendFaceRpcAsync(request);
         }
 
         public async Task<FaceRpcResponse> IsLoggedIn()
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceRpcMethod.face_loggedIn);
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_loggedIn);
             return await this._client.SendFaceRpcAsync(request);
         }
 
         public async Task<FaceRpcResponse> Logout()
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceRpcMethod.face_logOut);
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_logOut);
             return await this._client.SendFaceRpcAsync(request);
         }
 
         public async Task<FaceRpcResponse> GetAddresses()
         {
-            return await this._client.SendFaceRpcAsync<string, FaceArrayResponse>(
-                new FaceRpcRequest<string>(FaceRpcMethod.face_accounts));
+            return await this._client.SendFaceRpcAsync(
+                new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_accounts));
         }
 
         public async Task<FaceRpcResponse> GetBalance(string account = null)
         {
-            // string address = account ?? ((FaceArrayResponse)(await this.GetAddresses()).result).response[0];
-            // return await this._client.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceRpcMethod.eth_getBalance, address,
-            //     "latest"));
-            return null;
+            // TODO: Get address from the cache
+            return await this._client.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+                FaceRpcMethod.eth_getBalance, 
+                "0xDD9724Ecd92487633EC0191Ba7737009127D260e",
+                "latest"));
         }
 
         public async Task<FaceRpcResponse> SendTransaction(RawTransaction request)
         {
             FaceRpcRequest<RawTransaction> rpcRequest =
-                new FaceRpcRequest<RawTransaction>(FaceRpcMethod.eth_sendTransaction, request);
+                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_sendTransaction, request);
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
         public async Task<FaceRpcResponse> Call(RawTransaction request)
         {
-            FaceRpcRequest<object> rpcRequest = new FaceRpcRequest<object>(FaceRpcMethod.eth_call, request, "latest");
+            FaceRpcRequest<object> rpcRequest = new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), 
+                FaceRpcMethod.eth_call, request, "latest");
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
         public async Task<FaceRpcResponse> Sign(string message)
         {
-            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceRpcMethod.personal_sign,
+            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.personal_sign,
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }

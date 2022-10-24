@@ -44,7 +44,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             }
             catch (JsonException e)
             {
-                throw new InvalidRpcResponse(e);
+                throw new InvalidRpcResponseException(e);
             }
         }
 
