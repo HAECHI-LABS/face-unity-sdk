@@ -13,12 +13,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
     public class Wallet
     {
         private readonly FaceRpcProvider _client;
-        private readonly ActionQueue _actionQueue;
 
-        internal Wallet(FaceRpcProvider client, ActionQueue actionQueue)
+        internal Wallet(FaceRpcProvider client)
         {
             this._client = client;
-            this._actionQueue = actionQueue;
         }
 
         public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
@@ -35,11 +33,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._client.SendFaceRpcAsync(rpcRequest);
         }
 
-        public void LoginWithCredential(Action<FaceRpcResponse> onComplete) // Action<FaceRpcResponse> -> Action<FaceLoginResponse> 
+        public Task<FaceRpcResponse> LoginWithCredential() // Action<FaceRpcResponse> -> Action<FaceLoginResponse> 
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceRpcMethod.face_logInSignUp);
-            Task<FaceRpcResponse> responseTask = this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
-            this._actionQueue.Enqueue(onComplete, responseTask);
+            return this._client.SendFaceRpcAsync<string, FaceLoginResponse>(request);
         }
 
         public async Task<FaceRpcResponse> IsLoggedIn()

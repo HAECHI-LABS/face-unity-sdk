@@ -16,23 +16,27 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Face))]
+[RequireComponent(typeof(ActionQueue))]
 public class SafeWebviewTest : MonoBehaviour
 {
     [SerializeField] private TMP_Text responseText;
 
     private Face _face;
+    private ActionQueue _actionQueue;
 
     private void Awake()
     {
         _face = this.GetComponent<Face>();
+        this._actionQueue = this.GetComponent<ActionQueue>();
     }
 
     public void OnClickLogin()
     {
-        this._face.wallet.LoginWithCredential(response =>
+        Task<FaceRpcResponse> responseTask = this._face.wallet.LoginWithCredential();
+        this._actionQueue.Enqueue(response =>
         {
             FaceLoginResponse faceLoginResponse = response.Result.ToObject<FaceLoginResponse>();
             this.responseText.text = faceLoginResponse.faceUserId;
-        });
+        }, responseTask);
     }
 }

@@ -23,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime
             FaceProviderFactory factory = new FaceProviderFactory(this.GetComponent<SafeWebviewController>());
             FaceRpcProvider client = (FaceRpcProvider)factory.CreateUnityRpcClient();
             this.dataFactory = new ContractDataFactory(new Web3(client));
-            this.wallet = new Wallet(client, this.GetComponent<ActionQueue>());
+            this.wallet = new Wallet(client);
         }
     }
 }
