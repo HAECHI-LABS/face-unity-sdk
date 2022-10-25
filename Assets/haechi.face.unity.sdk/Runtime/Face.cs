@@ -3,7 +3,6 @@ using haechi.face.unity.sdk.Runtime.Utils;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Module;
-using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.Web3;
 using UnityEngine;
@@ -13,19 +12,28 @@ namespace haechi.face.unity.sdk.Runtime
     [RequireComponent(typeof(SafeWebviewController))]
     public class Face : MonoBehaviour
     {
-        internal ContractDataFactory dataFactory;
+        [SerializeField] internal SafeWebviewController safeWebviewController;
         internal Wallet wallet;
-        internal FaceRpcProvider client;
+        private ContractDataFactory _dataFactory;
+        private FaceRpcProvider _client;
 
         public void Initialize(FaceSettings.Parameters parameters)
         {
-            FaceSettings.Init(parameters);
+            FaceSettings.NewInstance(parameters);
             
-            SafeWebviewController safeWebviewController = this.GetComponent<SafeWebviewController>();
-            FaceProviderFactory factory = new FaceProviderFactory(safeWebviewController, FaceSettings.Instance.ServerHostURL());
-            this.client = (FaceRpcProvider)factory.CreateUnityRpcClient();
-            this.dataFactory = new ContractDataFactory(new Web3(this.client));
-            this.wallet = new Wallet(this.client);
+            FaceProviderFactory factory = new FaceProviderFactory(this.safeWebviewController, FaceSettings.Instance.ServerHostURL());
+            this._client = (FaceRpcProvider)factory.CreateUnityRpcClient();
+            this._dataFactory = new ContractDataFactory(new Web3(this._client));
+            this.wallet = new Wallet(this._client);
+        }
+
+        public void Disconnect()
+        {
+            FaceSettings.Destruct();
+            
+            this._client = null;
+            this._dataFactory = null;
+            this.wallet = null;
         }
     }
 }

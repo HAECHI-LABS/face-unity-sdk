@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
-using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
@@ -48,7 +46,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             {
                 return await this._defaultRequestSender.SendRequest(request);
             }
-
+            
             return await sender.SendRequest(request);
         }
 
@@ -72,6 +70,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 this._senders = new Dictionary<FaceRpcMethod, IRequestSender>
                 {
                     {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider)},
+                    {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider)},
                     {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider)},
                     // ...

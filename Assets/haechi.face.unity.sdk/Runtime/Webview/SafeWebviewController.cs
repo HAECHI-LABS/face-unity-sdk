@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using haechi.face.unity.sdk.Runtime.Client;
-using haechi.face.unity.sdk.Runtime.Settings;
 using Nethereum.JsonRpc.Client.RpcMessages;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
@@ -22,6 +19,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 this.onDeepLinkActivated(Application.absoluteURL);
             }
         }
+        // TODO: fix method prefix with face~
 #if UNITY_IOS
         [DllImport("__Internal")]
         extern static void web3auth_launch(string url, string redirectUri, string objectName);
