@@ -15,6 +15,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         face_loggedIn,
         face_accounts,
         face_openWalletConnect,
+        face_closeIframe,
 
         eth_getBalance,
         eth_sendTransaction,
@@ -31,6 +32,15 @@ namespace haechi.face.unity.sdk.Runtime.Client
         public static FaceRpcMethod ValueOf(string value)
         {
             return EnumUtils.FindEquals<FaceRpcMethod>(value);
+        }
+
+        public static bool Is(this FaceRpcMethod self, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            return ValueOf(value).Equals(self);
         }
     }
 }

@@ -75,16 +75,16 @@ namespace haechi.face.unity.sdk.Samples.Script
         // {
         //     this.ValidateIsLoggedIn();
         //
-        //     string amount =
-        //         NumberFormatter.DecimalStringToHexadecimal(
-        //             NumberFormatter.DecimalStringToIntegerString(this.inputDesignator.amount.text, 18));
-        //     RawTransaction request = RawTransaction.Of(this.dataDesignator.loggedInAddress.text,
-        //         this.inputDesignator.to.text,
-        //         string.Format($"0x{amount}"), null);
-        //     FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
-        //     this.dataDesignator.SetResult(string.Format($"TX Hash - {response.result}"));
+        // string amount =
+        //     NumberFormatter.DecimalStringToHexadecimal(
+        //         NumberFormatter.DecimalStringToIntegerString(this.inputDesignator.amount.text, 18));
+        // RawTransaction request = RawTransaction.Of(this.dataDesignator.loggedInAddress.text,
+        //     this.inputDesignator.to.text,
+        //     string.Format($"0x{amount}"), null);
+        // FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        // this.dataDesignator.SetResult(string.Format($"TX Hash - {response.result}"));
         //
-        //     this.GetBalance();
+        // this.GetBalance();
         // }
         //
         // public async void SendErc20Transaction()
