@@ -9,10 +9,18 @@ using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
+
+    public class CloseWebviewArgs
+    {
+        public string RequestId;
+    }
+    
     public class SafeWebviewController : MonoBehaviour
     {
         private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
             = new Dictionary<string, Func<FaceRpcResponse, bool>>();
+
+        public event Action<SafeWebviewController, CloseWebviewArgs> OnCloseWebview;
 
         private void Awake()
         {
@@ -80,7 +88,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             
             if (FaceRpcMethod.face_closeIframe.Is(response.Method))
             {
-                // TODO: Call callback that webview is closed
+                this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
+                {
+                    RequestId = "TestID" // TODO: Fix me
+                });
                 return;
             }
 

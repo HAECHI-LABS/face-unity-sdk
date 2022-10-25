@@ -4,6 +4,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Utils;
+using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using TMPro;
@@ -31,6 +32,8 @@ public class SafeWebviewTest : MonoBehaviour
             Blockchain = "ETHEREUM"
         });
         this._actionQueue = this.GetComponent<ActionQueue>();
+        this._face.RegisterOnCloseWebviewEventHandler(this.OnWebviewClosed);
+        this.responseText.text = Application.identifier;
     }
 
     public void OnClickLogin()
@@ -68,5 +71,10 @@ public class SafeWebviewTest : MonoBehaviour
             Debug.Log($"Result: {result}");
             this.responseText.text = response.CastResult<string>();
         }, responseTask);
+    }
+    
+    public void OnWebviewClosed(SafeWebviewController swc, CloseWebviewArgs args)
+    {
+        Debug.Log($"Webview is closed: {args.RequestId}");
     }
 }
