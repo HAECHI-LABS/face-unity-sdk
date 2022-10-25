@@ -8,7 +8,10 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
     [Serializable]
     public class FaceLoginResponse
     {
+        [JsonProperty("faceUserId")]
         public string faceUserId;
+        
+        [JsonProperty("wallet")]
         public Wallet wallet;
         
         [JsonConstructor]
@@ -18,9 +21,16 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         
         public class Wallet
         {
+            [JsonProperty("id")]
             public string Id;
+            
+            [JsonProperty("address")]
             public string Address;
+            
+            [JsonProperty("ecdsaPublicKey")]
             public string EcdsaPublicKey;
+            
+            [JsonProperty("eddsaPublicKey")]
             public string EddsaPublicKey;
         }
     }
