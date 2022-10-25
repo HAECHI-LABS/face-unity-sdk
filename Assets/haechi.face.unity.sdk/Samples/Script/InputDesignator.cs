@@ -9,6 +9,7 @@ namespace haechi.face.unity.sdk.Samples.Script
     public class InputDesignator : MonoBehaviour
     {
         public TMP_Dropdown profileDrd, blockchainDrd;
+        public TMP_InputField apiKey;
         public TMP_InputField to, amount;
         public TMP_InputField erc1155To, erc1155TokenId, erc1155Quantity, erc1155NftAddress;
         public TMP_InputField erc20To, erc20Amount, erc20TokenAddress, erc20BalanceInquiryAddress;
@@ -16,6 +17,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         public TMP_InputField messageToSign;
 
         public TMP_Dropdown landscapeProfileDrd, landscapeBlockchainDrd;
+        public TMP_InputField landscapeApiKey;
         public TMP_InputField landscapeTo, landscapeAmount;
 
         public TMP_InputField landscapeErc1155To,
@@ -52,6 +54,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 SetDropdown(this.blockchainDrd, value);
             });
+            this.apiKey.onValueChanged.AddListener(value => { SetInputText(this.landscapeApiKey, value); });
+            this.landscapeApiKey.onValueChanged.AddListener(value => { SetInputText(this.apiKey, value); });
 
             this.to.onValueChanged.AddListener(value => { SetInputText(this.landscapeTo, value); });
             this.amount.onValueChanged.AddListener(value => { SetInputText(this.landscapeAmount, value); });
@@ -124,6 +128,14 @@ namespace haechi.face.unity.sdk.Samples.Script
                 value => { SetInputText(this.messageToSign, value); });
         }
 
+        public void EnableDropdown(bool enable)
+        {
+            this.profileDrd.interactable = enable;
+            this.landscapeProfileDrd.interactable = enable;
+            this.blockchainDrd.interactable = enable;
+            this.landscapeBlockchainDrd.interactable = enable;
+        }
+        
         private static void SetDropdown(TMP_Dropdown dropdown, int value)
         {
             dropdown.value = value;

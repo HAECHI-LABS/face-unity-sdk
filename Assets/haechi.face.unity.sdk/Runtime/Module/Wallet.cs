@@ -1,14 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
-using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Type;
-using haechi.face.unity.sdk.Runtime.Utils;
-using Nethereum.JsonRpc.Client.RpcMessages;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -21,14 +15,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
             this._client = client;
         }
 
-        public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
-        {
-            FaceRpcRequest<FaceEnvironments> rpcRequest =
-                new FaceRpcRequest<FaceEnvironments>(FaceSettings.Instance.Blockchain(), 
-                    FaceRpcMethod.wallet_initialize, env);
-            return await this._client.SendFaceRpcAsync(rpcRequest);
-        }
-
         public async Task<FaceRpcResponse> SwitchNetwork(string network)
         {
             FaceRpcRequest<int> rpcRequest = new FaceRpcRequest<int>(FaceSettings.Instance.Blockchain(),
@@ -38,8 +24,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         
         public Task<FaceRpcResponse> LoginWithCredential() 
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
-                FaceRpcMethod.face_logInSignUp);
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_logInSignUp);
             return this._client.SendFaceRpcAsync(request);
         }
 
@@ -50,11 +35,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._client.SendFaceRpcAsync(request);
         }
 
-        public async Task<FaceRpcResponse> Logout()
+        public Task<FaceRpcResponse> Logout()
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_logOut);
-            return await this._client.SendFaceRpcAsync(request);
+            return this._client.SendFaceRpcAsync(request);
         }
 
         public async Task<FaceRpcResponse> GetAddresses()
@@ -63,12 +48,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_accounts));
         }
 
-        public async Task<FaceRpcResponse> GetBalance(string account = null)
+        public async Task<FaceRpcResponse> GetBalance(string account)
         {
-            // TODO: Get address from the cache
             return await this._client.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.eth_getBalance, 
-                "0xDD9724Ecd92487633EC0191Ba7737009127D260e",
+                account,
                 "latest"));
         }
 

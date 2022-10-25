@@ -429,52 +429,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!1 &138441712158639978
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8958590935006329451}
-  - component: {fileID: 6653793963328448376}
-  m_Layer: 0
-  m_Name: Orientation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8958590935006329451
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138441712158639978}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1590378247905861819}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6653793963328448376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138441712158639978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77870856634f4986b70d52cb007242e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  portraitUI: {fileID: 6663557300575088849}
-  landscapeUI: {fileID: 3043723986052733495}
 --- !u!1 &148136272181532052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1328,7 +1282,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: StageTest
+  m_text: Dev
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e438720382caa47c499e48b8b526ab59, type: 2}
   m_sharedMaterial: {fileID: -3258796842968893497, guid: e438720382caa47c499e48b8b526ab59, type: 2}
@@ -12680,60 +12634,6 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
---- !u!1 &2765880869258496930
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1059274758478820408}
-  - component: {fileID: 2289448516338300780}
-  m_Layer: 0
-  m_Name: DataDesignator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1059274758478820408
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2765880869258496930}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1590378247905861819}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2289448516338300780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2765880869258496930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff1c339049854dd698612cd98440d787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loggedInAddress: {fileID: 3577737966675090043}
-  loggedInId: {fileID: 3024494803443360839}
-  coinBalance: {fileID: 79414736112126414}
-  result: {fileID: 4259889850135789542}
-  landscapeLoggedInAddress: {fileID: 7760142004659105749}
-  landscapeLoggedInId: {fileID: 544875287439648198}
-  landscapeCoinBalance: {fileID: 3832908876534316050}
-  landscapeResult: {fileID: 1876175104666143598}
-  erc20Balance: {fileID: 2974576375393240536}
-  landscapeErc20Balance: {fileID: 780175306520031066}
 --- !u!1 &2770577345794954074
 GameObject:
   m_ObjectHideFlags: 0
@@ -24638,6 +24538,8 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: Dev
+      m_Image: {fileID: 0}
     - m_Text: StageTest
       m_Image: {fileID: 0}
     - m_Text: StageMainnet
@@ -26740,82 +26642,6 @@ RectTransform:
   m_AnchoredPosition: {x: 54, y: -15}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &6109960278450226147
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9014304868091728909}
-  - component: {fileID: 3461556511372748217}
-  m_Layer: 0
-  m_Name: InputDesignator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9014304868091728909
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6109960278450226147}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1590378247905861819}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3461556511372748217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6109960278450226147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53b5ca1b136e460194eba0465e4f072a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  profileDrd: {fileID: 7076646451398299833}
-  blockchainDrd: {fileID: 4506902948165606833}
-  to: {fileID: 6147168659665961078}
-  amount: {fileID: 4367333565420932018}
-  erc1155To: {fileID: 3015307830651937730}
-  erc1155TokenId: {fileID: 6178550853809653456}
-  erc1155Quantity: {fileID: 4615124066793319634}
-  erc1155NftAddress: {fileID: 5670539367877542688}
-  erc20To: {fileID: 5971396146921304731}
-  erc20Amount: {fileID: 3192305879433798876}
-  erc20TokenAddress: {fileID: 4176147757236366540}
-  erc20BalanceInquiryAddress: {fileID: 5528750987763889163}
-  erc721To: {fileID: 5599194002164972534}
-  erc721TokenId: {fileID: 7875474791981021484}
-  erc721NftAddress: {fileID: 7732230401848377982}
-  messageToSign: {fileID: 7132222171164761481}
-  landscapeProfileDrd: {fileID: 1833759839559920075}
-  landscapeBlockchainDrd: {fileID: 3276954907552051304}
-  landscapeTo: {fileID: 6446728379766186224}
-  landscapeAmount: {fileID: 1141305118562595727}
-  landscapeErc1155To: {fileID: 9089725812453103828}
-  landscapeErc1155TokenId: {fileID: 3452555970671954117}
-  landscapeErc1155Quantity: {fileID: 3308971554882333620}
-  landscapeErc1155NftAddress: {fileID: 2563100852759394927}
-  landscapeErc20To: {fileID: 8423563318128189992}
-  landscapeErc20Amount: {fileID: 8674126952076304781}
-  landscapeErc20TokenAddress: {fileID: 2755181669331906979}
-  landscapeErc20BalanceInquiryAddress: {fileID: 536955208210849235}
-  landscapeErc721To: {fileID: 8764100837908869008}
-  landscapeErc721TokenId: {fileID: 4651861093819393363}
-  landscapeErc721NftAddress: {fileID: 2952058912620334529}
-  landscapeMessageToSign: {fileID: 5777190517339350035}
 --- !u!1 &6132425392961327039
 GameObject:
   m_ObjectHideFlags: 0
@@ -31354,6 +31180,8 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
+    - m_Text: Dev
+      m_Image: {fileID: 0}
     - m_Text: StageTest
       m_Image: {fileID: 0}
     - m_Text: StageMainnet
@@ -31619,6 +31447,12 @@ GameObject:
   - component: {fileID: 2433099133944683961}
   - component: {fileID: 7449822048980144266}
   - component: {fileID: 7700186165668400205}
+  - component: {fileID: 5108564810060022851}
+  - component: {fileID: 5677593703189642839}
+  - component: {fileID: 4445176531039267113}
+  - component: {fileID: 8702759602457824950}
+  - component: {fileID: 8076101497714104911}
+  - component: {fileID: 3487593086688217454}
   m_Layer: 0
   m_Name: SampleWebviewUI
   m_TagString: Untagged
@@ -31640,9 +31474,6 @@ Transform:
   m_Children:
   - {fileID: 8511378883577958271}
   - {fileID: 5934527160132963128}
-  - {fileID: 1059274758478820408}
-  - {fileID: 9014304868091728909}
-  - {fileID: 8958590935006329451}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -31658,9 +31489,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: def69e5530ce4b468548adda5eacf3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  webviewUri: https://native-webview.netlify.app
-  dataDesignator: {fileID: 2289448516338300780}
-  inputDesignator: {fileID: 3461556511372748217}
+  dataDesignator: {fileID: 8702759602457824950}
+  inputDesignator: {fileID: 8076101497714104911}
+  face: {fileID: 5677593703189642839}
+  actionQueue: {fileID: 3487593086688217454}
 --- !u!114 &7449822048980144266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31706,6 +31538,125 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &5108564810060022851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18dcc2121281484caa37226304f3f024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5677593703189642839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739618d557f747faa8b1a99b1429eb3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  safeWebviewController: {fileID: 5108564810060022851}
+--- !u!114 &4445176531039267113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77870856634f4986b70d52cb007242e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portraitUI: {fileID: 6663557300575088849}
+  landscapeUI: {fileID: 3043723986052733495}
+--- !u!114 &8702759602457824950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1c339049854dd698612cd98440d787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loggedInAddress: {fileID: 3577737966675090043}
+  loggedInId: {fileID: 3024494803443360839}
+  coinBalance: {fileID: 79414736112126414}
+  result: {fileID: 4259889850135789542}
+  landscapeLoggedInAddress: {fileID: 7760142004659105749}
+  landscapeLoggedInId: {fileID: 544875287439648198}
+  landscapeCoinBalance: {fileID: 3832908876534316050}
+  landscapeResult: {fileID: 1876175104666143598}
+  erc20Balance: {fileID: 2974576375393240536}
+  landscapeErc20Balance: {fileID: 780175306520031066}
+--- !u!114 &8076101497714104911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53b5ca1b136e460194eba0465e4f072a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileDrd: {fileID: 7076646451398299833}
+  blockchainDrd: {fileID: 4506902948165606833}
+  apiKey: {fileID: 5826746010354211991}
+  to: {fileID: 6147168659665961078}
+  amount: {fileID: 4367333565420932018}
+  erc1155To: {fileID: 3015307830651937730}
+  erc1155TokenId: {fileID: 6178550853809653456}
+  erc1155Quantity: {fileID: 4615124066793319634}
+  erc1155NftAddress: {fileID: 5670539367877542688}
+  erc20To: {fileID: 5971396146921304731}
+  erc20Amount: {fileID: 3192305879433798876}
+  erc20TokenAddress: {fileID: 4176147757236366540}
+  erc20BalanceInquiryAddress: {fileID: 5528750987763889163}
+  erc721To: {fileID: 5599194002164972534}
+  erc721TokenId: {fileID: 7875474791981021484}
+  erc721NftAddress: {fileID: 7732230401848377982}
+  messageToSign: {fileID: 7132222171164761481}
+  landscapeProfileDrd: {fileID: 1833759839559920075}
+  landscapeBlockchainDrd: {fileID: 3276954907552051304}
+  landscapeApiKey: {fileID: 3553157728327137382}
+  landscapeTo: {fileID: 6446728379766186224}
+  landscapeAmount: {fileID: 1141305118562595727}
+  landscapeErc1155To: {fileID: 9089725812453103828}
+  landscapeErc1155TokenId: {fileID: 3452555970671954117}
+  landscapeErc1155Quantity: {fileID: 3308971554882333620}
+  landscapeErc1155NftAddress: {fileID: 2563100852759394927}
+  landscapeErc20To: {fileID: 8423563318128189992}
+  landscapeErc20Amount: {fileID: 8674126952076304781}
+  landscapeErc20TokenAddress: {fileID: 2755181669331906979}
+  landscapeErc20BalanceInquiryAddress: {fileID: 536955208210849235}
+  landscapeErc721To: {fileID: 8764100837908869008}
+  landscapeErc721TokenId: {fileID: 4651861093819393363}
+  landscapeErc721NftAddress: {fileID: 2952058912620334529}
+  landscapeMessageToSign: {fileID: 5777190517339350035}
+--- !u!114 &3487593086688217454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ace99b7140489aa68b4bcb7d89e61c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7370258799497361838
 GameObject:
   m_ObjectHideFlags: 0

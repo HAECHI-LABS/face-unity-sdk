@@ -1,39 +1,39 @@
+using System;
+using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
+using haechi.face.unity.sdk.Runtime.Client;
+using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Utils;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
     public class FaceUnity : MonoBehaviour
     {
-        [SerializeField] internal string webviewUri;
-
-        public DataDesignator dataDesignator;
-        public InputDesignator inputDesignator;
-        private Face _face;
-
-        private void Awake()
-        {
-            this._face = this.GetComponent<Face>();
-        }
-
+        [SerializeField] internal DataDesignator dataDesignator;
+        [SerializeField] internal InputDesignator inputDesignator;
+        [SerializeField] internal Face face;
+        [SerializeField] internal ActionQueue actionQueue;
+        
         private void Start()
         {
             Application.targetFrameRate = 60;
         }
+        
+        public void InitializeFace()
+        {
+            this.face.Initialize(new FaceSettings.Parameters
+            {
+                ApiKey = this.inputDesignator.apiKey.text,
+                Environment = this.inputDesignator.profileDrd.captionText.text,
+                Blockchain = this.inputDesignator.blockchainDrd.captionText.text
+            });
+            
+            this.inputDesignator.EnableDropdown(false);
+        }
 
-        // /**
-        //  * Should initialize Face first for webview client to use Face SDK
-        //  */
-        // public async Task InitializeFace()
-        // {
-        //     string apiKey = ""; // TODO: receive from text field
-        //     string blockchain = this.inputDesignator.blockchainDrd.captionText.text;
-        //     string profile = this.inputDesignator.profileDrd.captionText.text;
-        //     FaceEnvironments environments = FaceEnvironments.Of(NetworkResolver.GetNetwork(blockchain, profile), profile, apiKey);
-        //     await this._face.wallet.InitializeFaceSdk(environments);
-        // }
-        //
-        // public async void SwitchNetwork()
+        // public void SwitchNetwork()
         // {
         //     await this.InitializeFace();
         //
@@ -43,34 +43,48 @@ namespace haechi.face.unity.sdk.Samples.Script
         //
         //     // this.GetBalance();
         // }
-        //
-        // public async void LoginAndGetBalance()
-        // {
-        //     await this.InitializeFace();
-        //
-        //     FaceRpcResponse loginResponse = await this._face.wallet.LoginWithCredential();
-        //     this.dataDesignator.SetLoggedInId(((FaceLoginResponse)loginResponse.result).faceUserId);
-        //
-        //     this.GetMainAccount();
-        //     this.GetBalance();
-        // }
-        //
-        // public async void Logout()
-        // {
-        //     this.ValidateIsLoggedIn();
-        //
-        //     await this._face.wallet.Logout();
-        //     this.dataDesignator.Initialize();
-        // }
-        //
-        // public async Task GetBalance()
-        // {
-        //     this.ValidateIsLoggedIn();
-        //
-        //     FaceRpcResponse response = await this._face.wallet.GetBalance(this.dataDesignator.loggedInAddress.text);
-        //     this.dataDesignator.SetCoinBalance(NumberFormatter.DivideHexWithDecimals(response.result.ToString(), 18));
-        // }
-        //
+        
+        public void LoginAndGetBalance()
+        {
+            // TODO: this is temporal code, so remove after initialize button ui created
+            this.InitializeFace();
+            
+            Task<FaceRpcResponse> responseTask = this.face.wallet.LoginWithCredential();
+            this.actionQueue.Enqueue(response =>
+            {
+                FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
+                this.dataDesignator.SetLoggedInId(faceLoginResponse.faceUserId);
+                this.dataDesignator.SetLoggedInAddress(faceLoginResponse.wallet.Address);
+            }, responseTask);
+        }
+        
+        public void Logout()
+        {
+            Task<FaceRpcResponse> responseTask = this.face.wallet.Logout();
+            this.actionQueue.Enqueue(response =>
+            {
+                string result = JsonConvert.SerializeObject(response);
+                Debug.Log($"Result: {result}");
+                this.dataDesignator.Initialize();
+                this.inputDesignator.EnableDropdown(true);
+                this.face.Disconnect();
+            }, responseTask);
+        }
+
+        public void GetBalance()
+        {
+            this.ValidateIsLoggedIn();
+            
+            Task<FaceRpcResponse> responseTask = this.face.wallet.GetBalance(this.dataDesignator.loggedInAddress.text);
+            this.actionQueue.Enqueue(response =>
+            {
+                string result = JsonConvert.SerializeObject(response);
+                Debug.Log($"Result: {result}");
+                this.dataDesignator.SetCoinBalance(NumberFormatter.DivideHexWithDecimals(response.CastResult<string>(), 18));
+                response.CastResult<string>();
+            }, responseTask);
+        }
+
         // public async void SendNativeCoinTransaction()
         // {
         //     this.ValidateIsLoggedIn();
@@ -177,14 +191,15 @@ namespace haechi.face.unity.sdk.Samples.Script
         //     FaceRpcResponse response = await this._face.wallet.Call(request);
         //     return int.Parse(NumberFormatter.HexadecimalToDecimal(response.result.ToString()).ToStringInvariant());
         // }
-        //
-        // private void ValidateIsLoggedIn()
-        // {
-        //     string loggedInAddress = this.dataDesignator.loggedInAddress.text;
-        //     if (String.IsNullOrEmpty(loggedInAddress))
-        //     {
-        //         throw new UnauthorizedAccessException("Not logged in yet.");
-        //     }
-        // }
+
+        private void ValidateIsLoggedIn()
+        {
+            string loggedInId = this.dataDesignator.loggedInId.text;
+            string loggedInAddress = this.dataDesignator.loggedInAddress.text;
+            if (String.IsNullOrEmpty(loggedInAddress) || String.IsNullOrEmpty(loggedInId))
+            {
+                throw new UnauthorizedAccessException("Not logged in yet.");
+            }
+        }
     }
 }

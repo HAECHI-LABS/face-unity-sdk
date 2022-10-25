@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
-using UnityEngine;
 
-namespace haechi.face.unity.sdk.Runtime.Settings
+namespace haechi.face.unity.sdk.Runtime
 {
     public class FaceSettings
     {
@@ -18,9 +17,18 @@ namespace haechi.face.unity.sdk.Runtime.Settings
 
         public static FaceSettings Instance => instance;
 
-        public static void Init(Parameters parameters)
+        public static void NewInstance(Parameters parameters)
         {
+            if (instance != null)
+            {
+                throw new FaceException(ErrorCodes.ALREADY_INITIALIZED);
+            }
             instance = new FaceSettings(parameters);
+        }
+
+        public static void Destruct()
+        {
+            instance = null;
         }
 
         private FaceSettings(Parameters parameters)
@@ -30,19 +38,9 @@ namespace haechi.face.unity.sdk.Runtime.Settings
 
         private Parameters _parameters;
         
-        public void Environment(string env)
-        {
-            this._parameters.Environment = env;
-        }
-
         public Profile Environment()
         {
             return Profiles.ValueOf(this._parameters.Environment);
-        }
-
-        public void Blockchain(string blockchain)
-        {
-            this._parameters.Blockchain = blockchain;
         }
 
         public string ApiKey()
@@ -58,7 +56,6 @@ namespace haechi.face.unity.sdk.Runtime.Settings
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
         {
             { Profile.Dev, "https://app.dev.facewallet.xyz" },
-            // TODO: Setup other environment webview host
         };
 
         private readonly Dictionary<Profile, string> _serverHostMap = new Dictionary<Profile, string>

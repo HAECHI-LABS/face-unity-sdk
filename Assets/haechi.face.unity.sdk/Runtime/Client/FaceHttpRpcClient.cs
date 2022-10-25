@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using haechi.face.unity.sdk.Runtime.Settings;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -42,8 +41,10 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 httpResponseMessage.EnsureSuccessStatusCode();
                 using (StreamReader reader1 = new StreamReader(await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false)))
                 {
-                    using (JsonTextReader reader2 = new JsonTextReader((TextReader) reader1))
+                    using (JsonTextReader reader2 = new JsonTextReader(reader1))
+                    {
                         rpcResponseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<FaceRpcResponse>((JsonReader) reader2);
+                    }
                 }
             }
             catch (TaskCanceledException ex)

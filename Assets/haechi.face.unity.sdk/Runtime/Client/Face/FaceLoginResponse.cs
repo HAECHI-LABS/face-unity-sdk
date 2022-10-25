@@ -1,6 +1,5 @@
 using System;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client.Face
 {

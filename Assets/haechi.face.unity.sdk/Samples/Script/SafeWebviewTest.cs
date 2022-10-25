@@ -2,15 +2,10 @@ using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
-using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Utils;
-using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Scripting;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Face))]
 [RequireComponent(typeof(ActionQueue))]
@@ -61,7 +56,7 @@ public class SafeWebviewTest : MonoBehaviour
 
     public void OnClickBalance()
     {
-        Task<FaceRpcResponse> responseTask = this._face.wallet.GetBalance();
+        Task<FaceRpcResponse> responseTask = this._face.wallet.GetBalance("0x8cF9491DAF6CB1bf81ee86e2e58525BEDbcf516b");
         this._actionQueue.Enqueue(response =>
         {
             string result = JsonConvert.SerializeObject(response);
