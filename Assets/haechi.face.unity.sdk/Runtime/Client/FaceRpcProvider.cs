@@ -11,7 +11,6 @@ using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
 using UnityEngine;
-using JsonConvert = Unity.Plastic.Newtonsoft.Json.JsonConvert;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -74,6 +73,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 {
                     {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider)},
                     {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
+                    {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider)},
                     // ...
                 };
             }
@@ -107,7 +107,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             {
                 TaskCompletionSource<FaceRpcResponse> promise = new TaskCompletionSource<FaceRpcResponse>();
             
-                this._provider._webview.SendMessage(request.Id.ToString(), request, response => promise.TrySetResult(response));
+                this._provider._webview.SendMessage(request, response => promise.TrySetResult(response));
             
                 return await promise.Task;
             }

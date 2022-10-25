@@ -3,12 +3,13 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Settings;
+using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityEngine.UI;
-using JsonConvert = Unity.Plastic.Newtonsoft.Json.JsonConvert;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Face))]
@@ -37,8 +38,24 @@ public class SafeWebviewTest : MonoBehaviour
         Task<FaceRpcResponse> responseTask = this._face.wallet.LoginWithCredential();
         this._actionQueue.Enqueue(response =>
         {
-            FaceLoginResponse faceLoginResponse = response.Result.ToObject<FaceLoginResponse>();
-            this.responseText.text = faceLoginResponse.faceUserId;
+            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
+            this.responseText.text = JsonConvert.SerializeObject(faceLoginResponse);
+        }, responseTask);
+    }
+
+    public void OnClickSendNativeToken()
+    {
+        string amount =
+            NumberFormatter.DecimalStringToHexadecimal(
+                NumberFormatter.DecimalStringToIntegerString("0.0001", 18));
+        RawTransaction request = new RawTransaction("0xDD9724Ecd92487633EC0191Ba7737009127D260e",
+            "0xb64DEf0FC5B70E256130Eb91f36B628d38b223C7",
+            string.Format($"0x{amount}"), null);
+        Task<FaceRpcResponse> responseTask = this._face.wallet.SendTransaction(request);
+        this._actionQueue.Enqueue(response =>
+        {
+            Debug.Log($"Result: {response}");
+            // this.responseText.text = response.CastResult<string>();
         }, responseTask);
     }
 

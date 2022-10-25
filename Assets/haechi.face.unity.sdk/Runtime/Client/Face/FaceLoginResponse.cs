@@ -1,16 +1,27 @@
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client.Face
 {
+    [JsonObject]
     [Serializable]
     public class FaceLoginResponse
     {
-        [SerializeField] internal string faceUserId;
-
-        public FaceLoginResponse(string faceUserId)
+        public string faceUserId;
+        public Wallet wallet;
+        
+        [JsonConstructor]
+        public FaceLoginResponse()
         {
-            this.faceUserId = faceUserId;
+        }
+        
+        public class Wallet
+        {
+            public string Id;
+            public string Address;
+            public string EcdsaPublicKey;
+            public string EddsaPublicKey;
         }
     }
 }

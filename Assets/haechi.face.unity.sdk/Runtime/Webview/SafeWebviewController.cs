@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Settings;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
@@ -49,11 +50,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             this._handleDeepLink(new Uri(url));
         }
 
-        // TODO: remove `id` parameter. Get ID from `message`
-        public void SendMessage(string id, RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
+        public void SendMessage(RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
         {
-            Debug.Log($"Register Handler with ID: {id}");
-            this._handlerDictionary.Add(id, callbackHandler);
+            Debug.Log($"Register Handler with ID: {message.Id}");
+            this._handlerDictionary.Add(message.Id.ToString(), callbackHandler);
             
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
             {
@@ -76,6 +76,13 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         {
             Debug.Log($"URI Receive: {uri}");
             FaceRpcResponse response = SafeWebviewProtocol.DecodeQueryParams(uri);
+            Debug.Log($"Response received: {response}");
+            
+            if (FaceRpcMethod.face_closeIframe.Is(response.Method))
+            {
+                // TODO: Call callback that webview is closed
+                return;
+            }
 
             if (!this._handlerDictionary.TryGetValue(response.Id.ToString(), out Func<FaceRpcResponse, bool> callback))
             {
@@ -83,7 +90,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 return;
             }
 
-            callback(response);
+            callback(response); 
             this._handlerDictionary.Remove(response.Id.ToString());
         }
     }
