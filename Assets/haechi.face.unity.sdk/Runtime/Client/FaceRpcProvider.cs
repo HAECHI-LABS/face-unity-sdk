@@ -8,7 +8,6 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -16,16 +15,16 @@ namespace haechi.face.unity.sdk.Runtime.Client
     {
         private readonly SafeWebviewController _webview;
 
-        private readonly FaceHttpRpcClient _httpRpcClient;
+        private readonly FaceClient _client;
 
         private readonly MethodHandlers _methodHandlers;
 
         private readonly IRequestSender _defaultRequestSender;
 
-        public FaceRpcProvider(SafeWebviewController safeWebviewController, Uri uri)
+        public FaceRpcProvider(SafeWebviewController safeWebviewController)
         {
             this._webview = safeWebviewController;
-            this._httpRpcClient = new FaceHttpRpcClient(uri, new HttpClient());
+            this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
             this._methodHandlers = new MethodHandlers(this);
             this._defaultRequestSender = new WebviewRequestSender(this);
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
@@ -123,7 +122,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-                FaceRpcResponse response = await this._provider._httpRpcClient.SendRequest(request, "/api/v1/rpc");
+                FaceRpcResponse response = await this._provider._client.SendRpcRequest(request, "/api/v1/rpc");
                 promise.TrySetResult(response);
                 return await promise.Task;
             }

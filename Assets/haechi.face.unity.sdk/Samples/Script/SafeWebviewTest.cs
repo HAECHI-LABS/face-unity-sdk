@@ -64,4 +64,16 @@ public class SafeWebviewTest : MonoBehaviour
             this.responseText.text = response.CastResult<string>();
         }, responseTask);
     }
+
+    public void OnClickGetTransactionId()
+    {
+        string requestId = "e08cba30-5756-4536-8ca2-8f8710d331a4";
+        Task<TransactionRequestId> responseTask = this._face.wallet.GetTransactionRequestId(requestId);
+        this._actionQueue.Enqueue(transactionRequestId =>
+        {
+            string result = JsonConvert.SerializeObject(transactionRequestId);
+            Debug.Log($"Result: {result}");
+            this.responseText.text = result;
+        }, responseTask);
+    }
 }

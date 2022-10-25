@@ -1,5 +1,3 @@
-using System;
-using haechi.face.unity.sdk.Runtime.Utils;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Module;
@@ -21,7 +19,7 @@ namespace haechi.face.unity.sdk.Runtime
         {
             FaceSettings.NewInstance(parameters);
             
-            FaceProviderFactory factory = new FaceProviderFactory(this.safeWebviewController, FaceSettings.Instance.ServerHostURL());
+            FaceProviderFactory factory = new FaceProviderFactory(this.safeWebviewController);
             this._client = (FaceRpcProvider)factory.CreateUnityRpcClient();
             this._dataFactory = new ContractDataFactory(new Web3(this._client));
             this.wallet = new Wallet(this._client);

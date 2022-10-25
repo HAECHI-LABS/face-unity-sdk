@@ -7,10 +7,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
 {
     public class FaceProviderFactory : IUnityRpcRequestClientFactory
     {
-        public FaceProviderFactory(SafeWebviewController safeWebviewController, string uri)
+        public FaceProviderFactory(SafeWebviewController safeWebviewController)
         {
             this._safeWebviewController = safeWebviewController;
-            this._uri = new Uri(uri);
         }
 
         private SafeWebviewController _safeWebviewController { get; }
@@ -18,7 +17,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         public IUnityRpcRequestClient CreateUnityRpcClient()
         {
-            return new FaceRpcProvider(this._safeWebviewController, this._uri);
+            return new FaceRpcProvider(this._safeWebviewController);
         }
     }
 }
