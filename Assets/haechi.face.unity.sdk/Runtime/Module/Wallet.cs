@@ -1,18 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Numerics;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
-using haechi.face.unity.sdk.Runtime.Contract;
-using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Type;
-using Nethereum.ABI.FunctionEncoding;
-using Nethereum.Contracts;
-using Nethereum.Contracts.Services;
-using Nethereum.Hex.HexTypes;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -108,7 +100,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<RawTransaction> rpcRequest =
                 new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
-            return await this._client.SendFaceRpcAsync(rpcRequest);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
     }
 }

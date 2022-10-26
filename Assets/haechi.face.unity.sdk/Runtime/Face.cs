@@ -10,10 +10,11 @@ namespace haechi.face.unity.sdk.Runtime
     [RequireComponent(typeof(SafeWebviewController))]
     public class Face : MonoBehaviour
     {
-        [SerializeField] internal SafeWebviewController safeWebviewController;
         internal Wallet wallet;
-        internal WalletProxy walletProxy;
         internal FaceRpcProvider provider;
+        internal ContractDataFactory dataFactory;
+        
+        private WalletProxy _walletProxy;
 
         public void Initialize(FaceSettings.Parameters parameters)
         {
@@ -21,20 +22,29 @@ namespace haechi.face.unity.sdk.Runtime
             
             SafeWebviewController safeWebviewController = this.GetComponent<SafeWebviewController>();
             
-            this.walletProxy = new WalletProxy();
+            this._walletProxy = new WalletProxy();
             
             // Inject walletProxy instead of real Wallet. Because Wallet still not instantiated
             FaceProviderFactory factory = new FaceProviderFactory(safeWebviewController, 
-                FaceSettings.Instance.ServerHostURL(), this.walletProxy);
+                FaceSettings.Instance.ServerHostURL(), this._walletProxy);
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
             
             Web3 web3 = new Web3(this.provider);
-            this.wallet = new Wallet(this.provider, web3);
+            this.wallet = new Wallet(this.provider);
             
             // Now register real wallet
-            this.walletProxy.Register(this.wallet);
+            this._walletProxy.Register(this.wallet);
             this.dataFactory = new ContractDataFactory(web3);
             
+        }
+        
+        public void Disconnect()
+        {
+            FaceSettings.Destruct();
+            
+            this.provider = null;
+            this.dataFactory = null;
+            this.wallet = null;
         }
     }
 }

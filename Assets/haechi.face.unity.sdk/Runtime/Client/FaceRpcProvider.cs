@@ -8,7 +8,6 @@ using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Module;
-using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.ABI;
 using Nethereum.ABI.FunctionEncoding;
@@ -149,7 +148,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         public virtual async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
         {
             TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-            FaceRpcResponse response = await this._provider.faceClient().SendRequest(request, "/api/v1/rpc");
+            FaceRpcResponse response = await this._provider.faceClient().SendRpcRequest(request, "/api/v1/rpc");
             promise.TrySetResult(response);
             return await promise.Task;
         }
@@ -213,7 +212,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         
             if (this._isNativeTokenTransferTransaction(transaction))
             {
-                HexBigInteger balance = new HexBigInteger((await this._wallet.GetBalance()).CastResult<string>());
+                HexBigInteger balance = new HexBigInteger((await this._wallet.GetBalance(transaction.from)).CastResult<string>());
                 BigInteger diff = BigInteger.Subtract(balance.Value, new HexBigInteger(transaction.value));
                 if (diff.CompareTo(BigInteger.Zero) < 0)
                 {
