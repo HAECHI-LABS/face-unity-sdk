@@ -19,6 +19,7 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -127,7 +128,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
                 this._webview.OnCloseWebview += OnCloseWebview;
                 this._provider._webview.SendMessage(request, response => promise.TrySetResult(response));
-            
+                
                 return await promise.Task;
             }
         }

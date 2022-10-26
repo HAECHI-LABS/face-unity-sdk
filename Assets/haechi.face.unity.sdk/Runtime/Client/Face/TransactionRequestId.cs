@@ -20,5 +20,13 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         
         [JsonProperty("deletedAt")]
         public DateTime DeletedAt;
+
+        [JsonIgnore]
+        public string Error;
+
+        public TransactionRequestId(string error)
+        {
+            this.Error = error;
+        }
     }
 }

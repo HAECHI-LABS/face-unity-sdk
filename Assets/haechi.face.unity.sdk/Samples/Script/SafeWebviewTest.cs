@@ -44,13 +44,13 @@ public class SafeWebviewTest : MonoBehaviour
         string amount =
             NumberFormatter.DecimalStringToHexadecimal(
                 NumberFormatter.DecimalStringToIntegerString("0.0001", 18));
-        RawTransaction request = new RawTransaction("0xDD9724Ecd92487633EC0191Ba7737009127D260e",
+        RawTransaction request = new RawTransaction("0x27f3bfc6f7f886b5cb64f79b4031a4ab56fcb814",
             "0xb64DEf0FC5B70E256130Eb91f36B628d38b223C7",
             string.Format($"0x{amount}"), null);
         // Sample App에서는 async/await 쓰지 말자고 했지만 closeIframe 되었을 때 다음으로 잘 넘어가는지
         // 확인해보기 위해서 추가
-        FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
-        Debug.Log($"CALLED: {response.Request}");
+        // FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        // Debug.Log($"CALLED: {response.Request}");
         // this._actionQueue.Enqueue(response =>
         // {
         //     Debug.Log($"Result: {response}");
