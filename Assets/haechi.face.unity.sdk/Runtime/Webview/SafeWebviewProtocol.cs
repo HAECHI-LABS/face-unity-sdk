@@ -29,18 +29,28 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"blockchain={parameters.Blockchain}";
         }
 
-        public static FaceRpcResponse DecodeQueryParams(Uri uri)
+        public static FaceRpcContext DecodeQueryParams(Uri uri)
         {
             Dictionary<string, string> queryParameters = _parseQuery(uri.Query);
-            if (!queryParameters.TryGetValue("response", out string encodedResponse))
+            bool isResponse = queryParameters.ContainsKey("response");
+            bool isRequest = queryParameters.ContainsKey("request");
+            if ((!isResponse && !isRequest) || (isRequest && isResponse))
             {
                 throw new InvalidWebviewMessageException();
             }
 
-            string responseData = HttpUtility.UrlDecode(encodedResponse);
+            return isResponse ? 
+                new FaceRpcContext(_deserializeData<FaceRpcResponse>(queryParameters, "response")) : 
+                new FaceRpcContext(_deserializeData<WebviewRpcRequest>(queryParameters, "request"));
+        }
+
+        private static T _deserializeData<T>(IReadOnlyDictionary<string, string> queryParameters, string key)
+        {
+            queryParameters.TryGetValue(key, out string encodedData);
+            string data = HttpUtility.UrlDecode(encodedData);
             try
             {
-                return JsonConvert.DeserializeObject<FaceRpcResponse>(responseData);
+                return JsonConvert.DeserializeObject<T>(data);
             }
             catch (JsonException e)
             {

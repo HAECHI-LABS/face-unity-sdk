@@ -3,6 +3,7 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Utils;
+using Nethereum.Web3;
 using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
@@ -23,7 +24,7 @@ public class SafeWebviewTest : MonoBehaviour
         {
             ApiKey = "bx89CFIGB12EYcSjcAmgeBRViLr4QSwfce/kCfLj7FLa9w83fh5sd7qGTjv5w8ib9Iq9jXERZD8oxAkknroVQCjlulivVgeLn7wI6Pg0hQiAKWG9GSpvcXpqUpkL1bzNZKNfZNulMlxws6OkVFqbmUHoX4VF1TXrDSZeQetPjK4u4pJH/NosXFn1CaVFCHneM7wc/9ry9p0MmNhXe5t9Nai6UD4JlLyheW8MIuxqTXU=",
             Environment = "Dev",
-            Blockchain = "ETHEREUM"
+            Blockchain = "POLYGON"
         });
         this._actionQueue = this.GetComponent<ActionQueue>();
     }
@@ -38,7 +39,7 @@ public class SafeWebviewTest : MonoBehaviour
         }, responseTask);
     }
 
-    public void OnClickSendNativeToken()
+    public async void OnClickSendNativeToken()
     {
         string amount =
             NumberFormatter.DecimalStringToHexadecimal(
@@ -46,12 +47,15 @@ public class SafeWebviewTest : MonoBehaviour
         RawTransaction request = new RawTransaction("0xDD9724Ecd92487633EC0191Ba7737009127D260e",
             "0xb64DEf0FC5B70E256130Eb91f36B628d38b223C7",
             string.Format($"0x{amount}"), null);
-        Task<FaceRpcResponse> responseTask = this._face.wallet.SendTransaction(request);
-        this._actionQueue.Enqueue(response =>
-        {
-            Debug.Log($"Result: {response}");
-            // this.responseText.text = response.CastResult<string>();
-        }, responseTask);
+        // Sample App에서는 async/await 쓰지 말자고 했지만 closeIframe 되었을 때 다음으로 잘 넘어가는지
+        // 확인해보기 위해서 추가
+        FaceRpcResponse response = await this._face.wallet.SendTransaction(request);
+        Debug.Log($"CALLED: {response.Request}");
+        // this._actionQueue.Enqueue(response =>
+        // {
+        //     Debug.Log($"Result: {response}");
+        //     // this.responseText.text = response.CastResult<string>();
+        // }, responseTask);
     }
     
     public void OnClickBalance()

@@ -42,6 +42,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this.Method = method;
         }
 
+        public FaceRpcResponse(WebviewRpcRequest request)
+        {
+            this.Request = request;
+        }
+
         public T CastResult<T>()
         {
             return (T) Result.ToObject(typeof(T));
@@ -66,5 +71,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             return $"Id: {Id}, From: {From}, To: {To}, Result: {Result}, Method: {Method}";
         }
+
+        public WebviewRpcRequest Request { get; private set; }
     }
 }

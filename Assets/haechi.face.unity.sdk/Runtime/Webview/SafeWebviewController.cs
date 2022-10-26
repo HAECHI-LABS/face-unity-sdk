@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using haechi.face.unity.sdk.Runtime.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
     {
         private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
             = new Dictionary<string, Func<FaceRpcResponse, bool>>();
+
+        public event Action<SafeWebviewController, CloseWebviewArgs> OnCloseWebview;
 
         private void Awake()
         {
@@ -73,15 +76,23 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         private void _handleDeepLink(Uri uri)
         {
             Debug.Log($"URI Receive: {uri}");
-            FaceRpcResponse response = SafeWebviewProtocol.DecodeQueryParams(uri);
-            Debug.Log($"Response received: {response}");
             
-            if (FaceRpcMethod.face_closeIframe.Is(response.Method))
+            FaceRpcContext context = SafeWebviewProtocol.DecodeQueryParams(uri);
+            Debug.Log($"Data received from webview: {context}");
+            
+            if (context.WebviewRequest())
             {
-                // TODO: Call callback that webview is closed
-                return;
+                if (FaceRpcMethod.face_closeIframe.Is(context.Request.Method))
+                {
+                    this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
+                    {
+                        Response = new FaceRpcResponse(context.Request)
+                    });
+                    return;
+                }    
             }
 
+            FaceRpcResponse response = context.Response;
             if (!this._handlerDictionary.TryGetValue(response.Id.ToString(), out Func<FaceRpcResponse, bool> callback))
             {
                 Debug.Log($"Cannot find handler by id: {response.Id}");
@@ -91,5 +102,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             callback(response); 
             this._handlerDictionary.Remove(response.Id.ToString());
         }
+    }
+    
+    public class CloseWebviewArgs
+    {
+        public FaceRpcResponse Response;
     }
 }
