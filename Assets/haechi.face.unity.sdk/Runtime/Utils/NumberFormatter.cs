@@ -4,7 +4,7 @@ using Nethereum.Util;
 
 namespace haechi.face.unity.sdk.Runtime.Utils
 {
-    public class NumberFormatter
+    public static class NumberFormatter
     {
         public static string DecimalStringToIntegerString(string decimalNumber, int decimals)
         {
