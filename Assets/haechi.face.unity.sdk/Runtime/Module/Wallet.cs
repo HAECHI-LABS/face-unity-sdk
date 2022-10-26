@@ -60,7 +60,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task<FaceRpcResponse> GetBalance(string account)
         {
-            // TODO: Get address from the cache
             return await this._provider.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.eth_getBalance, 
                 account,

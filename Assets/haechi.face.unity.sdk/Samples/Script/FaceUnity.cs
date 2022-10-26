@@ -30,15 +30,13 @@ namespace haechi.face.unity.sdk.Samples.Script
                 Environment = this.inputDesignator.profileDrd.captionText.text,
                 Blockchain = this.inputDesignator.blockchainDrd.captionText.text
             });
-
-            this.inputDesignator.EnableDropdown(false);
+            
+            this.dataDesignator.SetLoginInstruction();
+            this.inputDesignator.SetWalletConnectedInputStatus();
         }
 
         public void LoginAndGetBalance()
         {
-            // TODO: this is temporal code, so remove after initialize button ui created
-            this.InitializeFace();
-
             Task<LoginResult> responseTask = this.LoginAndGetBalanceAsync();
 
             this.actionQueue.Enqueue(response =>
@@ -46,6 +44,9 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetLoggedInId(response.userId);
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
+                
+                this.dataDesignator.SetLogoutInstruction();
+                this.inputDesignator.SetLoggedInInputStatus();
             }, responseTask);
         }
 
@@ -67,8 +68,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 string result = JsonConvert.SerializeObject(response);
                 Debug.Log($"Result: {result}");
-                this.dataDesignator.Initialize();
-                this.inputDesignator.EnableDropdown(true);
+                this.dataDesignator.InitializeDataStatus();
+                this.inputDesignator.InitializeInputStatus();
                 this.face.Disconnect();
             }, responseTask);
         }

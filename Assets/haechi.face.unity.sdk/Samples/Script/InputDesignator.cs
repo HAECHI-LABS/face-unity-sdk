@@ -3,11 +3,29 @@ using System.Linq;
 using haechi.face.unity.sdk.Runtime.Type;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
     public class InputDesignator : MonoBehaviour
     {
+        [SerializeField] internal Button initializeBtn, loginBtn, logoutBtn, getBalanceBtn;
+        [SerializeField] internal Button landscapeInitializeBtn, landscapeLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
+
+        [SerializeField] internal Button sendNativeCoinTransactionBtn,
+            sendErc20TransactionBtn,
+            getErc20BalanceBtn,
+            sendErc721TransactionBtn,
+            sendErc1155TransactionBtn,
+            signMessageBtn;
+        
+        [SerializeField] internal Button landscapeSendNativeCoinTransactionBtn,
+            landscapeSendErc20TransactionBtn,
+            landscapeGetErc20BalanceBtn,
+            landscapeSendErc721TransactionBtn,
+            landscapeSendErc1155TransactionBtn,
+            landscapeSignMessageBtn;
+        
         public TMP_Dropdown profileDrd, blockchainDrd;
         public TMP_InputField apiKey;
         public TMP_InputField to, amount;
@@ -144,12 +162,100 @@ namespace haechi.face.unity.sdk.Samples.Script
                 value => { SetInputText(this.messageToSign, value); });
         }
 
-        public void EnableDropdown(bool enable)
+        public void InitializeInputStatus()
+        {
+            this.EnableConnectWalletSection(true);
+            this.EnableLogin(false);
+            this.EnableAuthSection(false);
+            this.EnableTestSection(false);
+        }
+
+        public void SetWalletConnectedInputStatus()
+        {
+            this.EnableConnectWalletSection(false);
+            this.EnableLogin(true);
+        }
+        
+        public void SetLoggedInInputStatus()
+        {
+            this.EnableLogin(false);
+            this.EnableAuthSection(true);
+            this.EnableTestSection(true);
+        }
+        
+        private void EnableConnectWalletSection(bool enable)
         {
             this.profileDrd.interactable = enable;
             this.landscapeProfileDrd.interactable = enable;
             this.blockchainDrd.interactable = enable;
             this.landscapeBlockchainDrd.interactable = enable;
+            this.apiKey.interactable = enable;
+            this.landscapeApiKey.interactable = enable;
+            this.initializeBtn.interactable = enable;
+            this.landscapeInitializeBtn.interactable = enable;
+        }
+
+        private void EnableLogin(bool enable)
+        {
+            this.loginBtn.interactable = enable;
+            this.landscapeLoginBtn.interactable = enable;
+        }
+        
+        private void EnableAuthSection(bool enable)
+        {
+            this.logoutBtn.interactable = enable;
+            this.landscapeLogoutBtn.interactable = enable;
+            this.getBalanceBtn.interactable = enable;
+            this.landscapeGetBalanceBtn.interactable = enable;
+        }
+
+        private void EnableTestSection(bool enable)
+        {
+            this.to.interactable = enable;
+            this.amount.interactable = enable;
+            this.sendNativeCoinTransactionBtn.interactable = enable;
+            this.landscapeTo.interactable = enable;
+            this.landscapeAmount.interactable = enable;
+            this.landscapeSendNativeCoinTransactionBtn.interactable = enable;
+            
+            this.erc20To.interactable = enable;
+            this.erc20Amount.interactable = enable;
+            this.erc20TokenAddress.interactable = enable;
+            this.sendErc20TransactionBtn.interactable = enable;
+            this.landscapeErc20To.interactable = enable;
+            this.landscapeErc20Amount.interactable = enable;
+            this.landscapeErc20TokenAddress.interactable = enable;
+            this.landscapeSendErc20TransactionBtn.interactable = enable;
+            
+            this.erc20BalanceInquiryAddress.interactable = enable;
+            this.getErc20BalanceBtn.interactable = enable;
+            this.landscapeErc20BalanceInquiryAddress.interactable = enable;
+            this.landscapeGetErc20BalanceBtn.interactable = enable;
+            
+            this.erc721To.interactable = enable;
+            this.erc721NftAddress.interactable = enable;
+            this.erc721TokenId.interactable = enable;
+            this.sendErc721TransactionBtn.interactable = enable;
+            this.landscapeErc721To.interactable = enable;
+            this.landscapeErc721NftAddress.interactable = enable;
+            this.landscapeErc721TokenId.interactable = enable;
+            this.landscapeSendErc721TransactionBtn.interactable = enable;
+            
+            this.erc1155To.interactable = enable;
+            this.erc1155Quantity.interactable = enable;
+            this.erc1155TokenId.interactable = enable;
+            this.erc1155NftAddress.interactable = enable;
+            this.sendErc1155TransactionBtn.interactable = enable;
+            this.landscapeErc1155To.interactable = enable;
+            this.landscapeErc1155Quantity.interactable = enable;
+            this.landscapeErc1155TokenId.interactable = enable;
+            this.landscapeErc1155NftAddress.interactable = enable;
+            this.landscapeSendErc1155TransactionBtn.interactable = enable;
+            
+            this.messageToSign.interactable = enable;
+            this.signMessageBtn.interactable = enable;
+            this.landscapeMessageToSign.interactable = enable;
+            this.landscapeSignMessageBtn.interactable = enable;
         }
         
         private static void SetDropdown(TMP_Dropdown dropdown, int value)
