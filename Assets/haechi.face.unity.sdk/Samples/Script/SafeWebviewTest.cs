@@ -70,7 +70,7 @@ public class SafeWebviewTest : MonoBehaviour
         string data = this._face.dataFactory.CreateErc20SendData("0xfCe04dd232006d0da001F6D54Bb5a7fC969dBc08", "0xDD9724Ecd92487633EC0191Ba7737009127D260e", "0.0001", 18);
         RawTransaction rawTransaction = new RawTransaction("0xDD9724Ecd92487633EC0191Ba7737009127D260e",
             "0xfCe04dd232006d0da001F6D54Bb5a7fC969dBc08", "0x1000000000900000000",
-            null);
+            data);
         FaceRpcResponse response = await this._face.wallet.EstimateGas(rawTransaction);
         Debug.Log(response);
     }

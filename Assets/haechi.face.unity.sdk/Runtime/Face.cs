@@ -10,6 +10,9 @@ namespace haechi.face.unity.sdk.Runtime
     [RequireComponent(typeof(SafeWebviewController))]
     public class Face : MonoBehaviour
     {
+        
+        [SerializeField] internal SafeWebviewController safeWebviewController;
+        
         internal Wallet wallet;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
@@ -20,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime
         {
             FaceSettings.NewInstance(parameters);
             
-            SafeWebviewController safeWebviewController = this.GetComponent<SafeWebviewController>();
+            this.safeWebviewController = this.GetComponent<SafeWebviewController>();
             
             this._walletProxy = new WalletProxy();
             
