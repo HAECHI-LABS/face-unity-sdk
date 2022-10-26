@@ -36,8 +36,8 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             this._webview = safeWebviewController;
             this._client = new FaceClient(uri, new HttpClient());
-            this._methodHandlers = new MethodHandlers(this, wallet);
-            this._defaultRequestSender = new WebviewRequestSender(this);
+            this._methodHandlers = new MethodHandlers(this, wallet, this._webview);
+            this._defaultRequestSender = new WebviewRequestSender(this, this._webview);
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
         }
         
@@ -80,13 +80,14 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             private readonly Dictionary<FaceRpcMethod, IRequestSender> _senders;
 
-            public MethodHandlers(FaceRpcProvider provider, IWallet wallet)
+            public MethodHandlers(FaceRpcProvider provider, IWallet wallet, SafeWebviewController webview)
             {
                 this._senders = new Dictionary<FaceRpcMethod, IRequestSender>
                 {
-                    {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider)},
+                    {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
-                    {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider)},
+                    {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.eth_estimateGas, new EstimateGasServerRequestSender(provider, wallet)},
                     // ...
                 };
@@ -107,15 +108,24 @@ namespace haechi.face.unity.sdk.Runtime.Client
         private class WebviewRequestSender : IRequestSender
         {
             private readonly FaceRpcProvider _provider;
-            public WebviewRequestSender(FaceRpcProvider provider)
+            private readonly SafeWebviewController _webview;
+            public WebviewRequestSender(FaceRpcProvider provider, SafeWebviewController webview)
             {
                 this._provider = provider;
+                this._webview = webview;
             }
             
             public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
                 TaskCompletionSource<FaceRpcResponse> promise = new TaskCompletionSource<FaceRpcResponse>();
-            
+
+                void OnCloseWebview(SafeWebviewController _, CloseWebviewArgs args)
+                {
+                    promise.TrySetResult(args.Response);
+                    this._webview.OnCloseWebview -= OnCloseWebview;
+                }
+
+                this._webview.OnCloseWebview += OnCloseWebview;
                 this._provider._webview.SendMessage(request, response => promise.TrySetResult(response));
             
                 return await promise.Task;

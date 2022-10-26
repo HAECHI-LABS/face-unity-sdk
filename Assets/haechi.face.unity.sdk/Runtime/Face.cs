@@ -38,7 +38,6 @@ namespace haechi.face.unity.sdk.Runtime
             // Now register real wallet
             this._walletProxy.Register(this.wallet);
             this.dataFactory = new ContractDataFactory(web3);
-            
         }
         
         public void Disconnect()
