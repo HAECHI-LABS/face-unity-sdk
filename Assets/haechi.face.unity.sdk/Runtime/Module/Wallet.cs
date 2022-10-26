@@ -8,7 +8,7 @@ using haechi.face.unity.sdk.Runtime.Type;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
-    public class Wallet
+    public class Wallet : IWallet
     {
         private readonly FaceRpcProvider _provider;
         private readonly FaceClient _client;
@@ -94,6 +94,13 @@ namespace haechi.face.unity.sdk.Runtime.Module
         public async Task<TransactionRequestId> GetTransactionRequestId(string requestId)
         {
             return await this._client.SendHttpGetRequest<TransactionRequestId>($"/api/v1/transactions/requests/{requestId}");
+        }
+
+        public async Task<FaceRpcResponse> EstimateGas(RawTransaction transaction)
+        {
+            FaceRpcRequest<RawTransaction> rpcRequest =
+                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
     }
 }
