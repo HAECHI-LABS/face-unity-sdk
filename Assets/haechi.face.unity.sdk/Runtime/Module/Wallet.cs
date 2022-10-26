@@ -24,14 +24,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
             this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
         }
 
-        public async Task<FaceRpcResponse> InitializeFaceSdk(FaceEnvironments env)
-        {
-            FaceRpcRequest<FaceEnvironments> rpcRequest =
-                new FaceRpcRequest<FaceEnvironments>(FaceSettings.Instance.Blockchain(), 
-                    FaceRpcMethod.wallet_initialize, env);
-            return await this._provider.SendFaceRpcAsync(rpcRequest);
-        }
-
         public async Task<FaceRpcResponse> SwitchNetwork(string network)
         {
             FaceRpcRequest<int> rpcRequest = new FaceRpcRequest<int>(FaceSettings.Instance.Blockchain(),
@@ -80,20 +72,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
             string requestId = string.Format($"unity-{Guid.NewGuid().ToString()}");
             FaceRpcRequest<object> rpcRequest =
                 new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_sendTransaction, request, requestId);
-
-            try
-            {
-                Debug.Log("Send TX Started");
-                await this._provider.SendFaceRpcAsync(rpcRequest);
-                Debug.Log("Send TX Finished");
-            }
-            catch (FaceException e)
-            {
-                Debug.Log("Iframe has been closed");
-            }
-            Debug.Log("Get TX Started");
+            
+            await this._provider.SendFaceRpcAsync(rpcRequest);
             return await this.GetTransactionRequestId(requestId);
-            // return await await task.ContinueWith((sendTxTask) => this.GetTransactionRequestId(requestId));
         }
 
         public async Task<FaceRpcResponse> Call(RawTransaction request)

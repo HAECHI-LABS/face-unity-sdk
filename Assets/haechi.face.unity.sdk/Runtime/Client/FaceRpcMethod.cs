@@ -8,7 +8,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
     public enum FaceRpcMethod
     {
         wallet_switchEthereumChain,
-        wallet_initialize,
         face_logInSignUp,
         face_logOut,
         face_currentUser,

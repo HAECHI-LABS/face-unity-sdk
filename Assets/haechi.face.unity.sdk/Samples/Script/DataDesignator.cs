@@ -11,8 +11,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void SetLoggedInAddress(string address)
         {
-            this.loggedInAddress.text = address;
-            this.landscapeLoggedInAddress.text = address;
+            this.loggedInAddress.text = address.ToLower();
+            this.landscapeLoggedInAddress.text = address.ToLower();
         }
 
         public void SetLoggedInId(string userId)

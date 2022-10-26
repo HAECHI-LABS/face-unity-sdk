@@ -87,8 +87,12 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 {
                     {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview)},
-                    {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.personal_sign, new WebviewRequestSender(provider, webview)},
+                    
+                    {FaceRpcMethod.eth_call, new ServerRequestSender(provider)},
+                    {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
+                    
                     {FaceRpcMethod.eth_estimateGas, new EstimateGasServerRequestSender(provider, wallet)},
                     // ...
                 };
