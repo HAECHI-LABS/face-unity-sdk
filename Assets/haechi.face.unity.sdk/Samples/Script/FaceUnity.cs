@@ -188,7 +188,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             RawTransaction request = new RawTransaction(loggedInAddress, to, string.Format($"0x{value}"), dataCallback());
             TransactionRequestId transactionRequestId = await this.face.wallet.SendTransaction(request);
 
-            Debug.Log($"Result: {transactionRequestId}");
             string txHash = transactionRequestId.Error ?? transactionRequestId.TransactionId;
             string result = string.Format($"TX Hash - {txHash}");
 
@@ -201,7 +200,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             this.actionQueue.Enqueue(response =>
             {
-                this.dataDesignator.SetCoinBalance(NumberFormatter.DivideHexWithDecimals(response.balance, 18));
+                this.dataDesignator.SetCoinBalance(response.balance);
                 this.dataDesignator.SetResult(response.result);
             }, transactionTask);
         }
