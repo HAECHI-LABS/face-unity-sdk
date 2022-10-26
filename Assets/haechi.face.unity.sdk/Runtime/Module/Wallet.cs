@@ -6,6 +6,8 @@ using System.Numerics;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Contract;
+using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Type;
 using Nethereum.ABI.FunctionEncoding;
 using Nethereum.Contracts;
@@ -14,7 +16,7 @@ using Nethereum.Hex.HexTypes;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
-    public class Wallet
+    public class Wallet : IWallet
     {
         private readonly FaceRpcProvider _provider;
         private readonly FaceClient _client;
@@ -102,33 +104,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._client.SendHttpGetRequest<TransactionRequestId>($"/api/v1/transactions/requests/{requestId}");
         }
 
-        public async Task<RawTransaction> EstimateGas(RawTransaction transaction)
+        public async Task<FaceRpcResponse> EstimateGas(RawTransaction transaction)
         {
-            if (string.IsNullOrEmpty(transaction.from) && string.IsNullOrEmpty(transaction.data))
-            {
-                return transaction;
-            }
-            
-            // Platform coin
-            if (!string.IsNullOrEmpty(transaction.data))
-            {
-                 HexBigInteger balance = new HexBigInteger((await this.GetBalance("")).CastResult<string>());
-                 BigInteger diff = BigInteger.Subtract(balance.Value, new HexBigInteger(transaction.value));
-                 if (diff.CompareTo(BigInteger.Zero) < 0)
-                 {
-                     transaction.value = "0x0";
-                 }
-
-                 return transaction;
-            }
-
-            EthApiContractService apiContractService = new EthApiContractService(null, null);
-            string abi =
-                @"[{""inputs"":[{""internalType"":""address"",""name"":""recipient"",""type"":""address""},{""internalType"":""uint256"",""name"":""amount"",""type"":""uint256""}],""name"":""transfer"",""outputs"":[{""internalType"":""bool"",""name"":"""",""type"":""bool""}],""stateMutability"":""nonpayable"",""type"":""function""}]";
-            Nethereum.Contracts.Contract contract = apiContractService.GetContract(abi, "ContractAddress");
-            Function transferFunction = contract.GetFunction("transfer");
-            List<ParameterOutput> decode = transferFunction.DecodeInput(transaction.data);
-            return transaction;
+            FaceRpcRequest<RawTransaction> rpcRequest =
+                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
+            return await this._client.SendFaceRpcAsync(rpcRequest);
         }
     }
 }

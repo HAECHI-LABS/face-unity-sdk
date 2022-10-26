@@ -20,6 +20,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         eth_getBalance,
         eth_sendTransaction,
         eth_call,
+        eth_estimateGas,
         personal_sign
     }
     

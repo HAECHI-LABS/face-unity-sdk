@@ -2,8 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Numerics;
 using System.Threading.Tasks;
+using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Contract;
+using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Module;
+using haechi.face.unity.sdk.Runtime.Settings;
 using haechi.face.unity.sdk.Runtime.Webview;
+using Nethereum.ABI;
+using Nethereum.ABI.FunctionEncoding;
+using Nethereum.Contracts;
+using Nethereum.Contracts.Services;
+using Nethereum.Contracts.Standards.ERC20.ContractDefinition;
+using Nethereum.Hex.HexTypes;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
@@ -11,6 +23,40 @@ using Newtonsoft.Json;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
+    
+    internal interface IRequestSender
+    {
+        Task<RpcResponseMessage> SendRequest(RpcRequestMessage request);
+    }
+    
+    internal class MethodHandlers
+    {
+        private readonly Dictionary<FaceRpcMethod, IRequestSender> _senders;
+
+        public MethodHandlers(FaceRpcProvider provider, IWallet wallet)
+        {
+            this._senders = new Dictionary<FaceRpcMethod, IRequestSender>
+            {
+                {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider)},
+                {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
+                {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider)},
+                {FaceRpcMethod.eth_estimateGas, new EstimateGasServerRequestSender(provider, wallet)},
+                // ...
+            };
+        }
+
+        public bool TryGetRequestSender(string methodValue, out IRequestSender sender)
+        {
+            if (!FaceRpcMethods.Contains(methodValue))
+            {
+                sender = null;
+                return false;
+            }
+
+            return this._senders.TryGetValue(FaceRpcMethods.ValueOf(methodValue), out sender);
+        }
+    }
+    
     public class FaceRpcProvider : ClientBase, IUnityRpcRequestClient
     {
         private readonly SafeWebviewController _webview;
@@ -20,14 +66,27 @@ namespace haechi.face.unity.sdk.Runtime.Client
         private readonly MethodHandlers _methodHandlers;
 
         private readonly IRequestSender _defaultRequestSender;
+        
+        private readonly IWallet _wallet;
 
-        public FaceRpcProvider(SafeWebviewController safeWebviewController)
+        public FaceRpcProvider(SafeWebviewController safeWebviewController, Uri uri, IWallet wallet)
         {
             this._webview = safeWebviewController;
-            this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
-            this._methodHandlers = new MethodHandlers(this);
+            this._client = new FaceClient(uri, new HttpClient());
+            this._methodHandlers = new MethodHandlers(this, wallet);
             this._defaultRequestSender = new WebviewRequestSender(this);
+            this._wallet = wallet;
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
+        }
+
+        public SafeWebviewController safeWebviewController()
+        {
+            return this._webview;
+        }
+
+        public FaceClient faceClient()
+        {
+            return this._client;
         }
 
         public JsonSerializerSettings JsonSerializerSettings { get; }
@@ -59,73 +118,142 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             return (FaceRpcResponse)await this.SendAsync(request);
         }
-
-        private class MethodHandlers
+    }
+    
+    internal class WebviewRequestSender : IRequestSender
+    {
+        private readonly FaceRpcProvider _provider;
+        public WebviewRequestSender(FaceRpcProvider provider)
         {
-            private readonly Dictionary<FaceRpcMethod, IRequestSender> _senders;
+            this._provider = provider;
+        }
+        
+        public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
+        {
+            TaskCompletionSource<FaceRpcResponse> promise = new TaskCompletionSource<FaceRpcResponse>();
+        
+            this._provider.safeWebviewController().SendMessage(request, response => promise.TrySetResult(response));
+        
+            return await promise.Task;
+        }
+    }
 
-            public MethodHandlers(FaceRpcProvider provider)
+    internal class ServerRequestSender : IRequestSender
+    {
+        private readonly FaceRpcProvider _provider;
+        public ServerRequestSender(FaceRpcProvider provider)
+        {
+            this._provider = provider;
+        }
+
+        public virtual async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
+        {
+            TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
+            FaceRpcResponse response = await this._provider.faceClient().SendRequest(request, "/api/v1/rpc");
+            promise.TrySetResult(response);
+            return await promise.Task;
+        }
+    }
+
+    internal class EstimateGasServerRequestSender : ServerRequestSender
+    {
+        private readonly IWallet _wallet;
+        private readonly ABIEncode _abiEncode = new ABIEncode();
+        private readonly EthApiContractService _ethApiContractService = new EthApiContractService(null);
+        
+        public EstimateGasServerRequestSender(FaceRpcProvider provider, IWallet wallet) : base(provider)
+        {
+            this._wallet = wallet;
+        }
+
+        public override async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
+        {
+            if (!this._isValidRequest(request))
             {
-                this._senders = new Dictionary<FaceRpcMethod, IRequestSender>
-                {
-                    {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider)},
-                    {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider)},
-                    {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
-                    {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider)},
-                    // ...
-                };
+                throw new InvalidRpcRequestException("Invalid eth_estimateGas params");
+            }
+            RawTransaction modifiedTransaction = await this._modifyTransactionValue(this._rawTransactionFromParams(request));
+            FaceRpcRequest<RawTransaction> newRequest =
+                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, modifiedTransaction);
+            return await base.SendRequest(newRequest);
+        }
+
+        private bool _isValidRequest(RpcRequestMessage request)
+        {
+            if (request.RawParameters.GetType() != typeof(object[]))
+            {
+                return false;
             }
 
-            public bool TryGetRequestSender(string methodValue, out IRequestSender sender)
+            object[] parameters = (object[])request.RawParameters;
+            if (parameters.Length != 1)
             {
-                if (!FaceRpcMethods.Contains(methodValue))
+                return false;
+            }
+
+            return parameters[0].GetType() == typeof(RawTransaction);
+        }
+
+        private RawTransaction _rawTransactionFromParams(RpcRequestMessage request)
+        {
+            return (RawTransaction)((object[])request.RawParameters)[0];
+        }
+
+        /// <summary>
+        /// _modifyTransactionValue update transaction's value depending on the account's balance.
+        ///  This is done for showing to the end-user the notification through Face Wallet SDK modal page.
+        /// While sending transaction via Face Wallet, even if account has less balance than the value, it does not fail
+        /// </summary>
+        private async Task<RawTransaction> _modifyTransactionValue(RawTransaction transaction)
+        {
+            if (string.IsNullOrEmpty(transaction.from) && string.IsNullOrEmpty(transaction.data))
+            {
+                return transaction;
+            }
+        
+            if (this._isNativeTokenTransferTransaction(transaction))
+            {
+                HexBigInteger balance = new HexBigInteger((await this._wallet.GetBalance()).CastResult<string>());
+                BigInteger diff = BigInteger.Subtract(balance.Value, new HexBigInteger(transaction.value));
+                if (diff.CompareTo(BigInteger.Zero) < 0)
                 {
-                    sender = null;
-                    return false;
+                    transaction.value = "0x0";
                 }
 
-                return this._senders.TryGetValue(FaceRpcMethods.ValueOf(methodValue), out sender);
+                return transaction;
             }
+
+            Function transferFunction = this._ethApiContractService
+                .GetContract(Abi.transferOnlyABI, "ArbitraryAddress")
+                .GetFunction("transfer");
+            List<ParameterOutput> decode = transferFunction.DecodeInput(transaction.data);
+            if (!this._isContractTransferCallTransaction(decode))
+            {
+                return transaction;
+            }
+
+            HexBigInteger balance2 = new HexBigInteger((await this._wallet.GetBalance(decode[0].ToString())).CastResult<string>());
+            BigInteger diff2 = BigInteger.Subtract(balance2.Value, new HexBigInteger(transaction.value));
+            if (diff2.CompareTo(BigInteger.Zero) < 0)
+            {
+                transaction.value = "0x0";
+                transaction.data = System.Text.Encoding.UTF8.GetString(this._abiEncode.GetABIEncoded(new TransferFunction
+                {
+                    To = transaction.to,
+                    Value = new HexBigInteger(transaction.value)
+                }));
+            }
+            return transaction;
         }
 
-        private interface IRequestSender
+        private bool _isNativeTokenTransferTransaction(RawTransaction transaction)
         {
-            Task<RpcResponseMessage> SendRequest(RpcRequestMessage request);
+            return string.IsNullOrEmpty(transaction.data);
         }
 
-        private class WebviewRequestSender : IRequestSender
+        private bool _isContractTransferCallTransaction(IReadOnlyList<ParameterOutput> decodeData)
         {
-            private readonly FaceRpcProvider _provider;
-            public WebviewRequestSender(FaceRpcProvider provider)
-            {
-                this._provider = provider;
-            }
-            
-            public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
-            {
-                TaskCompletionSource<FaceRpcResponse> promise = new TaskCompletionSource<FaceRpcResponse>();
-            
-                this._provider._webview.SendMessage(request, response => promise.TrySetResult(response));
-            
-                return await promise.Task;
-            }
-        }
-
-        private class ServerRequestSender : IRequestSender
-        {
-            private readonly FaceRpcProvider _provider;
-            public ServerRequestSender(FaceRpcProvider provider)
-            {
-                this._provider = provider;
-            }
-
-            public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
-            {
-                TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-                FaceRpcResponse response = await this._provider._client.SendRpcRequest(request, "/api/v1/rpc");
-                promise.TrySetResult(response);
-                return await promise.Task;
-            }
+            return !(decodeData.Count != 2 && decodeData[0].GetType() != typeof(string) && decodeData[1].GetType() != typeof(BigInteger));
         }
     }
 

@@ -53,7 +53,7 @@ public class SafeWebviewTest : MonoBehaviour
             // this.responseText.text = response.CastResult<string>();
         }, responseTask);
     }
-
+    
     public void OnClickBalance()
     {
         Task<FaceRpcResponse> responseTask = this._face.wallet.GetBalance("0x8cF9491DAF6CB1bf81ee86e2e58525BEDbcf516b");
@@ -64,16 +64,15 @@ public class SafeWebviewTest : MonoBehaviour
             this.responseText.text = response.CastResult<string>();
         }, responseTask);
     }
-
-    public void OnClickGetTransactionId()
+    
+    public async void OnClickEstimateGas()
     {
-        string requestId = "e08cba30-5756-4536-8ca2-8f8710d331a4";
-        Task<TransactionRequestId> responseTask = this._face.wallet.GetTransactionRequestId(requestId);
-        this._actionQueue.Enqueue(transactionRequestId =>
-        {
-            string result = JsonConvert.SerializeObject(transactionRequestId);
-            Debug.Log($"Result: {result}");
-            this.responseText.text = result;
-        }, responseTask);
+        string amount = NumberFormatter.DecimalStringToHexadecimal(NumberFormatter.DecimalStringToIntegerString("0.0001", 18));
+        string data = this._face.dataFactory.CreateErc20SendData("0xfCe04dd232006d0da001F6D54Bb5a7fC969dBc08", "0xDD9724Ecd92487633EC0191Ba7737009127D260e", "0.0001", 18);
+        RawTransaction rawTransaction = new RawTransaction("0xDD9724Ecd92487633EC0191Ba7737009127D260e",
+            "0xfCe04dd232006d0da001F6D54Bb5a7fC969dBc08", "0x1000000000900000000",
+            null);
+        FaceRpcResponse response = await this._face.wallet.EstimateGas(rawTransaction);
+        Debug.Log(response);
     }
 }
