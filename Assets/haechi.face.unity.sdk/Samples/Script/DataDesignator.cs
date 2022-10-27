@@ -57,7 +57,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         public void SetLoginInstruction()
         {
-            this.SetInstruction("Log in first to use Face Wallet.");
+            this.SetInstruction("Log in first to use Face Wallet. To clear session, log out.");
         }
 
         public void SetLogoutInstruction()
