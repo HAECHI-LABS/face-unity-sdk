@@ -18,7 +18,6 @@ namespace haechi.face.unity.sdk.Runtime
         internal ContractDataFactory dataFactory;
         
         private WalletProxy _walletProxy;
-
         public void Initialize(FaceSettings.Parameters parameters)
         {
             FaceSettings.NewInstance(parameters);

@@ -7,12 +7,13 @@ namespace haechi.face.unity.sdk.Samples.Script
     {
         public TMP_Text loggedInAddress, loggedInId, coinBalance, result;
         public TMP_Text landscapeLoggedInAddress, landscapeLoggedInId, landscapeCoinBalance, landscapeResult;
+        public TMP_Text instruction, landscapeInstruction;
         public TMP_InputField erc20Balance, landscapeErc20Balance;
 
         public void SetLoggedInAddress(string address)
         {
-            this.loggedInAddress.text = address;
-            this.landscapeLoggedInAddress.text = address;
+            this.loggedInAddress.text = address.ToLower();
+            this.landscapeLoggedInAddress.text = address.ToLower();
         }
 
         public void SetLoggedInId(string userId)
@@ -39,7 +40,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeErc20Balance.text = balance;
         }
 
-        public void Initialize()
+        public void InitializeDataStatus()
         {
             this.loggedInId.text = null;
             this.loggedInAddress.text = null;
@@ -51,6 +52,23 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeCoinBalance.text = null;
             this.landscapeResult.text = null;
             this.landscapeErc20Balance.text = null;
+            this.SetInstruction("You must connect to the network first.");
+        }
+        
+        public void SetLoginInstruction()
+        {
+            this.SetInstruction("Log in first to use Face Wallet.");
+        }
+
+        public void SetLogoutInstruction()
+        {
+            this.SetInstruction("If you log out, you can start from the beginning.");
+        }
+        
+        private void SetInstruction(string text)
+        {
+            this.instruction.text = text;
+            this.landscapeInstruction.text = text;
         }
     }
 }

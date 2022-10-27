@@ -11,14 +11,13 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         
         [JsonProperty("transactionId")]
         public string TransactionId;
+
+        [JsonIgnore]
+        public string Error;
         
-        [JsonProperty("createdAt")]
-        public DateTime CreatedAt;
-        
-        [JsonProperty("updatedAt")]
-        public DateTime UpdatedAt;
-        
-        [JsonProperty("deletedAt")]
-        public DateTime DeletedAt;
+        public TransactionRequestId(string error)
+        {
+            this.Error = error;
+        }
     }
 }

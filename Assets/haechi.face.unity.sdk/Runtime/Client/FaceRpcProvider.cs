@@ -19,6 +19,7 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -86,8 +87,12 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 {
                     {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview)},
-                    {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.personal_sign, new WebviewRequestSender(provider, webview)},
+                    
+                    {FaceRpcMethod.eth_call, new ServerRequestSender(provider)},
+                    {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
+                    
                     {FaceRpcMethod.eth_estimateGas, new EstimateGasServerRequestSender(provider, wallet)},
                     // ...
                 };
@@ -127,7 +132,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
                 this._webview.OnCloseWebview += OnCloseWebview;
                 this._provider._webview.SendMessage(request, response => promise.TrySetResult(response));
-            
+                
                 return await promise.Task;
             }
         }

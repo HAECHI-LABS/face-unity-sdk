@@ -56,11 +56,19 @@ namespace haechi.face.unity.sdk.Runtime
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
         {
             { Profile.Dev, "https://app.dev.facewallet.xyz" },
+            { Profile.StageTest, "https://app.stage-test.facewallet.xyz" },
+            { Profile.StageMainnet, "https://app.stage.facewallet.xyz" },
+            { Profile.ProdTest, "https://app.test.facewallet.xyz" },
+            { Profile.ProdMainnet, "https://app.facewallet.xyz" },
         };
 
         private readonly Dictionary<Profile, string> _serverHostMap = new Dictionary<Profile, string>
         {
             { Profile.Dev, "https://dev.facewallet.xyz" },
+            { Profile.StageTest, "https://stage-test.facewallet.xyz" },
+            { Profile.StageMainnet, "https://stage.facewallet.xyz" },
+            { Profile.ProdTest, "https://test.facewallet.xyz" },
+            { Profile.ProdMainnet, "https://facewallet.xyz" },
         };
 
         public string WebviewHostURL()

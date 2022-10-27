@@ -98,8 +98,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Debug.Log($"Cannot find handler by id: {response.Id}");
                 return;
             }
-
-            callback(response); 
+            
+            callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
         }
     }
