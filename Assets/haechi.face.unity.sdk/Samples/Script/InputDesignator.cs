@@ -166,7 +166,8 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.EnableConnectWalletSection(true);
             this.EnableLogin(false);
-            this.EnableAuthSection(false);
+            this.EnableGetBalance(false);
+            this.EnableLogout(false);
             this.EnableTestSection(false);
         }
 
@@ -174,12 +175,13 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.EnableConnectWalletSection(false);
             this.EnableLogin(true);
+            this.EnableLogout(true);
         }
         
         public void SetLoggedInInputStatus()
         {
             this.EnableLogin(false);
-            this.EnableAuthSection(true);
+            this.EnableGetBalance(true);
             this.EnableTestSection(true);
         }
         
@@ -201,10 +203,14 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeLoginBtn.interactable = enable;
         }
         
-        private void EnableAuthSection(bool enable)
+        private void EnableLogout(bool enable)
         {
             this.logoutBtn.interactable = enable;
             this.landscapeLogoutBtn.interactable = enable;
+        }
+        
+        private void EnableGetBalance(bool enable)
+        {
             this.getBalanceBtn.interactable = enable;
             this.landscapeGetBalanceBtn.interactable = enable;
         }
