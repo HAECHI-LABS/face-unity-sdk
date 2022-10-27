@@ -1,0 +1,10 @@
+apiRules:
+  - include:
+      uidRegex: ^haechi\.face\.unity\.sdk\.Runtime\.Module
+      type: Namespace
+  - include:
+      uidRegex: ^haechi\.face\.unity\.sdk\.Runtime\.Client
+      type: Namespace
+  - exclude:
+      uidRegex: ^.* # Every other namespaces are ignored
+      type: Namespace
