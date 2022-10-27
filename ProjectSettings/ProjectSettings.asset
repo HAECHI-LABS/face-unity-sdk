@@ -173,7 +173,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: xyz.facewallet.dev.app.test
+    Android: xyz.facewallet.dev.app
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.DefaultCompany.com.unity.template.mobile2D
     iPhone: xyz.facewallet.dev.app
