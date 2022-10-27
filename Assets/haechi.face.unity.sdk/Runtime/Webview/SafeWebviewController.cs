@@ -25,7 +25,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         // TODO: fix method prefix with face~
 #if UNITY_IOS
         [DllImport("__Internal")]
-        extern static void web3auth_launch(string url, string redirectUri, string objectName);
+        extern static void launch_face_webview(string url, string redirectUri, string objectName);
 #endif
         
         private static void LaunchUrl(string url, string objectName = null)
@@ -42,7 +42,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
 #elif UNITY_IOS
     var uri = new Uri(url);
-    web3auth_launch(url, SafeWebviewProtocol.Scheme, objectName);
+    launch_face_webview(url, SafeWebviewProtocol.Scheme, objectName);
 #endif
         }
 
