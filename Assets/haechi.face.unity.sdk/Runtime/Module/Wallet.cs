@@ -89,9 +89,15 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
-
-        // TODO: make it private after sample test script deleted
-        public async Task<TransactionRequestId> GetTransactionRequestId(string requestId)
+        
+        public async Task<FaceRpcResponse> EstimateGas(RawTransaction transaction)
+        {
+            FaceRpcRequest<RawTransaction> rpcRequest =
+                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
+        }
+        
+        private async Task<TransactionRequestId> GetTransactionRequestId(string requestId)
         {
             Debug.Log($"Request ID: {requestId}");
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
@@ -104,11 +110,5 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await task;
         }
 
-        public async Task<FaceRpcResponse> EstimateGas(RawTransaction transaction)
-        {
-            FaceRpcRequest<RawTransaction> rpcRequest =
-                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
-            return await this._provider.SendFaceRpcAsync(rpcRequest);
-        }
     }
 }
