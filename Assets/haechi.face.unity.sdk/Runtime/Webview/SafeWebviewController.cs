@@ -61,7 +61,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Request = message,
                 ApiKey = FaceSettings.Instance.ApiKey(),
                 Env = FaceSettings.Instance.Environment(),
-                Blockchain = FaceSettings.Instance.Blockchain()
+                Blockchain = FaceSettings.Instance.Blockchain(),
+                Hostname = Application.identifier
             });
             UriBuilder uriBuilder = new UriBuilder(FaceSettings.Instance.WebviewHostURL())
             {
