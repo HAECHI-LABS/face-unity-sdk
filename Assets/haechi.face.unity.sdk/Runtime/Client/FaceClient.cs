@@ -23,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this._jsonSerializerSettings = jsonSerializerSettings;
             this._httpClient = httpClient;
             this._httpClient.BaseAddress = baseUrl;
-            this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Hostname", "http://localhost:3000"); // TODO: FIXME
+            this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Hostname", Application.identifier);
             this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey());
         }
         
