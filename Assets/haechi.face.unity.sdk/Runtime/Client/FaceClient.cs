@@ -97,14 +97,18 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 {
                     using (JsonTextReader reader2 = new JsonTextReader((TextReader)reader1))
                     {
-                        responseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<R>((JsonReader) reader2);
+                        responseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<R>((JsonReader)reader2);
                     }
-                    
+
                 }
             }
             catch (TaskCanceledException ex)
             {
-                throw new RpcClientTimeoutException(string.Format("Rpc timeout after {0} milliseconds", (object) ClientBase.ConnectionTimeout.TotalMilliseconds), (System.Exception) ex);
+                throw new RpcClientTimeoutException(string.Format("Rpc timeout after {0} milliseconds", (object)ClientBase.ConnectionTimeout.TotalMilliseconds), (System.Exception)ex);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new HttpRequestException("Failed to get response from server", ex);
             }
             catch (System.Exception ex)
             {
