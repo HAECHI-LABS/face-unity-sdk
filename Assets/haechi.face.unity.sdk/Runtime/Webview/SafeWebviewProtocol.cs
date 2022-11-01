@@ -14,7 +14,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
     internal static class SafeWebviewProtocol
     {
         public static string Scheme = "facewebview";
-
+        
         public static string EncodeQueryParams(Parameters parameters)
         {
             byte[] requestBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(parameters.Request,
@@ -26,7 +26,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             return $"request={encodedRequest}&" +
                    $"api_key={parameters.ApiKey}&" +
                    $"env={parameters.Env}&" +
-                   $"blockchain={parameters.Blockchain}";
+                   $"blockchain={parameters.Blockchain}&" +
+                   $"hostname={parameters.Hostname}";
         }
 
         public static FaceRpcContext DecodeQueryParams(Uri uri)
@@ -86,6 +87,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             public string ApiKey;
             public Profile Env;
             public Blockchain Blockchain;
+            public string Hostname;
         }
     }
 }
