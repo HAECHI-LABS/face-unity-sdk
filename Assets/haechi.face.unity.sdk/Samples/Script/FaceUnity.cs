@@ -189,8 +189,9 @@ namespace haechi.face.unity.sdk.Samples.Script
             RawTransaction request = new RawTransaction(loggedInAddress, to, string.Format($"0x{value}"), dataCallback());
             TransactionRequestId transactionRequestId = await this.face.wallet.SendTransaction(request);
 
-            string txHash = transactionRequestId.Error ?? transactionRequestId.TransactionId;
-            string result = string.Format($"TX Hash - {txHash}");
+            string result = transactionRequestId.Error == null
+                ? string.Format($"TX Hash - {transactionRequestId.TransactionId}") 
+                : string.Format($"Error - {transactionRequestId.Error}");
 
             return new TransactionResult(await this.GetBalance(loggedInAddress), result);
         }
