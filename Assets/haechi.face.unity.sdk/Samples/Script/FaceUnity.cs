@@ -17,7 +17,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         [SerializeField] internal InputDesignator inputDesignator;
         [SerializeField] internal Face face;
         [SerializeField] internal ActionQueue actionQueue;
-
+        
         private void Start()
         {
             Application.targetFrameRate = 60;
@@ -53,17 +53,16 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private async Task<LoginResult> LoginAndGetBalanceAsync()
         {
-            FaceRpcResponse response = await this.face.wallet.LoginWithCredential();
-            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
-            string address = faceLoginResponse.wallet.Address;
+            FaceLoginResponse response = await this.face.Wallet().LoginWithCredential();
+            string address = response.wallet.Address;
             string balance = await this.GetBalance(address);
 
-            return new LoginResult(balance, faceLoginResponse.faceUserId, address);
+            return new LoginResult(balance, response.faceUserId, address);
         }
 
         public void Logout()
         {
-            Task<FaceRpcResponse> responseTask = this.face.wallet.Logout();
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().Logout();
 
             this.actionQueue.Enqueue(response =>
             {
@@ -96,7 +95,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             RawTransaction request =
                 new RawTransaction(null, this.inputDesignator.erc20BalanceInquiryAddress.text, "0x0", data);
 
-            Task<FaceRpcResponse> responseTask = this.face.wallet.Call(request);
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().Call(request);
 
             this.actionQueue.Enqueue(response =>
             {
@@ -154,7 +153,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.ValidateIsLoggedIn();
 
-            Task<FaceRpcResponse> responseTask = this.face.wallet.Sign(this.inputDesignator.messageToSign.text);
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().Sign(this.inputDesignator.messageToSign.text);
 
             this.actionQueue.Enqueue(response =>
             {
@@ -180,7 +179,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
             if (String.IsNullOrEmpty(loggedInAddress) || String.IsNullOrEmpty(loggedInId))
             {
-                throw new UnauthorizedAccessException("Not logged in yet.");
+                throw new FaceException(ErrorCodes.UNAUTHORIZED);
             }
         }
         
@@ -190,7 +189,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             RawTransaction request = new RawTransaction(loggedInAddress, to, string.Format($"0x{value}"), dataCallback());
             try
             {
-                TransactionRequestId transactionRequestId = await this.face.wallet.SendTransaction(request);
+                TransactionRequestId transactionRequestId = await this.face.Wallet().SendTransaction(request);
                 return new TransactionResult(await this.GetBalance(loggedInAddress), string.Format($"TX Hash - {transactionRequestId.TransactionId}"));
             }
             catch (FaceException ex)
@@ -212,7 +211,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private async Task<string> GetBalance(string address)
         {
-            FaceRpcResponse response = await this.face.wallet.GetBalance(address);
+            FaceRpcResponse response = await this.face.Wallet().GetBalance(address);
             return NumberFormatter.DivideHexWithDecimals(response.CastResult<string>(), 18);
         }
 
@@ -222,7 +221,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.face.dataFactory.CreateErc20GetDecimalsData(this.inputDesignator.erc20TokenAddress.text);
             RawTransaction decimalsRequest =
                 new RawTransaction(null, this.inputDesignator.erc20TokenAddress.text, "0x0", decimalsData);
-            FaceRpcResponse response = await this.face.wallet.Call(decimalsRequest);
+            FaceRpcResponse response = await this.face.Wallet().Call(decimalsRequest);
             return int.Parse(NumberFormatter.HexadecimalToDecimal(response.CastResult<string>()).ToStringInvariant());
         }
     }

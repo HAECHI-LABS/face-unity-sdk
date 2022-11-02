@@ -7,6 +7,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
+using haechi.face.unity.sdk.Runtime.Utils;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
@@ -31,11 +32,20 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         
-        public async Task<FaceRpcResponse> LoginWithCredential() 
+        public async Task<FaceLoginResponse> LoginWithCredential() 
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.face_logInSignUp);
-            return await this._provider.SendFaceRpcAsync(request);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
+            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
+
+            FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
+
+            if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
+            {
+                throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);
+            }
+            return faceLoginResponse;
         }
 
         public async Task<FaceRpcResponse> IsLoggedIn()
@@ -101,18 +111,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             Debug.Log($"Request ID: {requestId}");
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
-                $"/api/v1/transactions/requests/{requestId}");
-
+                $"/v1/transactions/requests/{requestId}");
             
             try
             {
                 return await task;
             }
-            catch (System.Exception e)
+            catch (HttpRequestException e)
             { 
                 throw new FaceException(ErrorCodes.SERVER_RESPONSE_ERROR, e.Message);
             }
         }
-
     }
 }

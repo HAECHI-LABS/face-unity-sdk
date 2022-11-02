@@ -31,11 +31,10 @@ public class SafeWebviewTest : MonoBehaviour
 
     public void OnClickLogin()
     {
-        Task<FaceRpcResponse> responseTask = this._face.wallet.LoginWithCredential();
+        Task<FaceLoginResponse> responseTask = this._face.Wallet().LoginWithCredential();
         this._actionQueue.Enqueue(response =>
         {
-            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
-            this.responseText.text = JsonConvert.SerializeObject(faceLoginResponse);
+            this.responseText.text = JsonConvert.SerializeObject(response);
         }, responseTask);
     }
 
@@ -60,7 +59,7 @@ public class SafeWebviewTest : MonoBehaviour
     
     public void OnClickBalance()
     {
-        Task<FaceRpcResponse> responseTask = this._face.wallet.GetBalance("0x8cF9491DAF6CB1bf81ee86e2e58525BEDbcf516b");
+        Task<FaceRpcResponse> responseTask = this._face.Wallet().GetBalance("0x8cF9491DAF6CB1bf81ee86e2e58525BEDbcf516b");
         this._actionQueue.Enqueue(response =>
         {
             string result = JsonConvert.SerializeObject(response);
@@ -75,7 +74,7 @@ public class SafeWebviewTest : MonoBehaviour
         RawTransaction rawTransaction = new RawTransaction("0xDD9724Ecd92487633EC0191Ba7737009127D260e",
             "0xfCe04dd232006d0da001F6D54Bb5a7fC969dBc08", "0x1000000000900000000",
             data);
-        FaceRpcResponse response = await this._face.wallet.EstimateGas(rawTransaction);
+        FaceRpcResponse response = await this._face.Wallet().EstimateGas(rawTransaction);
         Debug.Log(response);
     }
 }

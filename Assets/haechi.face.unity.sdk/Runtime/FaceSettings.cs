@@ -17,7 +17,7 @@ namespace haechi.face.unity.sdk.Runtime
 
         public static FaceSettings Instance => instance;
 
-        public static void NewInstance(Parameters parameters)
+        public static void Init(Parameters parameters)
         {
             if (instance != null)
             {
@@ -29,6 +29,11 @@ namespace haechi.face.unity.sdk.Runtime
         public static void Destruct()
         {
             instance = null;
+        }
+
+        public static bool IsInitialized()
+        {
+            return instance != null;
         }
 
         private FaceSettings(Parameters parameters)
@@ -64,11 +69,11 @@ namespace haechi.face.unity.sdk.Runtime
 
         private readonly Dictionary<Profile, string> _serverHostMap = new Dictionary<Profile, string>
         {
-            { Profile.Dev, "https://dev.facewallet.xyz" },
-            { Profile.StageTest, "https://stage-test.facewallet.xyz" },
-            { Profile.StageMainnet, "https://stage.facewallet.xyz" },
-            { Profile.ProdTest, "https://test.facewallet.xyz" },
-            { Profile.ProdMainnet, "https://facewallet.xyz" },
+            { Profile.Dev, "https://api.dev.facewallet.xyz" },
+            { Profile.StageTest, "https://api.stage-test.facewallet.xyz" },
+            { Profile.StageMainnet, "https://api.stage.facewallet.xyz" },
+            { Profile.ProdTest, "https://api.test.facewallet.xyz" },
+            { Profile.ProdMainnet, "https://api.facewallet.xyz" },
         };
 
         public string WebviewHostURL()

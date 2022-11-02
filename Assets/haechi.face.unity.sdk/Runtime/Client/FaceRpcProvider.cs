@@ -19,7 +19,6 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -148,7 +147,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             public virtual async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-                FaceRpcResponse response = await this._provider._client.SendRpcRequest(request, "/api/v1/rpc");
+                FaceRpcResponse response = await this._provider._client.SendRpcRequest(request, "/v1/rpc");
                 promise.TrySetResult(response);
                 return await promise.Task;
             }
