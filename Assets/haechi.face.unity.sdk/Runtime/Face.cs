@@ -12,6 +12,8 @@ namespace haechi.face.unity.sdk.Runtime
     {
         
         [SerializeField] internal SafeWebviewController safeWebviewController;
+
+        public const int WEBVIEW_VERSION = 1;
         
         internal Wallet wallet;
         internal FaceRpcProvider provider;

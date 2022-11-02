@@ -29,7 +29,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"api_key={parameters.ApiKey}&" +
                    $"env={parameters.Env}&" +
                    $"blockchain={parameters.Blockchain}&" +
-                   $"hostname={parameters.Hostname}";
+                   $"hostname={parameters.Hostname}&" +
+                   $"webview_version={Face.WEBVIEW_VERSION}";
         }
 
         public static FaceRpcContext DecodeQueryParams(Uri uri)
