@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
@@ -187,13 +188,15 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
             RawTransaction request = new RawTransaction(loggedInAddress, to, string.Format($"0x{value}"), dataCallback());
-            TransactionRequestId transactionRequestId = await this.face.wallet.SendTransaction(request);
-
-            string result = transactionRequestId.Error == null
-                ? string.Format($"TX Hash - {transactionRequestId.TransactionId}") 
-                : string.Format($"Error - {transactionRequestId.Error}");
-
-            return new TransactionResult(await this.GetBalance(loggedInAddress), result);
+            try
+            {
+                TransactionRequestId transactionRequestId = await this.face.wallet.SendTransaction(request);
+                return new TransactionResult(await this.GetBalance(loggedInAddress), string.Format($"TX Hash - {transactionRequestId.TransactionId}"));
+            }
+            catch (FaceException ex)
+            {
+                return new TransactionResult(await this.GetBalance(loggedInAddress), string.Format($"Error - {ex.Message}"));
+            }
         }
         
         private void SendTransactionQueue(Task<TransactionResult> transactionTask)

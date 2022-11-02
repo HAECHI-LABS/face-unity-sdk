@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
 
@@ -102,13 +103,14 @@ namespace haechi.face.unity.sdk.Runtime.Module
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
                 $"/api/v1/transactions/requests/{requestId}");
 
+            
             try
             {
                 return await task;
             }
             catch (System.Exception e)
-            {
-                return new TransactionRequestId(e.Message);
+            { 
+                throw new FaceException(ErrorCodes.SERVER_RESPONSE_ERROR, e.Message);
             }
         }
 

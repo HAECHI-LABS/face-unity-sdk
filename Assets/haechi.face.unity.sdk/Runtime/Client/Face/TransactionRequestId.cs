@@ -11,13 +11,5 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         
         [JsonProperty("transactionId")]
         public string TransactionId;
-
-        [JsonIgnore]
-        public string Error;
-        
-        public TransactionRequestId(string error)
-        {
-            this.Error = error;
-        }
     }
 }
