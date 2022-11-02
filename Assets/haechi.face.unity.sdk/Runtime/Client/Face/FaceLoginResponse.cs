@@ -31,6 +31,9 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
             
             [JsonProperty("eddsaPublicKey")]
             public string EddsaPublicKey;
+            
+            [JsonProperty("signedAddress")]
+            public string SignedAddress;
         }
     }
 }

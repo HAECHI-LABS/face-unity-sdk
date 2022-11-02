@@ -1,5 +1,6 @@
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
+using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.Web3;
@@ -13,14 +14,14 @@ namespace haechi.face.unity.sdk.Runtime
         
         [SerializeField] internal SafeWebviewController safeWebviewController;
         
-        internal Wallet wallet;
+        private Wallet _wallet;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
         
         private WalletProxy _walletProxy;
         public void Initialize(FaceSettings.Parameters parameters)
         {
-            FaceSettings.NewInstance(parameters);
+            FaceSettings.Init(parameters);
             
             this.safeWebviewController = this.GetComponent<SafeWebviewController>();
             
@@ -32,10 +33,10 @@ namespace haechi.face.unity.sdk.Runtime
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
             
             Web3 web3 = new Web3(this.provider);
-            this.wallet = new Wallet(this.provider);
+            this._wallet = new Wallet(this.provider);
             
             // Now register real wallet
-            this._walletProxy.Register(this.wallet);
+            this._walletProxy.Register(this._wallet);
             this.dataFactory = new ContractDataFactory(web3);
         }
         
@@ -45,7 +46,17 @@ namespace haechi.face.unity.sdk.Runtime
             
             this.provider = null;
             this.dataFactory = null;
-            this.wallet = null;
+            this._wallet = null;
+        }
+
+        public Wallet Wallet()
+        {
+            if (!FaceSettings.IsInitialized())
+            {
+                throw new FaceException(ErrorCodes.NOT_INITIALIZED);
+            }
+
+            return this._wallet;
         }
     }
 }
