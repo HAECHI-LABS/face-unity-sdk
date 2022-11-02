@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -8,6 +9,7 @@ using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
@@ -61,24 +63,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
         private static Dictionary<string, string> _parseQuery(string text)
         {
-            if (text.Length > 0 && text[0] == '?')
-            {
-                text = text.Remove(0, 1);
-            }
-
-            var parts = text.Split('&').Where(x => !string.IsNullOrEmpty(x)).ToList();
-
-            Dictionary<string, string> result = new Dictionary<string, string>();
-
-            if (parts.Count > 0)
-            {
-                result = parts.ToDictionary(
-                    c => c.Split('=')[0],
-                    c => Uri.UnescapeDataString(c.Split('=')[1])
-                );
-            }
-
-            return result;
+            NameValueCollection nvc = HttpUtility.ParseQueryString(text);
+            return nvc.AllKeys.ToDictionary(k => k, k => nvc[k]);
         }
 
         public struct Parameters
