@@ -102,12 +102,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
             Debug.Log($"Request ID: {requestId}");
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
                 $"/api/v1/transactions/requests/{requestId}");
-            if (task.IsFaulted)
-            {
-                return new TransactionRequestId("Failed to get transaction info from server");
-            }
+
             
-            return await task;
+            try
+            {
+                return await task;
+            }
+            catch (System.Exception e)
+            { 
+                throw new FaceException(ErrorCodes.SERVER_RESPONSE_ERROR, e.Message);
+            }
         }
 
     }

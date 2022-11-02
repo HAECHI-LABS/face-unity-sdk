@@ -13,6 +13,7 @@ namespace haechi.face.unity.sdk.Runtime.Exception
         public static readonly ErrorCode INVALLID_RPC_METHOD = new ErrorCode { Value = "U0003", Message = "Invalid rpc method" };
         public static readonly ErrorCode ALREADY_INITIALIZED = new ErrorCode { Value = "U0004", Message = "Face is already initialized" };
         public static readonly ErrorCode INVALLID_RPC_REQUEST = new ErrorCode { Value = "U0005", Message = "Invalid rpc request" };
+        public static readonly ErrorCode SERVER_RESPONSE_ERROR = new ErrorCode { Value = "U0006", Message = "Face server returned an error" };
     }
 
     public class FaceException : System.Exception
