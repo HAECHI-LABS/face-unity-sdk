@@ -22,7 +22,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 this.onDeepLinkActivated(Application.absoluteURL);
             }
         }
-        // TODO: fix method prefix with face~
+        
 #if UNITY_IOS
         [DllImport("__Internal")]
         extern static void launch_face_webview(string url, string redirectUri, string objectName);
