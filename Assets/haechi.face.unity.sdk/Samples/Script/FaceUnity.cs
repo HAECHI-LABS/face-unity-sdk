@@ -23,11 +23,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             Application.targetFrameRate = 60;
         }
 
-        private void _defaultExceptionHandler(Exception ex)
-        {
-            this.dataDesignator.SetResult($"Error - {ex.Message}");
-        }
-
         public void InitializeFace()
         {
             this.face.Initialize(new FaceSettings.Parameters
@@ -43,7 +38,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void LoginAndGetBalance()
         {
-            Task<LoginResult> responseTask = this.LoginAndGetBalanceAsync();
+            Task<LoginResult> responseTask = this._loginAndGetBalanceAsync();
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
@@ -56,11 +51,11 @@ namespace haechi.face.unity.sdk.Samples.Script
             }, this._defaultExceptionHandler);
         }
 
-        private async Task<LoginResult> LoginAndGetBalanceAsync()
+        private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
             FaceLoginResponse response = await this.face.Wallet().LoginWithCredential();
             string address = response.wallet.Address;
-            string balance = await this.GetBalance(address);
+            string balance = await this._getBalance(address);
 
             return new LoginResult(balance, response.faceUserId, address);
         }
@@ -81,9 +76,9 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void GetBalance()
         {
-            this.ValidateIsLoggedIn();
+            this._validateIsLoggedIn();
 
-            Task<string> responseTask = this.GetBalance(this.dataDesignator.loggedInAddress.text);
+            Task<string> responseTask = this._getBalance(this.dataDesignator.loggedInAddress.text);
             
             this.actionQueue.Enqueue(responseTask, response =>
             {
@@ -93,7 +88,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         public void GetErc20Balance()
         {
-            this.ValidateIsLoggedIn();
+            this._validateIsLoggedIn();
 
             string data = this.face.dataFactory.CreateErc20GetBalanceData(
                 this.inputDesignator.erc20BalanceInquiryAddress.text, this.dataDesignator.loggedInAddress.text);
@@ -113,23 +108,23 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void SendNativeCoinTransaction()
         {
-            Task<TransactionResult> transactionTask = this.SendTransactionTask(
+            Task<TransactionResult> transactionTask = this._sendTransactionTask(
                 this.inputDesignator.to.text,
                 () => null,
                 NumberFormatter.DecimalStringToHexadecimal(
                     NumberFormatter.DecimalStringToIntegerString(this.inputDesignator.amount.text, 18))
             );
-            this.SendTransactionQueue(transactionTask);
+            this._sendTransactionQueue(transactionTask);
         }
 
         public void SendErc20Transaction()
         {
-            this.SendTransactionQueue(this.SendErc20TransactionTask());
+            this._sendTransactionQueue(this._sendErc20TransactionTask());
         }
 
         public void SendErc721Transaction()
         {
-            Task<TransactionResult> transactionTask = this.SendTransactionTask(
+            Task<TransactionResult> transactionTask = this._sendTransactionTask(
                 this.inputDesignator.erc721NftAddress.text,
                 () => this.face.dataFactory.CreateErc721SendData(
                     this.inputDesignator.erc721NftAddress.text,
@@ -137,12 +132,12 @@ namespace haechi.face.unity.sdk.Samples.Script
                     this.inputDesignator.erc721To.text,
                     this.inputDesignator.erc721TokenId.text)
             );
-            this.SendTransactionQueue(transactionTask);
+            this._sendTransactionQueue(transactionTask);
         }
 
         public void SendErc1155Transaction()
         {
-            Task<TransactionResult> transactionTask = this.SendTransactionTask(
+            Task<TransactionResult> transactionTask = this._sendTransactionTask(
                 this.inputDesignator.erc1155NftAddress.text,
                 () => this.face.dataFactory.CreateErc1155SendBatchData(
                     this.inputDesignator.erc1155NftAddress.text,
@@ -151,12 +146,12 @@ namespace haechi.face.unity.sdk.Samples.Script
                     this.inputDesignator.erc1155TokenId.text,
                     this.inputDesignator.erc1155Quantity.text)
             );
-            this.SendTransactionQueue(transactionTask);
+            this._sendTransactionQueue(transactionTask);
         }
 
         public void SignMessage()
         {
-            this.ValidateIsLoggedIn();
+            this._validateIsLoggedIn();
 
             Task<FaceRpcResponse> responseTask = this.face.Wallet().Sign(this.inputDesignator.messageToSign.text);
 
@@ -168,17 +163,17 @@ namespace haechi.face.unity.sdk.Samples.Script
             }, this._defaultExceptionHandler);
         }
         
-        private async Task<TransactionResult> SendErc20TransactionTask()
+        private async Task<TransactionResult> _sendErc20TransactionTask()
         {
-            int decimals = await this.GetDecimals();
-            return await this.SendTransactionTask(this.inputDesignator.erc20TokenAddress.text, () =>
+            int decimals = await this._getDecimals();
+            return await this._sendTransactionTask(this.inputDesignator.erc20TokenAddress.text, () =>
             {
                 string amount = this.inputDesignator.erc20Amount.text;
                 return this.face.dataFactory.CreateErc20SendData(this.inputDesignator.erc20TokenAddress.text, this.inputDesignator.erc20To.text, amount, decimals);
             });
         }
 
-        private void ValidateIsLoggedIn()
+        private void _validateIsLoggedIn()
         {
             string loggedInId = this.dataDesignator.loggedInId.text;
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
@@ -188,24 +183,24 @@ namespace haechi.face.unity.sdk.Samples.Script
             }
         }
         
-        private async Task<TransactionResult> SendTransactionTask(string to, Func<string> dataCallback, string value = "0")
+        private async Task<TransactionResult> _sendTransactionTask(string to, Func<string> dataCallback, string value = "0")
         {
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
             RawTransaction request = new RawTransaction(loggedInAddress, to, string.Format($"0x{value}"), dataCallback());
             try
             {
                 TransactionRequestId transactionRequestId = await this.face.Wallet().SendTransaction(request);
-                return new TransactionResult(await this.GetBalance(loggedInAddress), string.Format($"TX Hash - {transactionRequestId.TransactionId}"));
+                return new TransactionResult(await this._getBalance(loggedInAddress), string.Format($"TX Hash - {transactionRequestId.TransactionId}"));
             }
             catch (FaceException ex)
             {
-                return new TransactionResult(await this.GetBalance(loggedInAddress), string.Format($"Error - {ex.Message}"));
+                return new TransactionResult(await this._getBalance(loggedInAddress), string.Format($"Error - {ex.Message}"));
             }
         }
         
-        private void SendTransactionQueue(Task<TransactionResult> transactionTask)
+        private void _sendTransactionQueue(Task<TransactionResult> transactionTask)
         {
-            this.ValidateIsLoggedIn();
+            this._validateIsLoggedIn();
 
             this.actionQueue.Enqueue(transactionTask, response =>
             {
@@ -214,13 +209,13 @@ namespace haechi.face.unity.sdk.Samples.Script
             }, this._defaultExceptionHandler);
         }
 
-        private async Task<string> GetBalance(string address)
+        private async Task<string> _getBalance(string address)
         {
             FaceRpcResponse response = await this.face.Wallet().GetBalance(address);
             return NumberFormatter.DivideHexWithDecimals(response.CastResult<string>(), 18);
         }
 
-        private async Task<int> GetDecimals()
+        private async Task<int> _getDecimals()
         {
             string decimalsData =
                 this.face.dataFactory.CreateErc20GetDecimalsData(this.inputDesignator.erc20TokenAddress.text);
@@ -228,6 +223,11 @@ namespace haechi.face.unity.sdk.Samples.Script
                 new RawTransaction(null, this.inputDesignator.erc20TokenAddress.text, "0x0", decimalsData);
             FaceRpcResponse response = await this.face.Wallet().Call(decimalsRequest);
             return int.Parse(NumberFormatter.HexadecimalToDecimal(response.CastResult<string>()).ToStringInvariant());
+        }
+        
+        private void _defaultExceptionHandler(Exception ex)
+        {
+            this.dataDesignator.SetResult($"Error - {ex.Message}");
         }
     }
 
