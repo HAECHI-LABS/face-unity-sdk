@@ -16,7 +16,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
     {
         private readonly FaceRpcProvider _provider;
         private readonly FaceClient _client;
-        private Dictionary<string, string> _requestIdMap = new Dictionary<string, string>();
         private string _requestId;
 
         internal Wallet(FaceRpcProvider provider)
@@ -83,7 +82,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_sendTransaction, request, requestId);
             
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
-            return await this.GetTransactionRequestId(requestId, response);
+            return await this._getTransactionRequestId(requestId, response);
         }
 
         public async Task<FaceRpcResponse> Call(RawTransaction request)
@@ -107,7 +106,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         
-        private async Task<TransactionRequestId> GetTransactionRequestId(string requestId, FaceRpcResponse response)
+        private async Task<TransactionRequestId> _getTransactionRequestId(string requestId, FaceRpcResponse response)
         {
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
                 $"/v1/transactions/requests/{requestId}");
