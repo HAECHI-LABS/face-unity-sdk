@@ -121,18 +121,25 @@ namespace haechi.face.unity.sdk.Runtime.Client
             
             public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
-                TaskCompletionSource<FaceRpcResponse> promise = new TaskCompletionSource<FaceRpcResponse>();
-
+                TaskCompletionSource<FaceRpcResponse> rpcResponsePromise = new TaskCompletionSource<FaceRpcResponse>();
+                TaskCompletionSource<FaceRpcResponse> webviewClosedPromise = new TaskCompletionSource<FaceRpcResponse>();
+                List<Task<FaceRpcResponse>> tasks = new List<Task<FaceRpcResponse>>
+                {
+                    rpcResponsePromise.Task,
+                    webviewClosedPromise.Task
+                };
+                
                 void OnCloseWebview(SafeWebviewController _, CloseWebviewArgs args)
                 {
-                    promise.TrySetResult(args.Response);
+                    webviewClosedPromise.TrySetResult(args.Response);
                     this._webview.OnCloseWebview -= OnCloseWebview;
                 }
 
                 this._webview.OnCloseWebview += OnCloseWebview;
-                this._provider._webview.SendMessage(request, response => promise.TrySetResult(response));
+                this._provider._webview.SendMessage(request, response => rpcResponsePromise.TrySetResult(response));
                 
-                return await promise.Task;
+                Task<FaceRpcResponse> doneTask = await Task.WhenAny(tasks);
+                return await doneTask;
             }
         }
 

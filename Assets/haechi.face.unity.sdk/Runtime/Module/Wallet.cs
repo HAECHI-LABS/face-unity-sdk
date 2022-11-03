@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -40,6 +38,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
 
+            if (faceLoginResponse.IsNewUser())
+            {
+                return faceLoginResponse;
+            }
             if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
             {
                 throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);

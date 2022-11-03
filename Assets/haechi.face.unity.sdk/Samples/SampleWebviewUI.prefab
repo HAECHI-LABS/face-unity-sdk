@@ -26425,9 +26425,9 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: StageMainnet
       m_Image: {fileID: 0}
-    - m_Text: ProdTest
+    - m_Text: Testnet
       m_Image: {fileID: 0}
-    - m_Text: ProdMainnet
+    - m_Text: Mainnet
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32128,9 +32128,9 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: StageMainnet
       m_Image: {fileID: 0}
-    - m_Text: ProdTest
+    - m_Text: Testnet
       m_Image: {fileID: 0}
-    - m_Text: ProdMainnet
+    - m_Text: Mainnet
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

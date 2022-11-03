@@ -27,8 +27,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.Dev, Network.GOERLI },
                         { Profile.StageTest, Network.GOERLI },
                         { Profile.StageMainnet, Network.ETHEREUM },
-                        { Profile.ProdTest, Network.GOERLI },
-                        { Profile.ProdMainnet, Network.ETHEREUM }
+                        { Profile.Testnet, Network.GOERLI },
+                        { Profile.Mainnet, Network.ETHEREUM }
                     }
                 },
                 {
@@ -37,8 +37,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.Dev, Network.BAOBAB },
                         { Profile.StageTest, Network.BAOBAB },
                         { Profile.StageMainnet, Network.KLAYTN },
-                        { Profile.ProdTest, Network.BAOBAB },
-                        { Profile.ProdMainnet, Network.KLAYTN }
+                        { Profile.Testnet, Network.BAOBAB },
+                        { Profile.Mainnet, Network.KLAYTN }
                     }
                 },
                 {
@@ -47,8 +47,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.Dev, Network.BNB_SMART_CHAIN_TESTNET },
                         { Profile.StageTest, Network.BNB_SMART_CHAIN_TESTNET },
                         { Profile.StageMainnet, Network.BNB_SMART_CHAIN },
-                        { Profile.ProdTest, Network.BNB_SMART_CHAIN_TESTNET },
-                        { Profile.ProdMainnet, Network.BNB_SMART_CHAIN }
+                        { Profile.Testnet, Network.BNB_SMART_CHAIN_TESTNET },
+                        { Profile.Mainnet, Network.BNB_SMART_CHAIN }
                     }
                 },
                 {
@@ -57,8 +57,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.Dev, Network.MUMBAI },
                         { Profile.StageTest, Network.MUMBAI },
                         { Profile.StageMainnet, Network.POLYGON },
-                        { Profile.ProdTest, Network.MUMBAI },
-                        { Profile.ProdMainnet, Network.POLYGON }
+                        { Profile.Testnet, Network.MUMBAI },
+                        { Profile.Mainnet, Network.POLYGON }
                     }
                 }
             };

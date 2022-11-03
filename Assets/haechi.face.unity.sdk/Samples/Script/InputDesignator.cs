@@ -177,7 +177,12 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.EnableLogin(true);
             this.EnableLogout(true);
         }
-        
+
+        public void DisableLoginInputStatus()
+        {
+            this.EnableLogin(false);
+        }
+
         public void SetLoggedInInputStatus()
         {
             this.EnableLogin(false);
