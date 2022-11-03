@@ -7,8 +7,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
         Dev,
         StageTest,
         StageMainnet,
-        ProdTest,
-        ProdMainnet
+        Testnet,
+        Mainnet
     }
 
     public static class Profiles
