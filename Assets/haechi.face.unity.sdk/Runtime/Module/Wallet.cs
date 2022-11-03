@@ -38,6 +38,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
 
+            if (faceLoginResponse.IsNewUser())
+            {
+                return faceLoginResponse;
+            }
             if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
             {
                 throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);

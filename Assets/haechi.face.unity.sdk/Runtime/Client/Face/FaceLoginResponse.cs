@@ -17,6 +17,11 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         public FaceLoginResponse()
         {
         }
+
+        public bool IsNewUser()
+        {
+            return !string.IsNullOrEmpty(this.wallet.KeyId) && string.IsNullOrEmpty(this.wallet.SignedAddress);
+        }
         
         public class Wallet
         {
@@ -34,6 +39,9 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
             
             [JsonProperty("signedAddress")]
             public string SignedAddress;
+            
+            [JsonProperty("keyId")]
+            public string KeyId;
         }
     }
 }
