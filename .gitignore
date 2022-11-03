@@ -88,5 +88,6 @@ crashlytics-build.properties
 *.blob
 Build_BurstDebugInformation_DoNotShip/
 **/obj/
+**/obj.meta
 Documentation/api/
 _site/

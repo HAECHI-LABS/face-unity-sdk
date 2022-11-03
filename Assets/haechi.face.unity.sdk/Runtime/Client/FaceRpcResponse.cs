@@ -78,7 +78,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         public override string ToString()
         {
-            return $"Id: {Id}, From: {From}, To: {To}, Result: {Result}, Method: {Method}";
+            return $"Id: {Id}, From: {From}, To: {To}, Result: {Result}, Method: {Method}, IsWebviewClosed: {this.IsWebviewClosed()}";
         }
 
         public WebviewRpcRequest Request { get; private set; }
