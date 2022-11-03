@@ -35,7 +35,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 #elif UNITY_ANDROID
         using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
-        using (var browserView = new AndroidJavaObject("com.face.unity.android.BrowserView"))
+        using (var browserView = new AndroidJavaObject("xyz.face.unity.android.BrowserView"))
         {
             browserView.CallStatic("launchUrl", activity, url);
         }
