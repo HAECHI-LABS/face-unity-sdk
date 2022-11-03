@@ -17,6 +17,7 @@ namespace haechi.face.unity.sdk.Runtime.Exception
         public static readonly ErrorCode SERVER_RESPONSE_ERROR = new ErrorCode { Value = "U0007", Message = "Face server returned an error" };
         public static readonly ErrorCode ADDRESS_VERIFICATION_FAILED = new ErrorCode { Value = "U0008", Message = "Failed to verify address" };
         public static readonly ErrorCode UNAUTHORIZED = new ErrorCode { Value = "U0009", Message = "Not logged in yet" };
+        public static readonly ErrorCode WEBVIEW_CLOSED = new ErrorCode { Value = "U0010", Message = "Webview is closed" };
     }
 
     public class FaceException : System.Exception

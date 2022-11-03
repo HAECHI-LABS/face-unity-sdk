@@ -1,4 +1,5 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Exception;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -13,32 +14,22 @@ namespace haechi.face.unity.sdk.Runtime.Client
         [JsonConstructor]
         public FaceRpcResponse()
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
         }
 
         public FaceRpcResponse(object id) : base(id)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
         }
         
         public FaceRpcResponse(object id, RpcError error) : base(id, error)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
         }
 
         public FaceRpcResponse(object id, JToken result) : base(id, result)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
         }
 
         public FaceRpcResponse(string method)
         {
-            this.From = "FACE_IFRAME";
-            this.To = "FACE_NATIVE_SDK";
             this.Method = method;
         }
 
@@ -47,25 +38,43 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this.Request = request;
         }
 
-        public T CastResult<T>()
+        public static FaceRpcResponse WebviewClosed()
         {
-            return (T) Result.ToObject(typeof(T));
+            FaceRpcResponse result = new FaceRpcResponse
+            {
+                _isWebviewClosed = true
+            };
+            return result;
         }
-        
+
         [JsonProperty("id")]
         public object Id { get; private set; }
 
-        [JsonProperty("from")]
-        public string From { get; private set; }
-        
-        [JsonProperty("to")]
-        public string To { get; private set; }
+        [JsonProperty("from")] public string From { get; private set; } = "FACE_IFRAME";
+
+        [JsonProperty("to")] public string To { get; private set; } = "FACE_NATIVE_SDK";
         
         [JsonProperty("result")]
         public JToken Result { get; private set; }
         
         [JsonProperty("method")]
         public string Method { get; private set; }
+
+        private bool _isWebviewClosed = false;
+        
+        public T CastResult<T>()
+        {
+            if (this._isWebviewClosed)
+            {
+                throw new WebviewClosedException();
+            }
+            return (T) Result.ToObject(typeof(T));
+        }
+
+        public bool IsWebviewClosed()
+        {
+            return this._isWebviewClosed;
+        }
 
         public override string ToString()
         {

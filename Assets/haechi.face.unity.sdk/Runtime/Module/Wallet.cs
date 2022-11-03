@@ -82,8 +82,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<object> rpcRequest =
                 new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_sendTransaction, request, requestId);
             
-            await this._provider.SendFaceRpcAsync(rpcRequest);
-            return await this.GetTransactionRequestId(requestId);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
+            return await this.GetTransactionRequestId(requestId, response);
         }
 
         public async Task<FaceRpcResponse> Call(RawTransaction request)
@@ -107,9 +107,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         
-        private async Task<TransactionRequestId> GetTransactionRequestId(string requestId)
+        private async Task<TransactionRequestId> GetTransactionRequestId(string requestId, FaceRpcResponse response)
         {
-            Debug.Log($"Request ID: {requestId}");
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
                 $"/v1/transactions/requests/{requestId}");
             
@@ -118,7 +117,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 return await task;
             }
             catch (HttpRequestException e)
-            { 
+            {
+                if (response.IsWebviewClosed())
+                {
+                    throw new WebviewClosedException();
+                }
                 throw new FaceException(ErrorCodes.SERVER_RESPONSE_ERROR, e.Message);
             }
         }
