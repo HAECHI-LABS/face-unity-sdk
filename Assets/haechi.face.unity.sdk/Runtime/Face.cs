@@ -14,6 +14,9 @@ namespace haechi.face.unity.sdk.Runtime
         
         [SerializeField] internal SafeWebviewController safeWebviewController;
 
+        /// <value>
+        /// This value indicates the version of webview client.
+        /// </value>
         public const int WEBVIEW_VERSION = 1;
         
         private Wallet _wallet;
@@ -21,6 +24,8 @@ namespace haechi.face.unity.sdk.Runtime
         internal ContractDataFactory dataFactory;
         
         private WalletProxy _walletProxy;
+        
+        /// <param name="parameters">Initialize face with registered environments.&#10; This method makes ready to use Face Wallet(<a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Wallet.html">Module.Wallet</a>).</param>
         public void Initialize(FaceSettings.Parameters parameters)
         {
             FaceSettings.Init(parameters);
@@ -42,6 +47,9 @@ namespace haechi.face.unity.sdk.Runtime
             this.dataFactory = new ContractDataFactory(web3);
         }
         
+        /// <summary>
+        /// Disconnect Face Wallet.&#10; If this method be called, need to initialize again to connect with Face Wallet.
+        /// </summary>
         public void Disconnect()
         {
             FaceSettings.Destruct();
@@ -51,6 +59,11 @@ namespace haechi.face.unity.sdk.Runtime
             this._wallet = null;
         }
 
+        /// <summary>
+        /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Wallet.html">Wallet</a>.
+        /// </summary>
+        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Wallet.html">Module.Wallet</a></returns>
+        /// <exception cref="FaceException">Throws if FaceSettings is not initialized.</exception>
         public Wallet Wallet()
         {
             if (!FaceSettings.IsInitialized())
