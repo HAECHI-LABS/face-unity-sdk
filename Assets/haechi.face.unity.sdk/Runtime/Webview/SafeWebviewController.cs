@@ -17,6 +17,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         private void Awake()
         {
             Application.deepLinkActivated += this.onDeepLinkActivated;
+            Application.focusChanged += this.onFocusChanged;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
                 this.onDeepLinkActivated(Application.absoluteURL);
@@ -72,6 +73,19 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
             // Launch browser
             LaunchUrl(uriBuilder.ToString(), this.gameObject.name);
+        }
+        
+        private void onFocusChanged(bool isFocused)
+        {
+            // Return true when focus is changed into Unity App
+            if (!isFocused)
+            {
+                return;
+            }
+            this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
+            {
+                Response = FaceRpcResponse.WebviewClosed()
+            });
         }
 
         private void _handleDeepLink(Uri uri)

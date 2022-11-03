@@ -23,6 +23,11 @@ namespace haechi.face.unity.sdk.Samples.Script
             Application.targetFrameRate = 60;
         }
 
+        private void _defaultExceptionHandler(Exception ex)
+        {
+            this.dataDesignator.SetResult($"Error - {ex.Message}");
+        }
+
         public void InitializeFace()
         {
             this.face.Initialize(new FaceSettings.Parameters
@@ -40,7 +45,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             Task<LoginResult> responseTask = this.LoginAndGetBalanceAsync();
 
-            this.actionQueue.Enqueue(response =>
+            this.actionQueue.Enqueue(responseTask, response =>
             {
                 this.dataDesignator.SetLoggedInId(response.userId);
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
@@ -48,7 +53,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 
                 this.dataDesignator.SetLogoutInstruction();
                 this.inputDesignator.SetLoggedInInputStatus();
-            }, responseTask);
+            }, this._defaultExceptionHandler);
         }
 
         private async Task<LoginResult> LoginAndGetBalanceAsync()
@@ -64,14 +69,14 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             Task<FaceRpcResponse> responseTask = this.face.Wallet().Logout();
 
-            this.actionQueue.Enqueue(response =>
+            this.actionQueue.Enqueue(responseTask, response =>
             {
                 string result = JsonConvert.SerializeObject(response);
                 Debug.Log($"Result: {result}");
                 this.dataDesignator.InitializeDataStatus();
                 this.inputDesignator.InitializeInputStatus();
                 this.face.Disconnect();
-            }, responseTask);
+            }, this._defaultExceptionHandler);
         }
 
         public void GetBalance()
@@ -80,10 +85,10 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             Task<string> responseTask = this.GetBalance(this.dataDesignator.loggedInAddress.text);
             
-            this.actionQueue.Enqueue(response =>
+            this.actionQueue.Enqueue(responseTask, response =>
             {
                 this.dataDesignator.SetCoinBalance(response);
-            }, responseTask);
+            }, this._defaultExceptionHandler);
         }
         
         public void GetErc20Balance()
@@ -97,13 +102,13 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             Task<FaceRpcResponse> responseTask = this.face.Wallet().Call(request);
 
-            this.actionQueue.Enqueue(response =>
+            this.actionQueue.Enqueue(responseTask, response =>
             {
                 string result = JsonConvert.SerializeObject(response);
                 Debug.Log($"Result: {result}");
                 this.dataDesignator.SetErc20Balance(
                     NumberFormatter.DivideHexWithDecimals(response.CastResult<string>(), 18));
-            }, responseTask);
+            }, this._defaultExceptionHandler);
         }
 
         public void SendNativeCoinTransaction()
@@ -155,12 +160,12 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             Task<FaceRpcResponse> responseTask = this.face.Wallet().Sign(this.inputDesignator.messageToSign.text);
 
-            this.actionQueue.Enqueue(response =>
+            this.actionQueue.Enqueue(responseTask, response =>
             {
                 string result = JsonConvert.SerializeObject(response);
                 Debug.Log($"Result: {result}");
                 this.dataDesignator.SetResult(string.Format($"Signed Message - {response.CastResult<string>()}"));
-            }, responseTask);
+            }, this._defaultExceptionHandler);
         }
         
         private async Task<TransactionResult> SendErc20TransactionTask()
@@ -202,11 +207,11 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.ValidateIsLoggedIn();
 
-            this.actionQueue.Enqueue(response =>
+            this.actionQueue.Enqueue(transactionTask, response =>
             {
                 this.dataDesignator.SetCoinBalance(response.balance);
                 this.dataDesignator.SetResult(response.result);
-            }, transactionTask);
+            }, this._defaultExceptionHandler);
         }
 
         private async Task<string> GetBalance(string address)

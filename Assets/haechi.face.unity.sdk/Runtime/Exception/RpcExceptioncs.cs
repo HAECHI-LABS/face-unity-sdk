@@ -24,4 +24,9 @@ namespace haechi.face.unity.sdk.Runtime.Exception
     {
         public InvalidRpcMethodException() : base(ErrorCodes.INVALLID_RPC_METHOD) {}
     }
+
+    public class WebviewClosedException : FaceException
+    {
+        public WebviewClosedException() : base(ErrorCodes.WEBVIEW_CLOSED) {}
+    }
 }

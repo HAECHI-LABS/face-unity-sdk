@@ -19,23 +19,31 @@ public class ActionQueue : MonoBehaviour
         }
     }
 
-    public void Enqueue<T>(Action<T> a, Task<T> task)
+    public void Enqueue<T>(Task<T> task, Action<T> a, Action<Exception> e)
     {
         lock (_executionQueue)
         {
             _executionQueue.Enqueue(() => {
-                StartCoroutine(_actionWrapper(a, task));
+                StartCoroutine(_actionWrapper(task, a, e));
             });
         }
     }
 
-    private IEnumerator _actionWrapper<T>(Action<T> a, Task<T> task)
+    private IEnumerator _actionWrapper<T>(Task<T> task, Action<T> a, Action<Exception> e)
     {
         while (!task.IsCompleted)
         {
             yield return null;
         }
-        a.Invoke(task.Result);
+
+        if (!task.IsCompletedSuccessfully)
+        {
+            e.Invoke(task.Exception);
+        }
+        else
+        {
+            a.Invoke(task.Result);
+        }
         yield return null;
     }
 }   
