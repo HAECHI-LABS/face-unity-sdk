@@ -19,6 +19,7 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -31,7 +32,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         private readonly MethodHandlers _methodHandlers;
 
         private readonly IRequestSender _defaultRequestSender;
-        
+
         public FaceRpcProvider(SafeWebviewController safeWebviewController, Uri uri, IWallet wallet)
         {
             this._webview = safeWebviewController;
@@ -123,11 +124,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
             {
                 TaskCompletionSource<FaceRpcResponse> rpcResponsePromise = new TaskCompletionSource<FaceRpcResponse>();
                 TaskCompletionSource<FaceRpcResponse> webviewClosedPromise = new TaskCompletionSource<FaceRpcResponse>();
-                List<Task<FaceRpcResponse>> tasks = new List<Task<FaceRpcResponse>>
-                {
-                    rpcResponsePromise.Task,
-                    webviewClosedPromise.Task
-                };
                 
                 void OnCloseWebview(SafeWebviewController _, CloseWebviewArgs args)
                 {
@@ -138,7 +134,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 this._webview.OnCloseWebview += OnCloseWebview;
                 this._provider._webview.SendMessage(request, response => rpcResponsePromise.TrySetResult(response));
                 
-                Task<FaceRpcResponse> doneTask = await Task.WhenAny(tasks);
+                Task<FaceRpcResponse> doneTask = await Task.WhenAny(new List<Task<FaceRpcResponse>>
+                {
+                    rpcResponsePromise.Task,
+                    webviewClosedPromise.Task
+                });
                 return await doneTask;
             }
         }

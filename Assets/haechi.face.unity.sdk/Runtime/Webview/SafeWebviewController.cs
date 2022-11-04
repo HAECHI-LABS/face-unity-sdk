@@ -82,10 +82,12 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             {
                 return;
             }
+#if UNITY_ANDROID
             this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
             {
                 Response = FaceRpcResponse.WebviewClosed()
             });
+#endif
         }
 
         private void _handleDeepLink(Uri uri)
