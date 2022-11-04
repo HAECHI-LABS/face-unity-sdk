@@ -4,6 +4,7 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
@@ -28,8 +29,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.face.Initialize(new FaceSettings.Parameters
             {
                 ApiKey = this.inputDesignator.apiKey.text,
-                Environment = this.inputDesignator.profileDrd.captionText.text,
-                Blockchain = this.inputDesignator.blockchainDrd.captionText.text
+                Environment = Profiles.ValueOf(this.inputDesignator.profileDrd.captionText.text),
+                Blockchain = Blockchains.ValueOf(this.inputDesignator.blockchainDrd.captionText.text)
             });
             
             this.dataDesignator.SetLoginInstruction();
