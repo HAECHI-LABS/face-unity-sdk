@@ -45,7 +45,7 @@ namespace haechi.face.unity.sdk.Runtime
             instance = new FaceSettings(new Parameters
             {
                 ApiKey = parameters.ApiKey,
-                Environment = Profile.StageTest,
+                Environment = parameters.Environment,
                 Blockchain = parameters.Blockchain
             });
         }

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
-using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
@@ -38,15 +37,12 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
 
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
-
-            if (faceLoginResponse.IsNewUser())
-            {
-                return faceLoginResponse;
-            }
+            
             if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
             {
                 throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);
             }
+            
             return faceLoginResponse;
         }
 

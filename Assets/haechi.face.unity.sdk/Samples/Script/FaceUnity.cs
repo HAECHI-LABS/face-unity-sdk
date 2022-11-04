@@ -43,12 +43,6 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
-                if (response.isNewUser)
-                {
-                    this.dataDesignator.SetLoginAfterSignupInstruction();
-                    this.inputDesignator.DisableLoginInputStatus();
-                    return;
-                }
                 this.dataDesignator.SetLoggedInId(response.userId);
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
@@ -61,10 +55,6 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
             FaceLoginResponse response = await this.face.Wallet().LoginWithCredential();
-            if (response.IsNewUser())
-            {
-                return LoginResult.SignupResult();
-            }
             string address = response.wallet.Address;
             string balance = await this._getBalance(address);
 
@@ -248,23 +238,12 @@ namespace haechi.face.unity.sdk.Samples.Script
         public string balance;
         public string userId;
         public string userAddress;
-        public bool isNewUser;
-
-        private LoginResult(bool isNewUser)
-        {
-            this.isNewUser = isNewUser;
-        }
 
         public LoginResult(string balance, string userId, string userAddress)
         {
             this.balance = balance;
             this.userId = userId;
             this.userAddress = userAddress;
-        }
-
-        public static LoginResult SignupResult()
-        {
-            return new LoginResult(true);
         }
     }
 

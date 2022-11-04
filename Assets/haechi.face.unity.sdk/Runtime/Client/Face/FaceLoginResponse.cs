@@ -24,14 +24,6 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         {
         }
 
-        /// <returns>
-        /// Confirms if the user is newly signed up.
-        /// </returns>
-        public bool IsNewUser()
-        {
-            return !string.IsNullOrEmpty(this.wallet.KeyId) && string.IsNullOrEmpty(this.wallet.SignedAddress);
-        }
-        
         public class Wallet
         {
             /// <value>
