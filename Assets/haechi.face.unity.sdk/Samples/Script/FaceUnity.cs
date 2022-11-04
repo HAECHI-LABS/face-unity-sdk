@@ -14,6 +14,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 {
     public class FaceUnity : MonoBehaviour
     {
+        private static string SAMPLE_API_KEY =
+            "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB";
         [SerializeField] internal DataDesignator dataDesignator;
         [SerializeField] internal InputDesignator inputDesignator;
         [SerializeField] internal Face face;
@@ -26,11 +28,21 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void InitializeFace()
         {
+            string apiKey = this.inputDesignator.apiKey != null
+                ? this.inputDesignator.apiKey.text 
+                : SAMPLE_API_KEY;
+            Profile environment = this.inputDesignator.profileDrd != null
+                ? Profiles.ValueOf(this.inputDesignator.profileDrd.captionText.text)
+                : Profile.ProdTest;
+            BlockchainNetwork network = this.inputDesignator.blockchainDrd != null && this.inputDesignator.profileDrd != null
+                ? BlockchainNetworks.GetNetwork(this.inputDesignator.blockchainDrd.captionText.text, this.inputDesignator.profileDrd.captionText.text)
+                : BlockchainNetworks.ValueOf(this.inputDesignator.networkDrd.captionText.text);
+
             this.face.Initialize(new FaceSettings.Parameters
             {
-                ApiKey = this.inputDesignator.apiKey.text,
-                Environment = Profiles.ValueOf(this.inputDesignator.profileDrd.captionText.text),
-                Network = BlockchainNetworks.ValueOf(this.inputDesignator.blockchainDrd.captionText.text)
+                ApiKey = apiKey,
+                Environment = environment,
+                Network = network
             });
             
             this.dataDesignator.SetLoginInstruction();

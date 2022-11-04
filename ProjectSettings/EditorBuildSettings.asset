@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/haechi.face.unity.sdk/Samples/Scenes/SampleScene.unity
-    guid: 4512be75148d84852be207c9dd79ed62
+    path: Assets/haechi.face.unity.sdk/Samples/Scenes/DevelopmentScene.unity
+    guid: a06676a417d8441eda5c6f992ed1807f
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: d4f34de0915824e8d8d86c5b7a146f67, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 37c8b5b67a2284e359263e0cac2e0924, type: 2}

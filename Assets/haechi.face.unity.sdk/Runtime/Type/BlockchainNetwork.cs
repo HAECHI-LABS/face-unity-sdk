@@ -41,25 +41,25 @@ namespace haechi.face.unity.sdk.Runtime.Type
                     throw new InvalidEnumArgumentException();
             }
         }
+        
         public static BlockchainNetwork ValueOf(string network)
         {
             return EnumUtils.FindEquals<BlockchainNetwork>(network);
         }
 
-        public static string GetNetwork(string blockchain, string profile)
+        public static BlockchainNetwork GetNetwork(string blockchain, string profile)
         {
-            if (!Blockchains.Map.TryGetValue(EnumUtils.FindEquals<Blockchain>(blockchain),
-                    out Dictionary<Profile, BlockchainNetwork> profileNetworkMap))
+            if (!Blockchains.Map.TryGetValue(Blockchains.ValueOf(blockchain), out Dictionary<Profile, BlockchainNetwork> profileNetworkMap))
             {
                 throw new ArgumentException($"Unknown blockchain {blockchain}");
             }
 
-            if (!profileNetworkMap.TryGetValue(EnumUtils.FindEquals<Profile>(profile), out BlockchainNetwork network))
+            if (!profileNetworkMap.TryGetValue(Profiles.ValueOf(profile), out BlockchainNetwork network))
             {
                 throw new ArgumentException($"Unknown env {profile}");
             }
 
-            return network.ToString().ToLower();
+            return network;
         }
 
         public static int GetChainId(this BlockchainNetwork blockchainNetwork)

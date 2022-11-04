@@ -26,7 +26,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             landscapeSendErc1155TransactionBtn,
             landscapeSignMessageBtn;
         
-        public TMP_Dropdown profileDrd, blockchainDrd;
+        public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey;
         public TMP_InputField to, amount;
         public TMP_InputField erc1155To, erc1155TokenId, erc1155Quantity, erc1155NftAddress;
@@ -34,7 +34,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         public TMP_InputField erc721To, erc721TokenId, erc721NftAddress;
         public TMP_InputField messageToSign;
 
-        public TMP_Dropdown landscapeProfileDrd, landscapeBlockchainDrd;
+        public TMP_Dropdown landscapeProfileDrd, landscapeBlockchainDrd, landscapeNetworkDrd;
         public TMP_InputField landscapeApiKey;
         public TMP_InputField landscapeTo, landscapeAmount;
 
@@ -53,18 +53,41 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private void Start()
         {
-            this.profileDrd.onValueChanged.AddListener(value => { SetDropdown(this.landscapeProfileDrd, value); });
-            this.blockchainDrd.onValueChanged.AddListener(value =>
+            if (this.profileDrd != null)
             {
-                SetDropdown(this.landscapeBlockchainDrd, value);
-            });
-            this.landscapeProfileDrd.onValueChanged.AddListener(value => { SetDropdown(this.profileDrd, value); });
-            this.landscapeBlockchainDrd.onValueChanged.AddListener(value =>
+                this.profileDrd.onValueChanged.AddListener(value => { SetDropdown(this.landscapeProfileDrd, value); });
+                this.landscapeProfileDrd.onValueChanged.AddListener(value => { SetDropdown(this.profileDrd, value); });
+            }
+
+            if (this.blockchainDrd != null)
             {
-                SetDropdown(this.blockchainDrd, value);
-            });
-            this.apiKey.onValueChanged.AddListener(value => { SetInputText(this.landscapeApiKey, value); });
-            this.landscapeApiKey.onValueChanged.AddListener(value => { SetInputText(this.apiKey, value); });
+                this.blockchainDrd.onValueChanged.AddListener(value =>
+                {
+                    SetDropdown(this.landscapeBlockchainDrd, value);
+                });
+                this.landscapeBlockchainDrd.onValueChanged.AddListener(value =>
+                {
+                    SetDropdown(this.blockchainDrd, value);
+                });
+            }
+
+            if (this.networkDrd != null)
+            {
+                this.networkDrd.onValueChanged.AddListener(value =>
+                {
+                    SetDropdown(this.landscapeNetworkDrd, value);
+                });
+                this.landscapeNetworkDrd.onValueChanged.AddListener(value =>
+                {
+                    SetDropdown(this.networkDrd, value);
+                });
+            }
+
+            if (this.apiKey != null)
+            {
+                this.apiKey.onValueChanged.AddListener(value => { SetInputText(this.landscapeApiKey, value); });
+                this.landscapeApiKey.onValueChanged.AddListener(value => { SetInputText(this.apiKey, value); });   
+            }
 
             this.to.onValidateInput += delegate(string s, int i, char c) { return char.ToLower(c); };
             this.to.onValueChanged.AddListener(value => { SetInputText(this.landscapeTo, value); });
@@ -183,12 +206,30 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         private void EnableConnectWalletSection(bool enable)
         {
-            this.profileDrd.interactable = enable;
-            this.landscapeProfileDrd.interactable = enable;
-            this.blockchainDrd.interactable = enable;
-            this.landscapeBlockchainDrd.interactable = enable;
-            this.apiKey.interactable = enable;
-            this.landscapeApiKey.interactable = enable;
+            if (this.profileDrd != null)
+            {
+                this.profileDrd.interactable = enable;
+                this.landscapeProfileDrd.interactable = enable;
+            }
+            
+            if (this.blockchainDrd != null)
+            {
+                this.blockchainDrd.interactable = enable;
+                this.landscapeBlockchainDrd.interactable = enable;
+            }
+            
+            if (this.networkDrd != null)
+            {
+                this.networkDrd.interactable = enable;
+                this.landscapeNetworkDrd.interactable = enable;
+            }
+            
+            if (this.apiKey != null)
+            {
+                this.apiKey.interactable = enable;
+                this.landscapeApiKey.interactable = enable;
+            }
+            
             this.initializeBtn.interactable = enable;
             this.landscapeInitializeBtn.interactable = enable;
         }
