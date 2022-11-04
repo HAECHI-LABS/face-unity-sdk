@@ -12,14 +12,16 @@ namespace haechi.face.unity.sdk.Runtime
             /// Api key.
             /// </value>
             public string ApiKey;
+            
             /// <value>
             /// Environment such as Testnet, Mainnet.
             /// </value>
-            public string Environment;
+            public Profile Environment;
+            
             /// <value>
             /// Blockchain such as Ethereum, Klaytn, etc.
             /// </value>
-            public string Blockchain;
+            public Blockchain Blockchain;
         }
         
         private static FaceSettings instance;
@@ -40,7 +42,12 @@ namespace haechi.face.unity.sdk.Runtime
             {
                 throw new FaceException(ErrorCodes.ALREADY_INITIALIZED);
             }
-            instance = new FaceSettings(parameters);
+            instance = new FaceSettings(new Parameters
+            {
+                ApiKey = parameters.ApiKey,
+                Environment = Profile.StageTest,
+                Blockchain = parameters.Blockchain
+            });
         }
 
         /// <summary>
@@ -67,7 +74,7 @@ namespace haechi.face.unity.sdk.Runtime
         /// <returns>Profile such as Testnet, Mainnet.</returns>
         public Profile Environment()
         {
-            return Profiles.ValueOf(this._parameters.Environment);
+            return this._parameters.Environment;
         }
 
         /// <returns>Api key.</returns>
@@ -79,7 +86,7 @@ namespace haechi.face.unity.sdk.Runtime
         /// <returns>Blockchain such as Ethereum, Klaytn, etc.</returns>
         public Blockchain Blockchain()
         {
-            return Blockchains.ValueOf(this._parameters.Blockchain);
+            return this._parameters.Blockchain;
         }
         
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
