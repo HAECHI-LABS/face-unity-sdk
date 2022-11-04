@@ -53,10 +53,6 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private void Start()
         {
-            this.profileDrd.ClearOptions();
-            this.profileDrd.AddOptions(Enum.GetNames(typeof(Profile)).ToList());
-            this.landscapeProfileDrd.ClearOptions();
-            this.landscapeProfileDrd.AddOptions(Enum.GetNames(typeof(Profile)).ToList());
             this.blockchainDrd.ClearOptions();
             this.blockchainDrd.AddOptions(Enum.GetNames(typeof(Blockchain)).ToList());
             this.landscapeBlockchainDrd.ClearOptions();
