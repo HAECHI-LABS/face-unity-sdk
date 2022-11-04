@@ -8,15 +8,32 @@ namespace haechi.face.unity.sdk.Runtime
     {
         public struct Parameters
         {
+            /// <value>
+            /// Api key.
+            /// </value>
             public string ApiKey;
+            /// <value>
+            /// Environment such as Testnet, Mainnet.
+            /// </value>
             public string Environment;
+            /// <value>
+            /// Blockchain such as Ethereum, Klaytn, etc.
+            /// </value>
             public string Blockchain;
         }
         
         private static FaceSettings instance;
 
+        /// <value>
+        /// Returns FaceSettings' instance.
+        /// </value>
         public static FaceSettings Instance => instance;
 
+        /// <summary>
+        /// Initialize FaceSettings with <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.FaceSettings.Parameters.html">Parameters</a>.
+        /// </summary>
+        /// <param name="parameters"><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.FaceSettings.Parameters.html">Parameters</a>.</param>
+        /// <exception cref="FaceException">Throws if FaceSettings is already initialized.</exception>
         public static void Init(Parameters parameters)
         {
             if (instance != null)
@@ -26,11 +43,15 @@ namespace haechi.face.unity.sdk.Runtime
             instance = new FaceSettings(parameters);
         }
 
+        /// <summary>
+        /// Initialize FaceSettings with null instance.
+        /// </summary>
         public static void Destruct()
         {
             instance = null;
         }
-
+        
+        /// <returns>Returns true if initialized.</returns>
         public static bool IsInitialized()
         {
             return instance != null;
@@ -43,16 +64,19 @@ namespace haechi.face.unity.sdk.Runtime
 
         private Parameters _parameters;
         
+        /// <returns>Profile such as Testnet, Mainnet.</returns>
         public Profile Environment()
         {
             return Profiles.ValueOf(this._parameters.Environment);
         }
 
+        /// <returns>Api key.</returns>
         public string ApiKey()
         {
             return this._parameters.ApiKey;
         }
-
+        
+        /// <returns>Blockchain such as Ethereum, Klaytn, etc.</returns>
         public Blockchain Blockchain()
         {
             return Blockchains.ValueOf(this._parameters.Blockchain);
@@ -75,12 +99,14 @@ namespace haechi.face.unity.sdk.Runtime
             { Profile.Testnet, "https://api.test.facewallet.xyz" },
             { Profile.Mainnet, "https://api.facewallet.xyz" },
         };
-
+        
+        /// <returns>Returns webview client url.</returns>
         public string WebviewHostURL()
         {
             return this._webviewHostMap.GetValueOrDefault(this.Environment(), this._webviewHostMap[Profile.Dev]);
         }
-
+        
+        /// <returns>Returns server host url.</returns>
         public string ServerHostURL()
         {
             return this._serverHostMap.GetValueOrDefault(this.Environment(), this._serverHostMap[Profile.Dev]);

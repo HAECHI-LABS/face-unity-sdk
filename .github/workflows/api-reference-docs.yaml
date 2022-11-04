@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'Assets/haechi.face.unity.sdk'
+      - 'Documentation'
 
 jobs:
   api-reference-docs:

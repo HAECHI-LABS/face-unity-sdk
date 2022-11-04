@@ -3,7 +3,16 @@ apiRules:
       uidRegex: ^haechi\.face\.unity\.sdk\.Runtime\.Module
       type: Namespace
   - include:
+      uidRegex: ^haechi\.face\.unity\.sdk\.Runtime\.Client\.Face
+      type: Namespace
+  - include:
       uidRegex: ^haechi\.face\.unity\.sdk\.Runtime\.Client
+      type: Namespace
+  - include:
+      uidRegex: ^haechi\.face\.unity\.sdk\.Runtime\.Contract
+      type: Namespace
+  - include:
+      uidRegex: ^haechi\.face\.unity\.sdk\.Runtime
       type: Namespace
   - exclude:
       uidRegex: ^.* # Every other namespaces are ignored

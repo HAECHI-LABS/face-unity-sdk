@@ -10,12 +10,22 @@ namespace haechi.face.unity.sdk.Runtime.Contract
     public class ContractDataFactory
     {
         private readonly Web3 _web3;
-
+        
+        /// <param name="web3">Web3</param>
         public ContractDataFactory(Web3 web3)
         {
             this._web3 = web3;
         }
 
+        /// <summary>
+        /// Create sending ERC20 data.
+        /// </summary>
+        /// <param name="tokenAddress">ERC20 token contract address.</param>
+        /// <param name="to">Receiver address.</param>
+        /// <param name="amount">Token amount to send.</param>
+        /// <param name="decimals">Token decimals.</param>
+        /// <returns>ABI encoded data.</returns>
+        /// <exception cref="DataException">Returns error if data creation fails.</exception>
         public string CreateErc20SendData(string tokenAddress, string to, string amount, int decimals = 18)
         {
             try
@@ -34,6 +44,13 @@ namespace haechi.face.unity.sdk.Runtime.Contract
             }
         }
 
+        /// <summary>
+        /// Create ERC20 balance inquiry data.
+        /// </summary>
+        /// <param name="tokenAddress">ERC20 token contract address.</param>
+        /// <param name="address">Sending wallet's address.</param>
+        /// <returns>ABI encoded data.</returns>
+        /// <exception cref="DataException">Returns error if data creation fails.</exception>
         public string CreateErc20GetBalanceData(string tokenAddress, string address)
         {
             try
@@ -49,6 +66,12 @@ namespace haechi.face.unity.sdk.Runtime.Contract
             }
         }
 
+        /// <summary>
+        /// Create ERC20 decimals inquiry data.
+        /// </summary>
+        /// <param name="tokenAddress">ERC20 token contract address.</param>
+        /// <returns>ABI encoded data.</returns>
+        /// <exception cref="DataException">Returns error if data creation fails.</exception>
         public string CreateErc20GetDecimalsData(string tokenAddress)
         {
             try
@@ -64,6 +87,15 @@ namespace haechi.face.unity.sdk.Runtime.Contract
             }
         }
 
+        /// <summary>
+        /// Create sending ERC721 data.
+        /// </summary>
+        /// <param name="nftAddress">ERC721 token contract address.</param>
+        /// <param name="from">Sending wallet's address.</param>
+        /// <param name="to">Receiver address.</param>
+        /// <param name="tokenId">NFT token ID.</param>
+        /// <returns>ABI encoded data.</returns>
+        /// <exception cref="DataException">Returns error if data creation fails.</exception>
         public string CreateErc721SendData(string nftAddress, string from, string to, string tokenId)
         {
             try
@@ -79,6 +111,16 @@ namespace haechi.face.unity.sdk.Runtime.Contract
             }
         }
 
+        /// <summary>
+        /// Create sending ERC1155 data.
+        /// </summary>
+        /// <param name="nftAddress">ERC1155 token contract address.</param>
+        /// <param name="from">Sending wallet's address.</param>
+        /// <param name="to">Receiver address.</param>
+        /// <param name="tokenId">NFT token ID.</param>
+        /// <param name="quantity">Quantity of sending ERC1155 nft.</param>
+        /// <returns>ABI encoded data.</returns>
+        /// <exception cref="DataException">Returns error if data creation fails.</exception>
         public string CreateErc1155SendBatchData(string nftAddress, string from, string to, string tokenId,
             string quantity)
         {

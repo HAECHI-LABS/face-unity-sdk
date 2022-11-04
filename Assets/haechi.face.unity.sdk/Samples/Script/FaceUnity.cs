@@ -163,7 +163,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this._validateIsLoggedIn();
 
-            Task<FaceRpcResponse> responseTask = this.face.Wallet().Sign(this.inputDesignator.messageToSign.text);
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().SignMessage(this.inputDesignator.messageToSign.text);
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
@@ -200,7 +200,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             try
             {
                 TransactionRequestId transactionRequestId = await this.face.Wallet().SendTransaction(request);
-                return new TransactionResult(await this._getBalance(loggedInAddress), string.Format($"TX Hash - {transactionRequestId.TransactionId}"));
+                return new TransactionResult(await this._getBalance(loggedInAddress), string.Format($"TX Hash - {transactionRequestId.transactionId}"));
             }
             catch (FaceException ex)
             {
@@ -237,7 +237,8 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         private void _defaultExceptionHandler(Exception ex)
         {
-            this.dataDesignator.SetResult($"Error - {ex.Message}");
+            Debug.Log(ex.StackTrace);
+            this.dataDesignator.SetResult($"Error - {ex.StackTrace}");
         }
     }
 

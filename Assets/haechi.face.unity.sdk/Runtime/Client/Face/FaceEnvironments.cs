@@ -16,6 +16,12 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         [SerializeField] [JsonProperty("apiKey")]
         internal string apiKey;
 
+        /// <summary>
+        /// Environments used to initialize and connect with Face.
+        /// </summary>
+        /// <param name="network">Blockchain value such as Ethereum, Polygon etc.</param>
+        /// <param name="env">Environment such as Testnet, Mainnet.</param>
+        /// <param name="apiKey">Your api key received when register.</param>
         public FaceEnvironments(string network, string env, string apiKey)
         {
             this.network = network;
