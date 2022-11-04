@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 
@@ -16,12 +17,19 @@ namespace haechi.face.unity.sdk.Runtime
             /// <value>
             /// Environment such as Testnet, Mainnet.
             /// </value>
-            public Profile Environment;
+            public Profile? Environment;
             
             /// <value>
-            /// Blockchain such as Ethereum, Klaytn, etc.
+            /// Blockchain Network such as Goerli, Mumbai, Ethereum etc.
             /// </value>
-            public Blockchain Blockchain;
+            public BlockchainNetwork Network;
+        }
+
+        private struct parameters
+        {
+            public string _apiKey;
+            public Profile _environment;
+            public BlockchainNetwork _network;
         }
         
         private static FaceSettings instance;
@@ -42,12 +50,25 @@ namespace haechi.face.unity.sdk.Runtime
             {
                 throw new FaceException(ErrorCodes.ALREADY_INITIALIZED);
             }
-            instance = new FaceSettings(new Parameters
+            instance = new FaceSettings(new parameters
             {
-                ApiKey = parameters.ApiKey,
-                Environment = parameters.Environment,
-                Blockchain = parameters.Blockchain
+                _apiKey = parameters.ApiKey,
+                _environment = parameters.Environment ?? _getDefaultProfile(parameters.Network),
+                _network = parameters.Network
             });
+        }
+
+        private static Profile _getDefaultProfile(BlockchainNetwork blockchainNetwork)
+        {
+            if (blockchainNetwork.Equals(BlockchainNetwork.BAOBAB) || 
+                blockchainNetwork.Equals(BlockchainNetwork.GOERLI) || 
+                blockchainNetwork.Equals(BlockchainNetwork.MUMBAI) || 
+                blockchainNetwork.Equals(BlockchainNetwork.BNB_SMART_CHAIN_TESTNET))
+            {
+                return Profile.ProdTest;
+            }
+
+            return Profile.ProdMainnet;
         }
 
         /// <summary>
@@ -64,29 +85,29 @@ namespace haechi.face.unity.sdk.Runtime
             return instance != null;
         }
 
-        private FaceSettings(Parameters parameters)
+        private FaceSettings(parameters parameters)
         {
             this._parameters = parameters;
         }
 
-        private Parameters _parameters;
+        private parameters _parameters;
         
-        /// <returns>Profile such as Testnet, Mainnet.</returns>
+        /// <returns>Return Profile such as Testnet, Mainnet.</returns>
         public Profile Environment()
         {
-            return this._parameters.Environment;
+            return this._parameters._environment;
         }
 
-        /// <returns>Api key.</returns>
+        /// <returns>Return Api key.</returns>
         public string ApiKey()
         {
-            return this._parameters.ApiKey;
+            return this._parameters._apiKey;
         }
         
-        /// <returns>Blockchain such as Ethereum, Klaytn, etc.</returns>
+        /// <returns> Return Blockchain Network such as Goerli, Mumbai, Ethereum etc.</returns>
         public Blockchain Blockchain()
         {
-            return this._parameters.Blockchain;
+            return BlockchainNetworks.OfBlockchain(this._parameters._network);
         }
         
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>

@@ -30,7 +30,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 ApiKey = this.inputDesignator.apiKey.text,
                 Environment = Profiles.ValueOf(this.inputDesignator.profileDrd.captionText.text),
-                Blockchain = Blockchains.ValueOf(this.inputDesignator.blockchainDrd.captionText.text)
+                Network = BlockchainNetworks.ValueOf(this.inputDesignator.blockchainDrd.captionText.text)
             });
             
             this.dataDesignator.SetLoginInstruction();

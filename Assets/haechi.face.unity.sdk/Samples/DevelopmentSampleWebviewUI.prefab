@@ -9507,7 +9507,7 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: POLYGON
+    - m_Text: MUMBAI
       m_Image: {fileID: 0}
     - m_Text: ETHEREUM
       m_Image: {fileID: 0}
@@ -13478,7 +13478,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: POLYGON
+  m_text: MUMBAI
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e438720382caa47c499e48b8b526ab59, type: 2}
   m_sharedMaterial: {fileID: -3258796842968893497, guid: e438720382caa47c499e48b8b526ab59, type: 2}

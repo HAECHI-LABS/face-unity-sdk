@@ -64,10 +64,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
     {
         private IAuth _auth;
 
-        public AuthProxy()
-        {
-        }
-
         public void Register(IAuth auth)
         {
             this._auth = auth;

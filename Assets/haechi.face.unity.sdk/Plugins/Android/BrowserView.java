@@ -1,4 +1,4 @@
-package xyz.face.unity.android;
+package xyz.facewallet.unity.android;
 
 import android.app.Activity;
 import android.content.Intent;

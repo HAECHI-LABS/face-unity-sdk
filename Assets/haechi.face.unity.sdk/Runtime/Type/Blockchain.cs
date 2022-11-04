@@ -18,47 +18,47 @@ namespace haechi.face.unity.sdk.Runtime.Type
             return EnumUtils.FindEquals<Blockchain>(value);
         }
         
-        public static Dictionary<Blockchain, Dictionary<Profile, Network>> Map =
-            new Dictionary<Blockchain, Dictionary<Profile, Network>>
+        public static Dictionary<Blockchain, Dictionary<Profile, BlockchainNetwork>> Map =
+            new Dictionary<Blockchain, Dictionary<Profile, BlockchainNetwork>>
             {
                 {
-                    Blockchain.ETHEREUM, new Dictionary<Profile, Network>
+                    Blockchain.ETHEREUM, new Dictionary<Profile, BlockchainNetwork>
                     {
-                        { Profile.Dev, Network.GOERLI },
-                        { Profile.StageTest, Network.GOERLI },
-                        { Profile.StageMainnet, Network.ETHEREUM },
-                        { Profile.ProdTest, Network.GOERLI },
-                        { Profile.ProdMainnet, Network.ETHEREUM }
+                        { Profile.Dev, BlockchainNetwork.GOERLI },
+                        { Profile.StageTest, BlockchainNetwork.GOERLI },
+                        { Profile.StageMainnet, BlockchainNetwork.ETHEREUM },
+                        { Profile.ProdTest, BlockchainNetwork.GOERLI },
+                        { Profile.ProdMainnet, BlockchainNetwork.ETHEREUM }
                     }
                 },
                 {
-                    Blockchain.KLAYTN, new Dictionary<Profile, Network>
+                    Blockchain.KLAYTN, new Dictionary<Profile, BlockchainNetwork>
                     {
-                        { Profile.Dev, Network.BAOBAB },
-                        { Profile.StageTest, Network.BAOBAB },
-                        { Profile.StageMainnet, Network.KLAYTN },
-                        { Profile.ProdTest, Network.BAOBAB },
-                        { Profile.ProdMainnet, Network.KLAYTN }
+                        { Profile.Dev, BlockchainNetwork.BAOBAB },
+                        { Profile.StageTest, BlockchainNetwork.BAOBAB },
+                        { Profile.StageMainnet, BlockchainNetwork.KLAYTN },
+                        { Profile.ProdTest, BlockchainNetwork.BAOBAB },
+                        { Profile.ProdMainnet, BlockchainNetwork.KLAYTN }
                     }
                 },
                 {
-                    Blockchain.BNB_SMART_CHAIN, new Dictionary<Profile, Network>
+                    Blockchain.BNB_SMART_CHAIN, new Dictionary<Profile, BlockchainNetwork>
                     {
-                        { Profile.Dev, Network.BNB_SMART_CHAIN_TESTNET },
-                        { Profile.StageTest, Network.BNB_SMART_CHAIN_TESTNET },
-                        { Profile.StageMainnet, Network.BNB_SMART_CHAIN },
-                        { Profile.ProdTest, Network.BNB_SMART_CHAIN_TESTNET },
-                        { Profile.ProdMainnet, Network.BNB_SMART_CHAIN }
+                        { Profile.Dev, BlockchainNetwork.BNB_SMART_CHAIN_TESTNET },
+                        { Profile.StageTest, BlockchainNetwork.BNB_SMART_CHAIN_TESTNET },
+                        { Profile.StageMainnet, BlockchainNetwork.BNB_SMART_CHAIN },
+                        { Profile.ProdTest, BlockchainNetwork.BNB_SMART_CHAIN_TESTNET },
+                        { Profile.ProdMainnet, BlockchainNetwork.BNB_SMART_CHAIN }
                     }
                 },
                 {
-                    Blockchain.POLYGON, new Dictionary<Profile, Network>
+                    Blockchain.POLYGON, new Dictionary<Profile, BlockchainNetwork>
                     {
-                        { Profile.Dev, Network.MUMBAI },
-                        { Profile.StageTest, Network.MUMBAI },
-                        { Profile.StageMainnet, Network.POLYGON },
-                        { Profile.ProdTest, Network.MUMBAI },
-                        { Profile.ProdMainnet, Network.POLYGON }
+                        { Profile.Dev, BlockchainNetwork.MUMBAI },
+                        { Profile.StageTest, BlockchainNetwork.MUMBAI },
+                        { Profile.StageMainnet, BlockchainNetwork.POLYGON },
+                        { Profile.ProdTest, BlockchainNetwork.MUMBAI },
+                        { Profile.ProdMainnet, BlockchainNetwork.POLYGON }
                     }
                 }
             };
