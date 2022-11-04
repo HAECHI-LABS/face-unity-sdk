@@ -94,8 +94,8 @@ namespace haechi.face.unity.sdk.Runtime
             { Profile.Dev, "https://app.dev.facewallet.xyz" },
             { Profile.StageTest, "https://app.stage-test.facewallet.xyz" },
             { Profile.StageMainnet, "https://app.stage.facewallet.xyz" },
-            { Profile.Testnet, "https://app.test.facewallet.xyz" },
-            { Profile.Mainnet, "https://app.facewallet.xyz" },
+            { Profile.ProdTest, "https://app.test.facewallet.xyz" },
+            { Profile.ProdMainnet, "https://app.facewallet.xyz" },
         };
 
         private readonly Dictionary<Profile, string> _serverHostMap = new Dictionary<Profile, string>
@@ -103,8 +103,8 @@ namespace haechi.face.unity.sdk.Runtime
             { Profile.Dev, "https://api.dev.facewallet.xyz" },
             { Profile.StageTest, "https://api.stage-test.facewallet.xyz" },
             { Profile.StageMainnet, "https://api.stage.facewallet.xyz" },
-            { Profile.Testnet, "https://api.test.facewallet.xyz" },
-            { Profile.Mainnet, "https://api.facewallet.xyz" },
+            { Profile.ProdTest, "https://api.test.facewallet.xyz" },
+            { Profile.ProdMainnet, "https://api.facewallet.xyz" },
         };
         
         /// <returns>Returns webview client url.</returns>
