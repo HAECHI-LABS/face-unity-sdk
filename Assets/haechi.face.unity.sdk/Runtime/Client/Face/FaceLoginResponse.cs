@@ -29,7 +29,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         /// </returns>
         public bool IsNewUser()
         {
-            return !string.IsNullOrEmpty(this.wallet.KeyId) && string.IsNullOrEmpty(this.wallet.SignedAddress);
+            return !string.IsNullOrEmpty(this.wallet.KeyId);
         }
         
         public class Wallet
