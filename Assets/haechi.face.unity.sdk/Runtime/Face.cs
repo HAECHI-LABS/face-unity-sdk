@@ -20,10 +20,12 @@ namespace haechi.face.unity.sdk.Runtime
         public const int WEBVIEW_VERSION = 1;
         
         private Wallet _wallet;
+        private Auth _auth;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
         
         private WalletProxy _walletProxy;
+        private AuthProxy _authProxy;
         
         /// <param name="parameters">Initialize face with registered environments.&#10; This method makes ready to use Face Wallet(<a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Wallet.html">Module.Wallet</a>).</param>
         public void Initialize(FaceSettings.Parameters parameters)
@@ -33,6 +35,7 @@ namespace haechi.face.unity.sdk.Runtime
             this.safeWebviewController = this.GetComponent<SafeWebviewController>();
             
             this._walletProxy = new WalletProxy();
+            this._authProxy = new AuthProxy();
             
             // Inject walletProxy instead of real Wallet. Because Wallet still not instantiated
             FaceProviderFactory factory = new FaceProviderFactory(safeWebviewController, 
@@ -41,9 +44,11 @@ namespace haechi.face.unity.sdk.Runtime
             
             Web3 web3 = new Web3(this.provider);
             this._wallet = new Wallet(this.provider);
+            this._auth = new Auth(this.provider);
             
             // Now register real wallet
             this._walletProxy.Register(this._wallet);
+            this._authProxy.Register(this._auth);
             this.dataFactory = new ContractDataFactory(web3);
         }
         
@@ -72,6 +77,21 @@ namespace haechi.face.unity.sdk.Runtime
             }
 
             return this._wallet;
+        }
+        
+        /// <summary>
+        /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Auth</a>.
+        /// </summary>
+        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Module.Wallet</a></returns>
+        /// <exception cref="FaceException">Throws if FaceSettings is not initialized.</exception>
+        public Auth Auth()
+        {
+            if (!FaceSettings.IsInitialized())
+            {
+                throw new FaceException(ErrorCodes.NOT_INITIALIZED);
+            }
+
+            return this._auth;
         }
     }
 }

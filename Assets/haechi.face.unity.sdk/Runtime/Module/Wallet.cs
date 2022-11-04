@@ -9,63 +9,20 @@ using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
+    public interface IWallet
+    {
+        Task<FaceRpcResponse> GetBalance(string account = null);
+    }
+
     public class Wallet : IWallet
     {
         private readonly FaceRpcProvider _provider;
         private readonly FaceClient _client;
-        private string _requestId;
 
         internal Wallet(FaceRpcProvider provider)
         {
             this._provider = provider;
             this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
-        }
-
-        /// <summary>
-        /// Sign up(if new user) or log in function. Need to initialize face with environment, blockchain and api key first.&#10;
-        /// You can choose three options, Google, Facebook, and Apple login.
-        /// </summary>
-        /// <returns>
-        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
-        /// </returns>
-        /// <exception cref="FaceException">Throws FaceExceptioin when address verification fails.</exception>
-        public async Task<FaceLoginResponse> LoginWithCredential() 
-        {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
-                FaceRpcMethod.face_logInSignUp);
-            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
-            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
-
-            FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
-            
-            if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
-            {
-                throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);
-            }
-            
-            return faceLoginResponse;
-        }
-
-        /// <summary>
-        /// Check if session logged in.
-        /// </summary>
-        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is boolean value.</returns>
-        public async Task<FaceRpcResponse> IsLoggedIn()
-        {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
-                FaceRpcMethod.face_loggedIn);
-            return await this._provider.SendFaceRpcAsync(request);
-        }
-
-        /// <summary>
-        /// Log out Face Wallet.
-        /// </summary>
-        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is boolean value.</returns>
-        public async Task<FaceRpcResponse> Logout()
-        {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
-                FaceRpcMethod.face_logOut);
-            return await this._provider.SendFaceRpcAsync(request);
         }
 
         /// <summary>
@@ -149,6 +106,28 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 }
                 throw new FaceException(ErrorCodes.SERVER_RESPONSE_ERROR, e.Message);
             }
+        }
+    }
+    
+    /// <summary>
+    /// WalletProxy 
+    /// </summary>
+    public class WalletProxy : IWallet
+    {
+        private IWallet _wallet;
+
+        public WalletProxy()
+        {
+        }
+
+        public void Register(IWallet wallet)
+        {
+            this._wallet = wallet;
+        }
+        
+        public Task<FaceRpcResponse> GetBalance(string account = null)
+        {
+            return this._wallet.GetBalance(account);
         }
     }
 }

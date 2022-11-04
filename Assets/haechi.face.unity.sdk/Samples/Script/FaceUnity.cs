@@ -54,7 +54,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
-            FaceLoginResponse response = await this.face.Wallet().LoginWithCredential();
+            FaceLoginResponse response = await this.face.Auth().Login();
             string address = response.wallet.Address;
             string balance = await this._getBalance(address);
 
@@ -63,7 +63,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void Logout()
         {
-            Task<FaceRpcResponse> responseTask = this.face.Wallet().Logout();
+            Task<FaceRpcResponse> responseTask = this.face.Auth().Logout();
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
