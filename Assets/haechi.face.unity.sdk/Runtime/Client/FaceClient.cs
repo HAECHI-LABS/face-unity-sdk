@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using haechi.face.unity.sdk.Runtime.Exception;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -72,7 +73,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
         private async Task<HttpResponseMessage> _sendPostRequestCallback<T>(T request, CancellationTokenSource cancellationTokenSource, string route = null)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject((object) request, this._jsonSerializerSettings), Encoding.UTF8, "application/json");
-            
             return await this._httpClient.PostAsync(route, (HttpContent) content, cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
@@ -85,14 +85,17 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private async Task<R> _sendRequestTemplate<T, R>(RequestParameters<T> parameters)
         {
-            R responseMessage;
-
             try
             {
+                R responseMessage;
+                
                 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                 cancellationTokenSource.CancelAfter(ClientBase.ConnectionTimeout);
                 HttpResponseMessage httpResponseMessage = await parameters.Callback(parameters.Request, cancellationTokenSource, parameters.Route);
-                httpResponseMessage.EnsureSuccessStatusCode();
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    throw this._createExceptionFromErrorResponse(httpResponseMessage);
+                }
                 using (StreamReader reader1 = new StreamReader(await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false)))
                 {
                     using (JsonTextReader reader2 = new JsonTextReader((TextReader)reader1))
@@ -101,6 +104,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                     }
 
                 }
+                return responseMessage;
             }
             catch (TaskCanceledException ex)
             {
@@ -110,12 +114,13 @@ namespace haechi.face.unity.sdk.Runtime.Client
             {
                 throw new HttpRequestException("Failed to get response from server", ex);
             }
-            catch (System.Exception ex)
-            {
-                throw new RpcClientUnknownException("Error occurred when trying to send rpc requests(s)", ex);
-            }
-            
-            return responseMessage;
+        }
+
+        private FaceServerException _createExceptionFromErrorResponse(HttpResponseMessage response)
+        {
+            string result = response.Content.ReadAsStringAsync().Result;
+            FaceServerError error = JsonConvert.DeserializeObject<FaceServerError>(result);
+            return new FaceServerException(error);
         }
     }
 }

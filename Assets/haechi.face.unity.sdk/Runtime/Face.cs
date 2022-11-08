@@ -12,7 +12,7 @@ namespace haechi.face.unity.sdk.Runtime
     public class Face : MonoBehaviour
     {
         
-        [SerializeField] internal SafeWebviewController safeWebviewController;
+        private SafeWebviewController _safeWebviewController;
 
         /// <value>
         /// This value indicates the version of webview client.
@@ -32,13 +32,13 @@ namespace haechi.face.unity.sdk.Runtime
         {
             FaceSettings.Init(parameters);
             
-            this.safeWebviewController = this.GetComponent<SafeWebviewController>();
+            this._safeWebviewController = this.GetComponent<SafeWebviewController>();
             
             this._walletProxy = new WalletProxy();
             this._authProxy = new AuthProxy();
             
             // Inject walletProxy instead of real Wallet. Because Wallet still not instantiated
-            FaceProviderFactory factory = new FaceProviderFactory(safeWebviewController, 
+            FaceProviderFactory factory = new FaceProviderFactory(this._safeWebviewController, 
                 FaceSettings.Instance.ServerHostURL(), this._walletProxy);
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
             
