@@ -62,5 +62,11 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
             [JsonProperty("keyId")]
             public string KeyId;
         }
+
+        public override string ToString()
+        {
+            return
+                $"faceUserId: {this.faceUserId}, wallet.id: {this.wallet.Id}, wallet.address: {this.wallet.Address}, wallet.signedAddress: {this.wallet.SignedAddress}";
+        }
     }
 }

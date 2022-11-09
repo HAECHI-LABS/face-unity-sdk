@@ -109,6 +109,11 @@ namespace haechi.face.unity.sdk.Runtime
         {
             return BlockchainNetworks.OfBlockchain(this._parameters._network);
         }
+
+        public BlockchainNetwork Network()
+        {
+            return this._parameters._network;
+        }
         
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
         {

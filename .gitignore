@@ -91,3 +91,4 @@ Build_BurstDebugInformation_DoNotShip/
 **/obj.meta
 Documentation/api/
 _site/
+*.zip
