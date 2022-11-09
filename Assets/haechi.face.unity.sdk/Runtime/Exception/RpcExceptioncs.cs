@@ -40,51 +40,51 @@ namespace haechi.face.unity.sdk.Runtime.Exception
         }
     }
     
-    /// <summary>
-    /// FaceServerError is a data for server error
-    /// </summary>
+    /// <value>
+    /// FaceServerError is a data for server error.
+    /// </value>
     [JsonObject]
     public class FaceServerError
     {
-        /// <summary>
-        /// Timestamp for when the server handles the error
-        /// </summary>
+        /// <value>
+        /// Timestamp for when the server handles the error.
+        /// </value>
         [JsonProperty(PropertyName = "timestamp")]
         public string Timestamp;
         
-        /// <summary>
-        /// Path for the request
-        /// </summary>
+        /// <value>
+        /// Path for the request.
+        /// </value>
         [JsonProperty(PropertyName = "path")]
         public string Path;
         
-        /// <summary>
-        /// Error is a message for the cause of error
-        /// </summary>
+        /// <value>
+        /// Error is a message for the cause of error.
+        /// </value>
         [JsonProperty(PropertyName = "error")]
         public string Error;
         
-        /// <summary>
-        /// RequestId is a identifier for the request
-        /// </summary>
+        /// <value>
+        /// RequestId is a identifier for the request.
+        /// </value>
         [JsonProperty(PropertyName = "requestId")]
         public string RequestId;
         
-        /// <summary>
-        /// Message is a message for the cause of error
-        /// </summary>
+        /// <value>
+        /// Message is a message for the cause of error.
+        /// </value>
         [JsonProperty(PropertyName = "message")]
         public string Message;
         
-        /// <summary>
-        /// Code about error cause
-        /// </summary>
+        /// <value>
+        /// Code about error cause.
+        /// </value>
         [JsonProperty(PropertyName = "code")]
         public string Code;
         
-        /// <summary>
-        /// Status is a HTTP status code
-        /// </summary>
+        /// <value>
+        /// Status is a HTTP status code.
+        /// </value>
         [JsonProperty(PropertyName = "status")]
         public int Status;
 
