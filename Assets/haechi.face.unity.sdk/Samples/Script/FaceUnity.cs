@@ -63,10 +63,49 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.inputDesignator.SetLoggedInInputStatus();
             }, this._defaultExceptionHandler);
         }
-
+        
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
             FaceLoginResponse response = await this.face.Auth().Login();
+            string address = response.wallet.Address;
+            string balance = await this._getBalance(address);
+
+            return new LoginResult(balance, response.faceUserId, address);
+        }
+        
+        public void GoogleLoginAndGetBalance()
+        {
+            this._directSocialLoginAndGetBalance(LoginProviderType.Google);
+        }
+        
+        public void FacebookLoginAndGetBalance()
+        {
+            this._directSocialLoginAndGetBalance(LoginProviderType.Facebook);
+        }
+        
+        public void AppleLoginAndGetBalance()
+        {
+            this._directSocialLoginAndGetBalance(LoginProviderType.Apple);
+        }
+        
+        private void _directSocialLoginAndGetBalance(string provider)
+        {
+            Task<LoginResult> responseTask = this._directSocialLoginAndGetBalanceAsync(provider);
+
+            this.actionQueue.Enqueue(responseTask, response =>
+            {
+                this.dataDesignator.SetLoggedInId(response.userId);
+                this.dataDesignator.SetLoggedInAddress(response.userAddress);
+                this.dataDesignator.SetCoinBalance(response.balance);
+                
+                this.dataDesignator.SetLogoutInstruction();
+                this.inputDesignator.SetLoggedInInputStatus();
+            }, this._defaultExceptionHandler);
+        }
+
+        private async Task<LoginResult> _directSocialLoginAndGetBalanceAsync(string provider)
+        {
+            FaceLoginResponse response = await this.face.Auth().DirectSocialLogin(provider);
             string address = response.wallet.Address;
             string balance = await this._getBalance(address);
 
@@ -241,7 +280,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         private void _defaultExceptionHandler(Exception ex)
         {
             Debug.Log(ex.StackTrace);
-            this.dataDesignator.SetResult($"Error - {ex.StackTrace}");
+            this.dataDesignator.SetResult(ex.StackTrace);
         }
     }
 
