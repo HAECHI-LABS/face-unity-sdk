@@ -9,6 +9,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
     {
         wallet_switchEthereumChain,
         face_logInSignUp,
+        face_directSocialLogin,
         face_logOut,
         face_currentUser,
         face_loggedIn,
