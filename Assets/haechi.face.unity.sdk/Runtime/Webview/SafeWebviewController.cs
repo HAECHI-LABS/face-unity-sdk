@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
-    public class SafeWebviewController : MonoBehaviour
+    public class SafeWebviewController : MonoBehaviour, IURLHandler
     {
         private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
             = new Dictionary<string, Func<FaceRpcResponse, bool>>();
@@ -23,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 this.onDeepLinkActivated(Application.absoluteURL);
             }
         }
-        
+
 #if UNITY_IOS
         [DllImport("__Internal")]
         extern static void launch_face_webview(string url, string redirectUri, string objectName);
@@ -54,7 +54,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
         public void SendMessage(RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
         {
-            Debug.Log($"Register Handler with ID: {message.Id}");
+            string redirectUri = "";
+#if UNITY_EDITOR
+            redirectUri = LocalTestWebServer.Start(this);
+#endif
             this._handlerDictionary.Add(message.Id.ToString(), callbackHandler);
             
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
@@ -63,6 +66,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 ApiKey = FaceSettings.Instance.ApiKey(),
                 Env = FaceSettings.Instance.Environment(),
                 Blockchain = FaceSettings.Instance.Blockchain(),
+                Schema = redirectUri,
                 Hostname = Application.identifier
             });
             UriBuilder uriBuilder = new UriBuilder(FaceSettings.Instance.WebviewHostURL())
@@ -118,6 +122,11 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             
             callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
+        }
+
+        public void HandleUrl(Uri url)
+        {
+            this._handleDeepLink(url);
         }
     }
     

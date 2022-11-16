@@ -7,16 +7,14 @@ using System.Web;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
+using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
     internal static class SafeWebviewProtocol
     {
-        public static string Scheme = "facewebview";
-        
         public static string EncodeQueryParams(Parameters parameters)
         {
             byte[] requestBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(parameters.Request,
@@ -30,6 +28,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"env={parameters.Env}&" +
                    $"blockchain={parameters.Blockchain}&" +
                    $"hostname={parameters.Hostname}&" +
+                   (!string.IsNullOrEmpty(parameters.Schema) ? $"schema={parameters.Schema}&" : "")+
                    $"webview_version={Face.WEBVIEW_VERSION}";
         }
 
@@ -75,6 +74,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             public Profile Env;
             public Blockchain Blockchain;
             public string Hostname;
+            [CanBeNull] public string Schema;
         }
     }
 }

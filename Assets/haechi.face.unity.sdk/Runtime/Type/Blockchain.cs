@@ -24,6 +24,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.ETHEREUM, new Dictionary<Profile, BlockchainNetwork>
                     {
+                        { Profile.Local, BlockchainNetwork.GOERLI },
                         { Profile.Dev, BlockchainNetwork.GOERLI },
                         { Profile.StageTest, BlockchainNetwork.GOERLI },
                         { Profile.StageMainnet, BlockchainNetwork.ETHEREUM },
@@ -34,6 +35,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.KLAYTN, new Dictionary<Profile, BlockchainNetwork>
                     {
+                        { Profile.Local, BlockchainNetwork.BAOBAB },
                         { Profile.Dev, BlockchainNetwork.BAOBAB },
                         { Profile.StageTest, BlockchainNetwork.BAOBAB },
                         { Profile.StageMainnet, BlockchainNetwork.KLAYTN },
@@ -44,6 +46,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.BNB_SMART_CHAIN, new Dictionary<Profile, BlockchainNetwork>
                     {
+                        { Profile.Local, BlockchainNetwork.BNB_SMART_CHAIN_TESTNET },
                         { Profile.Dev, BlockchainNetwork.BNB_SMART_CHAIN_TESTNET },
                         { Profile.StageTest, BlockchainNetwork.BNB_SMART_CHAIN_TESTNET },
                         { Profile.StageMainnet, BlockchainNetwork.BNB_SMART_CHAIN },
@@ -54,6 +57,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.POLYGON, new Dictionary<Profile, BlockchainNetwork>
                     {
+                        { Profile.Local, BlockchainNetwork.MUMBAI },
                         { Profile.Dev, BlockchainNetwork.MUMBAI },
                         { Profile.StageTest, BlockchainNetwork.MUMBAI },
                         { Profile.StageMainnet, BlockchainNetwork.POLYGON },
