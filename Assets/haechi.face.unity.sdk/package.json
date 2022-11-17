@@ -6,5 +6,12 @@
   "documentationUrl": "https://docs.facewallet.xyz/docs/overview-1",
   "unity": "2021.3",
   "dependencies": {
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Face Unity Sample",
+      "description": "Face Unity SDK sample app for Android, iOS.",
+      "path": "Samples~/SampleDapp"
+    }
+  ]
 }

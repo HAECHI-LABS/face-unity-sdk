@@ -9,8 +9,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 {
     public class InputDesignator : MonoBehaviour
     {
-        [SerializeField] internal Button initializeBtn, loginBtn, logoutBtn, getBalanceBtn;
-        [SerializeField] internal Button landscapeInitializeBtn, landscapeLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
+        [SerializeField] internal Button initializeBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, logoutBtn, getBalanceBtn;
+        [SerializeField] internal Button landscapeInitializeBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
 
         [SerializeField] internal Button sendNativeCoinTransactionBtn,
             sendErc20TransactionBtn,
@@ -238,6 +238,12 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.loginBtn.interactable = enable;
             this.landscapeLoginBtn.interactable = enable;
+            this.googleLoginBtn.interactable = enable;
+            this.landscapeGoogleLoginBtn.interactable = enable;
+            this.facebookLoginBtn.interactable = enable;
+            this.landscapeFacebookLoginBtn.interactable = enable;
+            this.appleLoginBtn.interactable = enable;
+            this.landscapeAppleLoginBtn.interactable = enable;
         }
         
         private void EnableLogout(bool enable)

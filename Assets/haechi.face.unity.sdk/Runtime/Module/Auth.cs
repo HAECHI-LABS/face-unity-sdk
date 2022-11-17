@@ -1,5 +1,3 @@
-using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
@@ -11,6 +9,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
     public interface IAuth
     {
         Task<FaceLoginResponse> Login();
+        Task<FaceLoginResponse> DirectSocialLogin(string provider);
         Task<FaceRpcResponse> Logout();
     }
     
@@ -24,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         }
         
         /// <summary>
-        /// Sign up(if new user) or log in function. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// Sign-up(if new user) or login function. Need to initialize face with environment, blockchain and api key first.&#10;
         /// You can choose three options, Google, Facebook, and Apple login.
         /// </summary>
         /// <returns>
@@ -33,8 +32,25 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <exception cref="FaceException">Throws FaceExceptioin when address verification fails.</exception>
         public async Task<FaceLoginResponse> Login() 
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
-                FaceRpcMethod.face_logInSignUp);
+            return await this._login(FaceRpcMethod.face_logInSignUp);
+        }
+
+        /// <summary>
+        /// Directly sign-up(if new user) or login using social login. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> to parameter.
+        /// </summary>
+        /// <returns>
+        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
+        /// </returns>
+        /// <exception cref="FaceException">Throws FaceExceptioin when address verification fails.</exception>
+        public async Task<FaceLoginResponse> DirectSocialLogin(string provider)
+        {
+            return await this._login(FaceRpcMethod.face_directSocialLogin, provider);
+        }
+
+        private async Task<FaceLoginResponse> _login(FaceRpcMethod method, params string[] parameterList)
+        {
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
 
@@ -72,6 +88,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
         public Task<FaceLoginResponse> Login()
         {
             return this._auth.Login();
+        }
+        
+        public Task<FaceLoginResponse> DirectSocialLogin(string provider)
+        {
+            return this._auth.DirectSocialLogin(provider);
         }
         
         public Task<FaceRpcResponse> Logout()
