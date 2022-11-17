@@ -6,6 +6,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
 {
     public enum Profile
     {
+        Local,
         Dev,
         StageTest,
         StageMainnet,
@@ -17,12 +18,14 @@ namespace haechi.face.unity.sdk.Runtime.Type
     {
         private static Dictionary<string, Profile> _strProfileDictionary = new Dictionary<string, Profile>
         {
+            {"Local", Profile.Local},
             {"Dev", Profile.Dev},
             {"StageTest", Profile.StageTest},
             {"StageMainnet", Profile.StageMainnet},
             {"Testnet", Profile.ProdTest},
             {"Mainnet", Profile.ProdMainnet}
         };
+
         public static Profile ValueOf(string value)
         {
             if (!_strProfileDictionary.TryGetValue(value, out Profile result))
@@ -32,7 +35,5 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
             return result;
         }
-        
-        
     }
 }
