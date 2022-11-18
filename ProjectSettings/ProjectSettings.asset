@@ -312,7 +312,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 4cee8337d7e98434d957e279c1c1830a, type: 3}
+      m_Icon: {fileID: 2800000, guid: 9cfa82b6b338847a08ef708862bf9451, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -845,15 +845,16 @@ PlayerSettings:
   webGLTemplate: APPLICATION:Default
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
-  webGLCompressionFormat: 0
+  webGLCompressionFormat: 2
   webGLWasmArithmeticExceptions: 0
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: 
+    Android: VUPLEX_CCU;VUPLEX_STANDALONE
     Standalone: VUPLEX_CCU
+    WebGL: 
     iPhone: VUPLEX_CCU
   additionalCompilerArguments: {}
   platformArchitecture: {}
