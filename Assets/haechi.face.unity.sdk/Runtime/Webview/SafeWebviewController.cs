@@ -27,12 +27,18 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 #if UNITY_IOS
         [DllImport("__Internal")]
         extern static void launch_face_webview(string url, string redirectUri, string objectName);
+#elif UNITY_WEBGL
+        [DllImport("__Internal")]
+        private static extern void openWindow(string url);
 #endif
         
         private static void LaunchUrl(string url, string objectName = null)
         {
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+            
+#if UNITY_EDITOR || UNITY_STANDALONE
             Application.OpenURL(url);
+#elif UNITY_WEBGL
+            openWindow(url);
 #elif UNITY_ANDROID
         using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
@@ -55,8 +61,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         public void SendMessage(RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
         {
             string redirectUri = "";
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
             redirectUri = LocalTestWebServer.Start(this);
+#elif UNITY_WEBGL
+            redirectUri = this._hostname();
 #endif
             this._handlerDictionary.Add(message.Id.ToString(), callbackHandler);
             
@@ -67,7 +75,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Env = FaceSettings.Instance.Environment(),
                 Blockchain = FaceSettings.Instance.Blockchain(),
                 Schema = redirectUri,
-                Hostname = Application.identifier
+                Hostname = this._hostname()
             });
             UriBuilder uriBuilder = new UriBuilder(FaceSettings.Instance.WebviewHostURL())
             {
@@ -77,6 +85,15 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
             // Launch browser
             LaunchUrl(uriBuilder.ToString(), this.gameObject.name);
+        }
+
+        private string _hostname()
+        {
+#if UNITY_WEBGL
+            return Application.absoluteURL;
+#else
+            return Application.identifier;
+#endif
         }
         
         private void onFocusChanged(bool isFocused)

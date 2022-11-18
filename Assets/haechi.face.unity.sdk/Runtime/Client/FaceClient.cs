@@ -24,7 +24,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this._jsonSerializerSettings = jsonSerializerSettings;
             this._httpClient = httpClient;
             this._httpClient.BaseAddress = baseUrl;
+#if UNITY_WEBGL
+            this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Hostname", Application.absoluteURL);
+#else
             this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Hostname", Application.identifier);
+#endif
             this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey());
         }
         
