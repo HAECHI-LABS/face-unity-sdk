@@ -193,7 +193,7 @@ PlayerSettings:
     Android: xyz.facewallet.dev.app
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.DefaultCompany.com.unity.template.mobile2D
-    iPhone: xyz.facewallet.dev.app
+    iPhone: xyz.facewallet.unity.app
     tvOS: com.DefaultCompany.com.unity.template.mobile2D
   buildNumber:
     Standalone: 0
