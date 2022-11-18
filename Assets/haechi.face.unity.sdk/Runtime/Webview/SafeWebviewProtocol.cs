@@ -15,6 +15,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 {
     internal static class SafeWebviewProtocol
     {
+        public static string Scheme = "facewebview";
+        
         public static string EncodeQueryParams(Parameters parameters)
         {
             byte[] requestBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(parameters.Request,
