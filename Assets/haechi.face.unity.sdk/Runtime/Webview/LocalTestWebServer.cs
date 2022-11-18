@@ -83,8 +83,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 output.Write(buffer, 0, buffer.Length);
                 output.Close();
 
-                string responseData = httpRequest.QueryString.Get("response");
-                if (!string.IsNullOrEmpty(responseData))
+                if (!string.IsNullOrEmpty(httpRequest.QueryString.Get("response")) ||
+                    !string.IsNullOrEmpty(httpRequest.QueryString.Get("request")))
                 {
                     this._urlHandler.HandleUrl(httpRequest.Url);
                 }
