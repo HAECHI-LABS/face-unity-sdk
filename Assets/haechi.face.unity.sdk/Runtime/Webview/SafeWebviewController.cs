@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using haechi.face.unity.sdk.Runtime.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
@@ -116,7 +117,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             Debug.Log($"URI Receive: {uri}");
             
             FaceRpcContext context = SafeWebviewProtocol.DecodeQueryParams(uri);
-            Debug.Log($"Data received from webview: {context}");
+            Debug.Log($"Data received from webview: {JsonConvert.SerializeObject(context)}");
             
             if (context.WebviewRequest())
             {
