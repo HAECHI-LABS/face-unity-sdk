@@ -92,3 +92,4 @@ Build_BurstDebugInformation_DoNotShip/
 Documentation/api/
 _site/
 *.zip
+**/*.Generated/
