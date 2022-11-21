@@ -10,7 +10,7 @@
     {
       "displayName": "Face Unity Sample",
       "description": "Face Unity SDK sample app for Android, iOS.",
-      "path": "Samples~/SampleDapp"
+      "path": "Samples/SampleDapp"
     }
   ]
 }
