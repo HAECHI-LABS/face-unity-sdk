@@ -1,4 +1,7 @@
 
+<a name="1.1.1"></a>
+## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
+
 <a name="1.1.0"></a>
 ## Release: [1.1.0](https://github.com/HAECHI-LABS/core/releases/tag/1.1.0)
 ### Features
