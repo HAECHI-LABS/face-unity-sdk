@@ -85,7 +85,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
             {
                 this._senders = new Dictionary<FaceRpcMethod, IRequestSender>
                 {
+                    {FaceRpcMethod.face_switchNetwork, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.face_directSocialLogin, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.personal_sign, new WebviewRequestSender(provider, webview)},

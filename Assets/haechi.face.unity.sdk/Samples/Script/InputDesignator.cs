@@ -9,8 +9,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 {
     public class InputDesignator : MonoBehaviour
     {
-        [SerializeField] internal Button initializeBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, logoutBtn, getBalanceBtn;
-        [SerializeField] internal Button landscapeInitializeBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
+        [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, logoutBtn, getBalanceBtn;
+        [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
 
         [SerializeField] internal Button sendNativeCoinTransactionBtn,
             sendErc20TransactionBtn,
@@ -191,7 +191,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.EnableLogin(true);
             this.EnableLogout(true);
         }
-
+        
         public void DisableLoginInputStatus()
         {
             this.EnableLogin(false);
@@ -206,32 +206,16 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         private void EnableConnectWalletSection(bool enable)
         {
-            if (this.profileDrd != null)
-            {
-                this.profileDrd.interactable = enable;
-                this.landscapeProfileDrd.interactable = enable;
-            }
-            
-            if (this.blockchainDrd != null)
-            {
-                this.blockchainDrd.interactable = enable;
-                this.landscapeBlockchainDrd.interactable = enable;
-            }
-            
-            if (this.networkDrd != null)
-            {
-                this.networkDrd.interactable = enable;
-                this.landscapeNetworkDrd.interactable = enable;
-            }
-            
             if (this.apiKey != null)
             {
                 this.apiKey.interactable = enable;
                 this.landscapeApiKey.interactable = enable;
             }
-            
-            this.initializeBtn.interactable = enable;
-            this.landscapeInitializeBtn.interactable = enable;
+
+            this.initializeBtn.GetComponent<Button>().gameObject.SetActive(enable);
+            this.switchNetworkBtn.GetComponent<Button>().gameObject.SetActive(!enable);
+            this.landscapeInitializeBtn.GetComponent<Button>().gameObject.SetActive(enable);
+            this.landscapeSwitchNetworkBtn.GetComponent<Button>().gameObject.SetActive(!enable);
         }
 
         private void EnableLogin(bool enable)

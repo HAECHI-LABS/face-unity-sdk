@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Type
@@ -13,6 +14,26 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
     public static class Blockchains
     {
+        public static Blockchain OfBlockchainNetwork(BlockchainNetwork network)
+        {
+            switch (network)
+            {
+                case BlockchainNetwork.ETHEREUM:
+                    return Blockchain.ETHEREUM;
+                case BlockchainNetwork.GOERLI:
+                    return Blockchain.ETHEREUM;
+                case BlockchainNetwork.POLYGON:
+                    return Blockchain.POLYGON;
+                case BlockchainNetwork.MUMBAI:
+                    return Blockchain.POLYGON;
+                case BlockchainNetwork.BNB_SMART_CHAIN:
+                    return Blockchain.BNB_SMART_CHAIN;
+                case BlockchainNetwork.BNB_SMART_CHAIN_TESTNET:
+                    return Blockchain.BNB_SMART_CHAIN;
+                default:
+                    throw new InvalidEnumArgumentException();
+            }
+        }
         public static Blockchain ValueOf(string value)
         {
             return EnumUtils.FindEquals<Blockchain>(value);

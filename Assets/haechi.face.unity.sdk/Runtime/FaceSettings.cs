@@ -107,12 +107,17 @@ namespace haechi.face.unity.sdk.Runtime
         /// <returns> Return Blockchain Network such as Goerli, Mumbai, Ethereum etc.</returns>
         public Blockchain Blockchain()
         {
-            return BlockchainNetworks.OfBlockchain(this._parameters._network);
+            return Blockchains.OfBlockchainNetwork(this._parameters._network);
         }
 
         public BlockchainNetwork Network()
         {
             return this._parameters._network;
+        }
+
+        public void SetNetwork(BlockchainNetwork network)
+        {
+            this._parameters._network = network;
         }
         
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
