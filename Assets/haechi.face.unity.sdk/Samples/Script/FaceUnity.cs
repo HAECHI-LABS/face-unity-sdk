@@ -48,7 +48,6 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             FaceSettings.Parameters faceSettings = this._getFaceSettingsInput();
             await this.face.Wallet().SwitchNetwork(faceSettings.Network);
-            FaceSettings.Instance.SetNetwork(faceSettings.Network);
             string balance = await this._getBalance(this.dataDesignator.loggedInAddress.text);
             return balance;
         }

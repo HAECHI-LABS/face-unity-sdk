@@ -99,7 +99,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             Blockchain blockchain = FaceSettings.Instance.Blockchain();
             FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(blockchain, FaceRpcMethod.face_switchNetwork, blockchain.ToString());
-            return await this._provider.SendFaceRpcAsync(rpcRequest);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
+            FaceSettings.Instance.SetNetwork(network);
+            return response;
         }
         
         private async Task<TransactionRequestId> _getTransactionRequestId(string requestId, FaceRpcResponse response)
