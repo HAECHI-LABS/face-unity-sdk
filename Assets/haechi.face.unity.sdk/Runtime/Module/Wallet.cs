@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
@@ -87,6 +88,20 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<RawTransaction> rpcRequest =
                 new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
             return await this._provider.SendFaceRpcAsync(rpcRequest);
+        }
+
+        /// <summary>
+        /// Switch Face Wallet's network
+        /// </summary>
+        /// <param name="network">Blockchain network.</param>
+        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is given string value from blockchain.</returns>
+        public async Task<FaceRpcResponse> SwitchNetwork(BlockchainNetwork network)
+        {
+            Blockchain blockchain = FaceSettings.Instance.Blockchain();
+            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(blockchain, FaceRpcMethod.face_switchNetwork, blockchain.ToString());
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
+            FaceSettings.Instance.SetNetwork(network);
+            return response;
         }
         
         private async Task<TransactionRequestId> _getTransactionRequestId(string requestId, FaceRpcResponse response)

@@ -28,6 +28,32 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void InitializeFace()
         {
+            this.face.Initialize(this._getFaceSettingsInput());
+            this.dataDesignator.SetLoginInstruction();
+            this.inputDesignator.SetWalletConnectedInputStatus();
+        }
+        
+        public void SwitchNetwork()
+        {
+            Task<string> responseTask = this._switchNetworkAndGetBalanceAsync();
+
+            this.actionQueue.Enqueue(responseTask, balance =>
+            {
+                this.dataDesignator.SetCoinBalance(balance);
+                this.dataDesignator.SetResult("");
+            }, this._defaultExceptionHandler);
+        }
+        
+        private async Task<string> _switchNetworkAndGetBalanceAsync()
+        {
+            FaceSettings.Parameters faceSettings = this._getFaceSettingsInput();
+            await this.face.Wallet().SwitchNetwork(faceSettings.Network);
+            string balance = await this._getBalance(this.dataDesignator.loggedInAddress.text);
+            return balance;
+        }
+
+        private FaceSettings.Parameters _getFaceSettingsInput()
+        {
             string apiKey = this.inputDesignator.apiKey != null
                 ? this.inputDesignator.apiKey.text 
                 : SAMPLE_API_KEY;
@@ -38,15 +64,12 @@ namespace haechi.face.unity.sdk.Samples.Script
                 ? BlockchainNetworks.GetNetwork(this.inputDesignator.blockchainDrd.captionText.text, this.inputDesignator.profileDrd.captionText.text)
                 : BlockchainNetworks.ValueOf(this.inputDesignator.networkDrd.captionText.text);
 
-            this.face.Initialize(new FaceSettings.Parameters
+            return new FaceSettings.Parameters
             {
                 ApiKey = apiKey,
                 Environment = environment,
                 Network = network
-            });
-            
-            this.dataDesignator.SetLoginInstruction();
-            this.inputDesignator.SetWalletConnectedInputStatus();
+            };
         }
 
         public void LoginAndGetBalance()
@@ -279,7 +302,6 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         private void _defaultExceptionHandler(Exception ex)
         {
-            Debug.Log(ex.StackTrace);
             this.dataDesignator.SetResult(ex.StackTrace);
         }
     }
