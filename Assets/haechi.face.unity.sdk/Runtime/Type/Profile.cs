@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Type
 {
@@ -16,6 +15,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
     public static class Profiles
     {
+        public static bool IsMainnet(Profile profile)
+        {
+            return profile.Equals(Profile.ProdMainnet) || profile.Equals(Profile.StageMainnet);
+        }
+        
         private static Dictionary<string, Profile> _strProfileDictionary = new Dictionary<string, Profile>
         {
             {"Local", Profile.Local},

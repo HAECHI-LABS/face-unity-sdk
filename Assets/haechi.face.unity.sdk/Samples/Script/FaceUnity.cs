@@ -30,7 +30,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.face.Initialize(this._getFaceSettingsInput());
             this.dataDesignator.SetLoginInstruction();
-            this.inputDesignator.SetWalletConnectedInputStatus();
+            this.inputDesignator.SetFaceConnectedInputStatus();
         }
         
         public void SwitchNetwork()
@@ -159,6 +159,20 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 this.dataDesignator.SetCoinBalance(response);
             }, this._defaultExceptionHandler);
+        }
+
+        public void ConnectOpensea()
+        {
+            try
+            {
+                this.face.Wallet().ConnectOpensea();
+                this.dataDesignator.SetConnectOpenseaSucceeded();
+                // this.inputDesignator.SetOpenseaConnectedInputStatus();
+            }
+            catch (Exception e)
+            {
+                this.dataDesignator.SetConnectOpenseaFailed(e.Message);
+            }
         }
         
         public void GetErc20Balance()

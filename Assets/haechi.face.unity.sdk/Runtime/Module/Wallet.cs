@@ -6,7 +6,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
-using haechi.face.unity.sdk.Runtime.Utils;
+using JetBrains.Annotations;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -102,6 +102,27 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
             FaceSettings.Instance.SetNetwork(network);
             return response;
+        }
+
+        /// <summary>
+        /// Connect Face with Opensea via WalletConnect.
+        /// </summary>
+        /// <param name="collectionName">Blockchain network.</param>
+        public void ConnectOpensea([CanBeNull] string collectionName = null)
+        {
+            string hostname = Profiles.IsMainnet(FaceSettings.Instance.Environment())
+                ? "https://opensea.io/"
+                : "https://testnets.opensea.io/";
+            this._openWalletConnect("OpenSea",
+                !string.IsNullOrEmpty(collectionName)
+                    ? $"{hostname}/collection/" + collectionName
+                    : $"{hostname}");
+        }
+
+        private void _openWalletConnect(string name, string url)
+        {
+            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openWalletConnect, name, url);
+            this._provider.SendFaceRpc(rpcRequest);
         }
         
         private async Task<TransactionRequestId> _getTransactionRequestId(string requestId, FaceRpcResponse response)

@@ -9,8 +9,8 @@ namespace haechi.face.unity.sdk.Samples.Script
 {
     public class InputDesignator : MonoBehaviour
     {
-        [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, logoutBtn, getBalanceBtn;
-        [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
+        [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, logoutBtn, getBalanceBtn, connectOpenseaBtn;
+        [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn, landscapeConnectOpenseaBtn;
 
         [SerializeField] internal Button sendNativeCoinTransactionBtn,
             sendErc20TransactionBtn,
@@ -178,33 +178,34 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void InitializeInputStatus()
         {
-            this.EnableConnectWalletSection(true);
+            this.EnableConnectFaceSection(true);
             this.EnableLogin(false);
             this.EnableGetBalance(false);
             this.EnableLogout(false);
             this.EnableTestSection(false);
         }
 
-        public void SetWalletConnectedInputStatus()
+        public void SetFaceConnectedInputStatus()
         {
-            this.EnableConnectWalletSection(false);
+            this.EnableConnectFaceSection(false);
             this.EnableLogin(true);
             this.EnableLogout(true);
         }
         
-        public void DisableLoginInputStatus()
-        {
-            this.EnableLogin(false);
-        }
-
         public void SetLoggedInInputStatus()
         {
             this.EnableLogin(false);
             this.EnableGetBalance(true);
+            this.EnableConnectOpenseaSection(true);
             this.EnableTestSection(true);
         }
+
+        public void SetOpenseaConnectedInputStatus()
+        {
+            this.EnableConnectOpenseaSection(false);
+        }
         
-        private void EnableConnectWalletSection(bool enable)
+        private void EnableConnectFaceSection(bool enable)
         {
             if (this.apiKey != null)
             {
@@ -240,6 +241,12 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.getBalanceBtn.interactable = enable;
             this.landscapeGetBalanceBtn.interactable = enable;
+        }
+
+        private void EnableConnectOpenseaSection(bool enable)
+        {
+            this.connectOpenseaBtn.interactable = enable;
+            this.landscapeConnectOpenseaBtn.interactable = enable;
         }
 
         private void EnableTestSection(bool enable)

@@ -1,6 +1,5 @@
 using System;
 using haechi.face.unity.sdk.Runtime.Type;
-using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using Random = UnityEngine.Random;
@@ -19,7 +18,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this.To = "FACE_IFRAME";
         }
 
-        private static int _generateId()
+        public static int _generateId()
         {
             return Random.Range(1, 100000);
         }

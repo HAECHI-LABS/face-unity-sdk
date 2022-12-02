@@ -3,7 +3,6 @@ using haechi.face.unity.sdk.Runtime.Exception;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {

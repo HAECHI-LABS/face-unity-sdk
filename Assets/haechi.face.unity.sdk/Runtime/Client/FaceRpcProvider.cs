@@ -19,7 +19,6 @@ using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -72,8 +71,20 @@ namespace haechi.face.unity.sdk.Runtime.Client
             return (FaceRpcResponse)await this.SendAsync(request);
         }
         
+        internal void SendFaceRpc<TParams>(FaceRpcRequest<TParams> request)
+        {
+            if (!this._methodHandlers.TryGetRequestSender(request.Method, out IRequestSender sender))
+            {
+                this._defaultRequestSender.SendNonResponseRequest(request);
+                return;
+            }
+            
+            sender.SendNonResponseRequest(request);
+        }
+        
         private interface IRequestSender
         {
+            void SendNonResponseRequest(RpcRequestMessage request);
             Task<RpcResponseMessage> SendRequest(RpcRequestMessage request);
         }
     
@@ -89,6 +100,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                     {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.face_directSocialLogin, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.face_openWalletConnect, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.personal_sign, new WebviewRequestSender(provider, webview)},
                     
@@ -116,10 +128,16 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             private readonly FaceRpcProvider _provider;
             private readonly SafeWebviewController _webview;
+            
             public WebviewRequestSender(FaceRpcProvider provider, SafeWebviewController webview)
             {
                 this._provider = provider;
                 this._webview = webview;
+            }
+            
+            public void SendNonResponseRequest(RpcRequestMessage request)
+            {
+                this._provider._webview.SendMessage(request, null);
             }
             
             public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
@@ -144,13 +162,17 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 return await doneTask;
             }
         }
-
+        
         private class ServerRequestSender : IRequestSender
         {
             private readonly FaceRpcProvider _provider;
             public ServerRequestSender(FaceRpcProvider provider)
             {
                 this._provider = provider;
+            }
+            
+            public void SendNonResponseRequest(RpcRequestMessage request)
+            {
             }
 
             public virtual async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)

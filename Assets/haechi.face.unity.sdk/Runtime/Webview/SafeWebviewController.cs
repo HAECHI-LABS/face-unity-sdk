@@ -100,7 +100,6 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             
             FaceRpcContext context = SafeWebviewProtocol.DecodeQueryParams(uri);
             Debug.Log($"Data received from webview: {context}");
-            
             if (context.WebviewRequest())
             {
                 if (FaceRpcMethod.face_closeIframe.Is(context.Request.Method))
@@ -110,7 +109,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                         Response = new FaceRpcResponse(context.Request)
                     });
                     return;
-                }    
+                }
             }
 
             FaceRpcResponse response = context.Response;
@@ -120,6 +119,12 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 return;
             }
             
+            if (String.IsNullOrEmpty(context.Response.Method) && String.IsNullOrEmpty(context.Response.Result.ToString()))
+            {
+                this._handlerDictionary.Remove(response.Id.ToString());
+                return;
+            }
+
             callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
         }
