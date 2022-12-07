@@ -30,6 +30,10 @@ namespace haechi.face.unity.sdk.Runtime.Type
                     return Blockchain.BNB_SMART_CHAIN;
                 case BlockchainNetwork.BNB_SMART_CHAIN_TESTNET:
                     return Blockchain.BNB_SMART_CHAIN;
+                case BlockchainNetwork.KLAYTN:
+                    return Blockchain.KLAYTN;
+                case BlockchainNetwork.BAOBAB:
+                    return Blockchain.KLAYTN;
                 default:
                     throw new InvalidEnumArgumentException();
             }
