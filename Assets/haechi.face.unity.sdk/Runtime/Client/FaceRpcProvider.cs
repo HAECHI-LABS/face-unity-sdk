@@ -97,9 +97,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 this._senders = new Dictionary<FaceRpcMethod, IRequestSender>
                 {
                     {FaceRpcMethod.face_switchNetwork, new WebviewRequestSender(provider, webview)},
-                    {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview)},
-                    {FaceRpcMethod.face_directSocialLogin, new WebviewRequestSender(provider, webview)},
-                    {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.face_logInSignUp, new WebviewRequestSender(provider, webview, true)},
+                    {FaceRpcMethod.face_directSocialLogin, new WebviewRequestSender(provider, webview, true)},
+                    {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider, webview, true)},
                     {FaceRpcMethod.face_openWalletConnect, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider, webview)},
                     {FaceRpcMethod.personal_sign, new WebviewRequestSender(provider, webview)},
@@ -128,16 +128,18 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             private readonly FaceRpcProvider _provider;
             private readonly SafeWebviewController _webview;
+            private readonly bool _isAuth;
             
-            public WebviewRequestSender(FaceRpcProvider provider, SafeWebviewController webview)
+            public WebviewRequestSender(FaceRpcProvider provider, SafeWebviewController webview, bool isAuth = false)
             {
                 this._provider = provider;
                 this._webview = webview;
+                this._isAuth = isAuth;
             }
             
             public void SendNonResponseRequest(RpcRequestMessage request)
             {
-                this._provider._webview.SendMessage(request, null);
+                this._provider._webview.SendMessage(request, null, this._isAuth);
             }
             
             public async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
@@ -152,7 +154,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 }
 
                 this._webview.OnCloseWebview += OnCloseWebview;
-                this._provider._webview.SendMessage(request, response => rpcResponsePromise.TrySetResult(response));
+                this._provider._webview.SendMessage(request, response => rpcResponsePromise.TrySetResult(response), this._isAuth);
                 
                 Task<FaceRpcResponse> doneTask = await Task.WhenAny(new List<Task<FaceRpcResponse>>
                 {

@@ -1,9 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using haechi.face.unity.sdk.Runtime.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Newtonsoft.Json;
 using UnityEngine;
+using Object = System.Object;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
@@ -16,11 +20,11 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
         private void Awake()
         {
-            Application.deepLinkActivated += this.onDeepLinkActivated;
-            Application.focusChanged += this.onFocusChanged;
+            Application.deepLinkActivated += this._onDeepLinkActivated;
+            Application.focusChanged += this._onFocusChanged;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
-                this.onDeepLinkActivated(Application.absoluteURL);
+                this._onDeepLinkActivated(Application.absoluteURL);
             }
         }
 
@@ -29,30 +33,28 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         extern static void launch_face_webview(string url, string redirectUri, string objectName);
 #endif
         
-        private static void LaunchUrl(string url, string objectName = null)
+        private void _launchUrl(string url, bool isAuth)
         {
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
             Application.OpenURL(url);
 #elif UNITY_ANDROID
-        using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-        using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
-        using (var browserView = new AndroidJavaObject("xyz.facewallet.unity.android.BrowserView"))
-        {
-            browserView.CallStatic("launchUrl", activity, url);
-        }
-
+            using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+            using (var browserView = new AndroidJavaObject("xyz.facewallet.unity.android.BrowserView"))
+            {
+                browserView.CallStatic("launchUrl", activity, url);
+            }
 #elif UNITY_IOS
-    var uri = new Uri(url);
-    launch_face_webview(url, SafeWebviewProtocol.Scheme, objectName);
+            launch_face_webview(url, SafeWebviewProtocol.Scheme, this.gameObject.name);
 #endif
         }
 
-        public void onDeepLinkActivated(string url)
+        private void _onDeepLinkActivated(string url)
         {
             this._handleDeepLink(new Uri(url));
         }
 
-        public void SendMessage(RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
+        public void SendMessage(RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler, bool isAuth)
         {
             string redirectUri = "";
 #if UNITY_EDITOR
@@ -76,10 +78,12 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             Debug.Log($"URL: {uriBuilder}");
 
             // Launch browser
-            LaunchUrl(uriBuilder.ToString(), this.gameObject.name);
+            string url = uriBuilder.ToString();
+            this._launchUrl(url, isAuth);
+            Debug.Log("URL Launched");
         }
         
-        private void onFocusChanged(bool isFocused)
+        private void _onFocusChanged(bool isFocused)
         {
             // Return true when focus is changed into Unity App
             if (!isFocused)
@@ -102,16 +106,27 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             Debug.Log($"Data received from webview: {context}");
             if (context.WebviewRequest())
             {
-                if (FaceRpcMethod.face_closeIframe.Is(context.Request.Method))
+                WebviewRpcRequest request = context.Request;
+                if (FaceRpcMethod.face_openBrowser.Is(request.Method))
+                {
+                    Debug.Log("!!!!!!!!!!!face_openBrowser!!!!!!!!!!!!!");
+                    string[] arr = ((IEnumerable)request.RawParameters).Cast<object>()
+                        .Select(x => x.ToString())
+                        .ToArray();
+                    Debug.Log(arr[0]);
+                    Application.OpenURL(arr[0]);
+                    return;
+                }
+                if (FaceRpcMethod.face_closeIframe.Is(request.Method))
                 {
                     this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
                     {
-                        Response = new FaceRpcResponse(context.Request)
+                        Response = new FaceRpcResponse(request)
                     });
                     return;
                 }
             }
-
+            
             FaceRpcResponse response = context.Response;
             if (!this._handlerDictionary.TryGetValue(response.Id.ToString(), out Func<FaceRpcResponse, bool> callback))
             {
@@ -124,7 +139,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 this._handlerDictionary.Remove(response.Id.ToString());
                 return;
             }
-
+            
             callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
         }

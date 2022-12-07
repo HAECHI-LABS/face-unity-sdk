@@ -40,6 +40,11 @@ namespace haechi.face.unity.sdk.Runtime.Exception
         }
     }
     
+    public class IosCallbackFailedException : FaceException
+    {
+        public IosCallbackFailedException(string message) : base(ErrorCodes.IOS_CALLBACK_FAILED, message) {}
+    }
+    
     /// <value>
     /// FaceServerError is a data for server error.
     /// </value>

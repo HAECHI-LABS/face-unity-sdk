@@ -64,6 +64,9 @@ namespace haechi.face.unity.sdk.Samples.Script
                 ? BlockchainNetworks.GetNetwork(this.inputDesignator.blockchainDrd.captionText.text, this.inputDesignator.profileDrd.captionText.text)
                 : BlockchainNetworks.ValueOf(this.inputDesignator.networkDrd.captionText.text);
 
+            Debug.Log(apiKey);
+            Debug.Log(environment.ToString());
+            Debug.Log(network.ToString());
             return new FaceSettings.Parameters
             {
                 ApiKey = apiKey,

@@ -13,9 +13,11 @@ import UIKit
                 guard authError == nil, let callbackURL = callbackURL else {
                     return
                 }
+                
+                print("callbackURL: " + callbackURL.absoluteString);
 
                 let unity = UnityFramework.getInstance();
-                unity?.sendMessageToGO(withName: objectName, functionName: "onDeepLinkActivated", message: callbackURL.absoluteString);
+                unity?.sendMessageToGO(withName: objectName, functionName: "_onDeepLinkActivated", message: callbackURL.absoluteString);
         }
         
         if #available(iOS 13.0, *) {
