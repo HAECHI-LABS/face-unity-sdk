@@ -1,4 +1,10 @@
 
+<a name="1.1.2"></a>
+## Release: [1.1.2](https://github.com/HAECHI-LABS/core/releases/tag/1.1.2)
+### Features
+- Add switchNetwork and fix UI
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
