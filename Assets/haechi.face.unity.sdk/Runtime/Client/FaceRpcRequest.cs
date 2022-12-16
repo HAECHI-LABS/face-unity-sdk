@@ -30,6 +30,14 @@ namespace haechi.face.unity.sdk.Runtime.Client
             parameterList.CopyTo(result, 0);
             return result;
         }
+        
+        private static object[] _parameterize(Object parameterList)
+        {
+            object[] convertList = (object[])parameterList;
+            object[] result = new object[convertList.Length];
+            convertList.CopyTo(result, 0);
+            return result;
+        }
 
         public FaceRpcRequest(Blockchain blockchain, FaceRpcMethod method, params T[] parameterList) 
             : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method), 
@@ -46,8 +54,15 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
             this.From = "FACE_NATIVE_SDK";
             this.To = "FACE_IFRAME";
+        }  
+        
+        public FaceRpcRequest(Blockchain blockchain, RpcRequestMessage message) 
+            : base(_generateId(), message.Method, _parameterize(message.RawParameters))
+        {
+            this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
         }
         
+
         [JsonProperty("from", Required = Required.Always)]
         public string From { get; private set; }
         

@@ -7,6 +7,7 @@ using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
+using Nethereum.Web3;
 using Newtonsoft.Json;
 using UnityEngine;
 

@@ -6,7 +6,6 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
-using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
