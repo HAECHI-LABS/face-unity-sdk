@@ -157,16 +157,16 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
             public virtual async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
-                RpcRequestMessage sendRequest = request;
+                RpcRequestMessage requestMessage = request;
                 
-                if (sendRequest.GetType() != typeof(FaceRpcRequest<>))
+                if (requestMessage.GetType() != typeof(FaceRpcRequest<>))
                 {
-                    sendRequest =
+                    requestMessage =
                         new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), request);
                 }
             
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-                FaceRpcResponse response = await this._provider._client.SendRpcRequest(sendRequest, "/v1/rpc");
+                FaceRpcResponse response = await this._provider._client.SendRpcRequest(requestMessage, "/v1/rpc");
                 promise.TrySetResult(response);
                 return await promise.Task;
             }
