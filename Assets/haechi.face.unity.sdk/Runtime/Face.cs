@@ -1,8 +1,11 @@
+using System.Collections;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Module;
+using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Webview;
+using Nethereum.Hex.HexTypes;
 using Nethereum.Web3;
 using UnityEngine;
 
@@ -39,7 +42,8 @@ namespace haechi.face.unity.sdk.Runtime
             
             // Inject walletProxy instead of real Wallet. Because Wallet still not instantiated
             FaceProviderFactory factory = new FaceProviderFactory(this._safeWebviewController, 
-                FaceSettings.Instance.ServerHostURL(), this._walletProxy);
+                FaceSettings.Instance.ServerHostURL(),
+                this._walletProxy);
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
             
             Web3 web3 = new Web3(this.provider);

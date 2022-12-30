@@ -75,12 +75,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
         [JsonProperty("to")] public string To { get; private set; } = "FACE_NATIVE_SDK";
         
         /// <value>
-        /// Rpc request's result.
-        /// </value>
-        [JsonProperty("result")]
-        public JToken Result { get; private set; }
-        
-        /// <value>
         /// Rpc method name.
         /// </value>
         [JsonProperty("method")]

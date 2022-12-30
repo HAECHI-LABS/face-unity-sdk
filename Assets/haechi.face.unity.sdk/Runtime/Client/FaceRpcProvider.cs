@@ -17,9 +17,11 @@ using Nethereum.Contracts.Standards.ERC20.ContractDefinition;
 using Nethereum.Hex.HexTypes;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Nethereum.Model;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
 using UnityEngine;
+using Object = System.Object;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -28,7 +30,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         private readonly SafeWebviewController _webview;
 
         private readonly FaceClient _client;
-
+        
         private readonly MethodHandlers _methodHandlers;
 
         private readonly IRequestSender _defaultRequestSender;
@@ -38,7 +40,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this._webview = safeWebviewController;
             this._client = new FaceClient(uri, new HttpClient());
             this._methodHandlers = new MethodHandlers(this, wallet, this._webview);
-            this._defaultRequestSender = new WebviewRequestSender(this, this._webview);
+            this._defaultRequestSender = new ServerRequestSender(this);
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
         }
         
@@ -66,7 +68,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             // TODO: batch rpc sender will be implemented if needed
             throw new NotImplementedException();
         }
-
+        
         internal async Task<FaceRpcResponse> SendFaceRpcAsync<TParams>(FaceRpcRequest<TParams> request)
         {
             return (FaceRpcResponse)await this.SendAsync(request);
@@ -155,8 +157,16 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
             public virtual async Task<RpcResponseMessage> SendRequest(RpcRequestMessage request)
             {
+                RpcRequestMessage requestMessage = request;
+                
+                if (requestMessage.GetType() != typeof(FaceRpcRequest<>))
+                {
+                    requestMessage =
+                        new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), request);
+                }
+            
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
-                FaceRpcResponse response = await this._provider._client.SendRpcRequest(request, "/v1/rpc");
+                FaceRpcResponse response = await this._provider._client.SendRpcRequest(requestMessage, "/v1/rpc");
                 promise.TrySetResult(response);
                 return await promise.Task;
             }
