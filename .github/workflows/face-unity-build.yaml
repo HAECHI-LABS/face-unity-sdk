@@ -1,0 +1,21 @@
+name: face-unity-build
+on:
+  push:
+    branches:
+      - eddie/ci
+
+jobs:
+  unity-build:
+    name: Unity Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unity - Activate
+      uses: game-ci/unity-activate@v2.0.0
+      with:
+        unityVersion: 2019.3.15f1
+    - name: Unity - Builder
+      uses: game-ci/unity-builder@v2.1.2
+      with:
+        # Platform that the build should target.
+        targetPlatform: Android 
+        unityVersion: 2019.3.15f1
