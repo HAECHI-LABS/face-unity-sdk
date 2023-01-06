@@ -72,7 +72,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
         /// <value>
         /// To value that indicates where this rpc request received.
         /// </value>
+#if UNITY_WEBGL
+        [JsonProperty("to")] public string To { get; private set; } = "FACE_SDK";
+#else
         [JsonProperty("to")] public string To { get; private set; } = "FACE_NATIVE_SDK";
+#endif
         
         /// <value>
         /// Rpc method name.

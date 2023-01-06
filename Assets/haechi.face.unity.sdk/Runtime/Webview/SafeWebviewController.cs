@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using AOT;
 using haechi.face.unity.sdk.Runtime.Client;
+using haechi.face.unity.sdk.Runtime.Module;
+using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -13,10 +15,20 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
             = new Dictionary<string, Func<FaceRpcResponse, bool>>();
 
+        private static readonly ObservableDictionary<string, string> IframeResponse = new ObservableDictionary<string, string>();
         public event Action<SafeWebviewController, CloseWebviewArgs> OnCloseWebview;
 
         private void Awake()
         {
+            IframeResponse.CollectionChanged += (_, args) =>
+            {
+                foreach (var argsNewItem in args.NewItems)
+                {
+                    KeyValuePair<string, string> response = (KeyValuePair<string, string>)argsNewItem;
+                    this._handlerDictionary[response.Key](JsonConvert.DeserializeObject<FaceRpcResponse>(response.Value));
+                    this._handlerDictionary.Remove(response.Key);
+                }
+            };
             Application.deepLinkActivated += this.onDeepLinkActivated;
             Application.focusChanged += this.onFocusChanged;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
@@ -28,18 +40,12 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 #if UNITY_IOS
         [DllImport("__Internal")]
         extern static void launch_face_webview(string url, string redirectUri, string objectName);
-#elif UNITY_WEBGL
-        [DllImport("__Internal")]
-        private static extern void openWindow(string url);
 #endif
-        
+
         private static void LaunchUrl(string url, string objectName = null)
         {
-            
 #if UNITY_EDITOR || UNITY_STANDALONE
             Application.OpenURL(url);
-#elif UNITY_WEBGL
-            openWindow(url);
 #elif UNITY_ANDROID
         using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
         using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
@@ -61,13 +67,16 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
         public void SendMessage(RpcRequestMessage message, Func<FaceRpcResponse, bool> callbackHandler)
         {
-            string redirectUri = "";
-#if UNITY_EDITOR || UNITY_STANDALONE
-            redirectUri = LocalTestWebServer.Start(this);
-#elif UNITY_WEBGL
-            redirectUri = this._hostname();
-#endif
             this._handlerDictionary.Add(message.Id.ToString(), callbackHandler);
+            
+            string redirectUri = "";
+#if UNITY_WEBGL
+            Iframe.SendChildMessage(message);
+            Iframe.WaitForResponse(message.Id.ToString(), ResponseCallback);
+            return;
+#elif UNITY_EDITOR || UNITY_STANDALONE
+            redirectUri = LocalTestWebServer.Start(this);
+#endif
             
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
             {
@@ -87,16 +96,18 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             // Launch browser
             LaunchUrl(uriBuilder.ToString(), this.gameObject.name);
         }
+        
+        [MonoPInvokeCallback(typeof(Action<string, string>))]
+        private static void ResponseCallback(string id, string res)
+        {
+            IframeResponse.Add(id, res);
+        }
 
         private string _hostname()
         {
-#if UNITY_WEBGL
-            return Application.absoluteURL;
-#else
             return Application.identifier;
-#endif
         }
-        
+
         private void onFocusChanged(bool isFocused)
         {
             // Return true when focus is changed into Unity App
@@ -115,10 +126,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         private void _handleDeepLink(Uri uri)
         {
             Debug.Log($"URI Receive: {uri}");
-            
+
             FaceRpcContext context = SafeWebviewProtocol.DecodeQueryParams(uri);
             Debug.Log($"Data received from webview: {JsonConvert.SerializeObject(context)}");
-            
+
             if (context.WebviewRequest())
             {
                 if (FaceRpcMethod.face_closeIframe.Is(context.Request.Method))
@@ -128,7 +139,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                         Response = new FaceRpcResponse(context.Request)
                     });
                     return;
-                }    
+                }
             }
 
             FaceRpcResponse response = context.Response;
@@ -137,7 +148,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Debug.Log($"Cannot find handler by id: {response.Id}");
                 return;
             }
-            
+
             callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
         }
@@ -147,7 +158,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             this._handleDeepLink(url);
         }
     }
-    
+
     public class CloseWebviewArgs
     {
         public FaceRpcResponse Response;

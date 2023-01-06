@@ -2,7 +2,9 @@ using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Utils;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -52,8 +54,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
-            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
 
+            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
+            Iframe.ConsoleLog($"USER ID: {faceLoginResponse.faceUserId}");
+            Iframe.ConsoleLog($"USER Address: {faceLoginResponse.wallet.Address}");
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
             
             if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
@@ -61,6 +65,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);
             }
             
+            Iframe.ConsoleLog("LOGGED IN SUCCESSFULLY!!!!");
             return faceLoginResponse;
         }
 

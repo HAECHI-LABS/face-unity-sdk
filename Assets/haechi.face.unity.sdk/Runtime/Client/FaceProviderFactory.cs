@@ -1,5 +1,4 @@
 using System;
-using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.Unity.Rpc;
@@ -21,6 +20,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         public IUnityRpcRequestClient CreateUnityRpcClient()
         {
+            Iframe.ConsoleLog($"Server URI: {this._uri}");
             return new FaceRpcProvider(this._safeWebviewController, this._uri, this._wallet);
         }
     }

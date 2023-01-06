@@ -6,6 +6,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
+using Newtonsoft.Json;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -110,7 +111,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
             
             try
             {
-                return await task;
+                TransactionRequestId transactionRequestId = await task;
+                Iframe.ConsoleLog(JsonConvert.SerializeObject(transactionRequestId));
+                return transactionRequestId;
             }
             catch (HttpRequestException e)
             {

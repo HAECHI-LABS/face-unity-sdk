@@ -1,14 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Module;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -47,6 +50,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
 
         private readonly HttpClient _httpClient;
+        private readonly UnityWebRequest _unityWebRequest;
 
         public async Task<FaceRpcResponse> SendRpcRequest(
             RpcRequestMessage request,
@@ -63,6 +67,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         public async Task<R> SendHttpGetRequest<R>(string route = null)
         {
+            Iframe.ConsoleLog("SendHttpGetRequest");
             return await this._sendRequestTemplate<object, R>(new RequestParameters<object>{
                 Callback = (_, cancellationTokenSource, route) => this._sendGetRequestCallback(cancellationTokenSource, route),
                 Route = route
@@ -71,13 +76,23 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private async Task<HttpResponseMessage> _sendGetRequestCallback(CancellationTokenSource cancellationTokenSource, string route = null)
         {
+            Iframe.ConsoleLog("_sendGetRequestCallback");
             return await this._httpClient.GetAsync(route, cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         private async Task<HttpResponseMessage> _sendPostRequestCallback<T>(T request, CancellationTokenSource cancellationTokenSource, string route = null)
         {
             StringContent content = new StringContent(JsonConvert.SerializeObject((object) request, this._jsonSerializerSettings), Encoding.UTF8, "application/json");
-            return await this._httpClient.PostAsync(route, (HttpContent) content, cancellationTokenSource.Token).ConfigureAwait(false);
+            try
+            {
+                HttpResponseMessage message = await this._httpClient.PostAsync(route, (HttpContent) content, cancellationTokenSource.Token).ConfigureAwait(false);
+                Iframe.ConsoleLog($"MESSAGE: {JsonConvert.SerializeObject(message)}");
+                return message;
+            }
+            catch (System.Exception e)
+            {
+                throw new ArgumentException($"Send post request failed. {e.Message}");
+            }
         }
 
         struct RequestParameters<T>
@@ -89,10 +104,10 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private async Task<R> _sendRequestTemplate<T, R>(RequestParameters<T> parameters)
         {
+            Iframe.ConsoleLog("_sendRequestTemplate");
             try
             {
                 R responseMessage;
-                
                 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
                 cancellationTokenSource.CancelAfter(ClientBase.ConnectionTimeout);
                 HttpResponseMessage httpResponseMessage = await parameters.Callback(parameters.Request, cancellationTokenSource, parameters.Route);
@@ -125,6 +140,17 @@ namespace haechi.face.unity.sdk.Runtime.Client
             string result = response.Content.ReadAsStringAsync().Result;
             FaceServerError error = JsonConvert.DeserializeObject<FaceServerError>(result);
             return new FaceServerException(error);
+        }
+        
+        private interface IHttpClient<T>
+        {
+            Task<T> Get(RpcRequestMessage request);
+            Task<T> Post(RpcRequestMessage request);
+        }
+        
+        private class ClientSupplier
+        {
+            // private readonly Dictionary<FaceRpcMethod, IRequestSender> _httpClient;
         }
     }
 }

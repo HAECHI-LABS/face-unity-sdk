@@ -1,11 +1,8 @@
-using System.Collections;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Module;
-using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Webview;
-using Nethereum.Hex.HexTypes;
 using Nethereum.Web3;
 using UnityEngine;
 
@@ -34,6 +31,7 @@ namespace haechi.face.unity.sdk.Runtime
         public void Initialize(FaceSettings.Parameters parameters)
         {
             FaceSettings.Init(parameters);
+            Iframe.CreateIframe();
             
             this._safeWebviewController = this.GetComponent<SafeWebviewController>();
             
