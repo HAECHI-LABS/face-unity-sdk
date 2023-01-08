@@ -1,11 +1,13 @@
 name: face-unity-build
 on:
-  push:
-    branches:
-      - eddie/ci
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Sample Dapp version"
+        required: true
 jobs:
-  build:
-    name: 🚀 Build Face Unity Sample Dapp 🚀
+  build-android:
+    name: 🚀 Build Face Unity Sample Android Dapp 🚀
     runs-on: ubuntu-latest
     steps:
       # Checkout
@@ -13,7 +15,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           lfs: true
-
       # Cache
       - uses: actions/cache@v2
         with:
@@ -21,7 +22,6 @@ jobs:
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
-
       # Build
       - name: Build Android project
         uses: game-ci/unity-builder@v2
@@ -31,10 +31,113 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          buildMethod: PerformBuild.Android
-          
+          versioning: ${{ github.event.inputs.version }}
+      - uses: actions/setup-node@v1
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+      - name: Distribute Android
+        run: sudo fastlane android
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       # Output
       - uses: actions/upload-artifact@v2
         with:
-          name: Build
+          name: Build-Android
+          path: build  
+  build-iOS:
+    name: 🚀 Build Face Unity Sample iOS Dapp 🚀
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+      - name: Build iOS project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: iOS
+          versioning: ${{ github.event.inputs.version }}
+      # Output
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Build-IOS
+          path: build
+  distribution-ios:
+    needs: build-iOS
+    runs-on: macos-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      - uses: actions/download-artifact@master
+        with:
+          name: Build-IOS
+          path: build
+      - uses: actions/cache@v2
+        with:
+          path: build/iOS/iOS/Carthage
+          key: Carthage-${{ hashFiles('**/Cartfile.resolved') }}
+          restore-keys: |
+            Carthage-
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+      - uses: actions/setup-node@v1
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+      - name: Distribute ios
+        env:
+          #          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
+  build-webgl:
+    name: 🚀 Build Face Unity Sample WebGL Dapp 🚀
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+      # Build
+      - name: Build WebGL project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          versioning: ${{ github.event.inputs.version }}
+      # Output
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Build-WebGL
           path: build
