@@ -13,10 +13,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### iOS
+### ios
 
 ```sh
-[bundle exec] fastlane iOS
+[bundle exec] fastlane ios
 ```
 
 

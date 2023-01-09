@@ -96,3 +96,10 @@ _site/
 face-unity-sample_BackUpThisFolder_ButDontShipItWithYourGame
 
 face-unity-sample_BurstDebugInformation_DoNotShip
+fastlane/report.xml
+
+*.log
+
+*.ipa
+
+for_fastlane
