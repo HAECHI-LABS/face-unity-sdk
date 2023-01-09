@@ -1,8 +1,8 @@
 ﻿var IframePlugin = {
-    createIframe: function(url, readyCompleteCallback, readyCallback)
+    createIframe: function(url, readyCompleteCallback, readyCallback, showIframeCallback, hideIframeCallback)
     {
         if (document.getElementById('face-iframe')) {
-            console.log('Face is already initialized, Face can be initialized once.');
+            console.log('Face is already initialized, Face can be initialized only once.');
             return;
         }
         const iframeUrl = new URL(UTF8ToString(url));
@@ -32,23 +32,22 @@
             } else {}
         }
         
-        const iframe = document.getElementById('face-iframe');
         window.addEventListener('message', async (e) => {
-            if (e.origin !== `${iframeUrl.protocol}//${iframeUrl.host}/`) {
+            const iframe = document.getElementById('face-iframe');
+            if (!e.origin.includes(`${iframeUrl.protocol}//${iframeUrl.host}`)) {
                 return;
             }
-            switch (message.method) {
+            switch (e.data.method) {
                 case 'face_ready':
                     Module['dynCall_v'](readyCompleteCallback);
                     break;
                 case 'face_openIframe':
                     Module['dynCall_v'](readyCallback);
-                    iframe.style.display = 'block';
-                    iframe.focus();
+                    Module['dynCall_v'](showIframeCallback);
                     break;
                 case 'face_closeIframe':
                     Module['dynCall_v'](readyCallback);
-                    iframe.style.display = 'none';
+                    Module['dynCall_v'](hideIframeCallback);
                     break;
             }
         });
@@ -63,16 +62,8 @@
     sendChildMessage: function(blockchain, serializedMessage, readyCallback)
     {
         const message = JSON.parse(UTF8ToString(serializedMessage));
-        
         Module['dynCall_v'](readyCallback);
         let iframe = document.getElementById('face-iframe');
-        iframe.style.display = 'block';
-        iframe.focus();
-        
-        console.log('params size: ' + message.params.length);
-        for (let i = 0 ; i < message.params.length ; i++) {
-            console.log('Params: ' + message.params[i]);
-        }
         iframe.contentWindow.postMessage({id: message.id, method: message.method, params: message.params, blockchain: UTF8ToString(blockchain), from: 'FACE_SDK'}, '*');
     },
     
@@ -82,23 +73,15 @@
         return new Promise((resolve, reject) => {
             const listener = (event) => {
                 const response = event.data;
-                console.log('RESPONSE: ' + JSON.stringify(response));
                 const responseId = response.id ?? null;
-                const isCloseIframe = response.method && response.method !== 'face_closeIframe';
-                if (requestId && responseId != requestId && isCloseIframe) {
+                if (requestId && responseId != requestId) {
                     return;
                 }
                 window.removeEventListener('message', listener);
                 if (response.error) {
                     reject(response.error);
                 }
-                console.log(responseId === null);
-                console.log(response.method != null);
-                console.log(response.method !== 'face_closeIframe');
-                if (responseId === null && isCloseIframe) {
-                    console.log('Returning...');
-                    return;
-                }
+               
                 resolve(response.result);
             };
             window.addEventListener('message', listener);
@@ -126,8 +109,6 @@
             stringToUTF8(stringResponse, responseBuffer, responseBufferSize);
 
             Module['dynCall_vii'](responseCallback, requestIdBuffer, responseBuffer);
-            let iframe = document.getElementById('face-iframe');
-            iframe.style.display = 'none';
         });
     },
     

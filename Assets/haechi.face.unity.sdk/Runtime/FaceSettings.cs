@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 
@@ -43,12 +42,12 @@ namespace haechi.face.unity.sdk.Runtime
         /// Initialize FaceSettings with <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.FaceSettings.Parameters.html">Parameters</a>.
         /// </summary>
         /// <param name="parameters"><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.FaceSettings.Parameters.html">Parameters</a>.</param>
-        /// <exception cref="FaceException">Throws if FaceSettings is already initialized.</exception>
+        /// <exception cref="AlreadyInitializedException">Throws if FaceSettings is already initialized.</exception>
         public static void Init(Parameters parameters)
         {
-            if (instance != null)
+            if (IsInitialized())
             {
-                throw new FaceException(ErrorCodes.ALREADY_INITIALIZED);
+                throw new AlreadyInitializedException();
             }
             instance = new FaceSettings(new parameters
             {

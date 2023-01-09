@@ -6,7 +6,6 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
-using Newtonsoft.Json;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -97,22 +96,31 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is given string value from blockchain.</returns>
         public async Task<FaceRpcResponse> SwitchNetwork(BlockchainNetwork network)
         {
-            Blockchain blockchain = FaceSettings.Instance.Blockchain();
-            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(blockchain, FaceRpcMethod.face_switchNetwork, blockchain.ToString());
+            Blockchain originalBlockchain = FaceSettings.Instance.Blockchain();
+            Blockchain switchedBlockchain = Blockchains.OfBlockchainNetwork(network);
+            FaceRpcRequest<SwitchNetworkRequest> rpcRequest = new FaceRpcRequest<SwitchNetworkRequest>(originalBlockchain, FaceRpcMethod.face_switchNetwork, new SwitchNetworkRequest(switchedBlockchain.ToString()));
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
+            if (!response.CastResult<string>().Equals(switchedBlockchain.ToString()))
+            {
+                throw new SwitchNetworkFailedException();
+            }
             FaceSettings.Instance.SetNetwork(network);
             return response;
         }
-        
+
         private async Task<TransactionRequestId> _getTransactionRequestId(string requestId, FaceRpcResponse response)
         {
+#if UNITY_WEBGL
+            Task<TransactionRequestId> task = this._provider._webRequest.SendHttpGetRequest<TransactionRequestId>(
+                $"{FaceSettings.Instance.ServerHostURL()}/v1/transactions/requests/{requestId}");
+#else
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
                 $"/v1/transactions/requests/{requestId}");
-            
+#endif
+
             try
             {
                 TransactionRequestId transactionRequestId = await task;
-                Iframe.ConsoleLog(JsonConvert.SerializeObject(transactionRequestId));
                 return transactionRequestId;
             }
             catch (HttpRequestException e)
@@ -121,7 +129,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 {
                     throw new WebviewClosedException();
                 }
-                throw new FaceException(ErrorCodes.SERVER_RESPONSE_ERROR, e.Message);
+                throw new FaceServerException(e);
             }
         }
     }

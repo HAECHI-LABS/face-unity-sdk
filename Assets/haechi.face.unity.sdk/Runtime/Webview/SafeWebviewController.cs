@@ -25,7 +25,13 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 foreach (var argsNewItem in args.NewItems)
                 {
                     KeyValuePair<string, string> response = (KeyValuePair<string, string>)argsNewItem;
-                    this._handlerDictionary[response.Key](JsonConvert.DeserializeObject<FaceRpcResponse>(response.Value));
+                    if (!this._handlerDictionary.TryGetValue(response.Key, out Func<FaceRpcResponse, bool> callback))
+                    {
+                        Debug.Log($"Cannot find handler by id: {response.Key}");
+                        return;
+                    }
+                    FaceRpcResponse rpcResponse = JsonConvert.DeserializeObject<FaceRpcResponse>(response.Value);
+                    callback(rpcResponse);
                     this._handlerDictionary.Remove(response.Key);
                 }
             };
@@ -125,8 +131,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
         private void _handleDeepLink(Uri uri)
         {
+#if !UNITY_WEBGL
             Debug.Log($"URI Receive: {uri}");
-
             FaceRpcContext context = SafeWebviewProtocol.DecodeQueryParams(uri);
             Debug.Log($"Data received from webview: {JsonConvert.SerializeObject(context)}");
 
@@ -151,6 +157,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
             callback(response);
             this._handlerDictionary.Remove(response.Id.ToString());
+#endif
         }
 
         public void HandleUrl(Uri url)

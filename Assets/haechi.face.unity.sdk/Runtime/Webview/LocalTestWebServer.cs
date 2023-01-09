@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
@@ -76,10 +78,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 </html>
             ";
 
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+                byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
                 httpResponse.ContentLength64 = buffer.Length;
-                System.IO.Stream output = httpResponse.OutputStream;
+                Stream output = httpResponse.OutputStream;
                 output.Write(buffer, 0, buffer.Length);
                 output.Close();
 

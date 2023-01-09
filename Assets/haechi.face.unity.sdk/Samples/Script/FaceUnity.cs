@@ -4,11 +4,9 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
-using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
-using Nethereum.Web3;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -80,15 +78,10 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
-                Iframe.ConsoleLog("SetLoggedInId!!!");
                 this.dataDesignator.SetLoggedInId(response.userId);
-                Iframe.ConsoleLog("SetLoggedInAddress!!!");
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
-                Iframe.ConsoleLog("SetCoinBalance!!!");
                 this.dataDesignator.SetCoinBalance(response.balance);
-                Iframe.ConsoleLog("SetLogoutInstruction!!!");
                 this.dataDesignator.SetLogoutInstruction();
-                Iframe.ConsoleLog("SetLoggedInInputStatus!!!");
                 this.inputDesignator.SetLoggedInInputStatus();
             }, this._defaultExceptionHandler);
         }
@@ -96,12 +89,10 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
             FaceLoginResponse response = await this.face.Auth().Login();
-            Iframe.ConsoleLog($"User ID: {response.faceUserId}");
-            Iframe.ConsoleLog($"Address: {response.wallet.Address}");
             string address = response.wallet.Address;
-            // string balance = await this._getBalance(address);
+            string balance = await this._getBalance(address);
 
-            return new LoginResult(null, response.faceUserId, address);
+            return new LoginResult(balance, response.faceUserId, address);
         }
         
         public void GoogleLoginAndGetBalance()
@@ -262,7 +253,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
             if (String.IsNullOrEmpty(loggedInAddress) || String.IsNullOrEmpty(loggedInId))
             {
-                throw new FaceException(ErrorCodes.UNAUTHORIZED);
+                throw new UnauthorizedException();
             }
         }
         
@@ -294,9 +285,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private async Task<string> _getBalance(string address)
         {
-            Iframe.ConsoleLog("GET BALANCE!!!");
             FaceRpcResponse response = await this.face.Wallet().GetBalance(address);
-            Iframe.ConsoleLog($"BALANCE IS {response.CastResult<string>()}!!!!!!");
             return NumberFormatter.DivideHexWithDecimals(response.CastResult<string>(), 18);
         }
 

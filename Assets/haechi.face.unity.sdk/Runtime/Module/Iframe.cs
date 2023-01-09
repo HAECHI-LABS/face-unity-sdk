@@ -13,7 +13,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private static readonly Ready ready = new Ready();
         
         [DllImport("__Internal")]
-        private static extern void createIframe(string url, Action readyCompleteCallback, Action readyCallback);
+        private static extern void createIframe(string url, Action readyCompleteCallback, Action readyCallback, Action showIframeCallback, Action hideIframeCallback);
 
         [DllImport("__Internal")]
         private static extern void sendChildMessage(string blockchain, string serializedMessage, Action readyCallback);
@@ -36,7 +36,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             {
                 return;
             }
-            createIframe(FaceSettings.Instance.IframeURL(), ReadyCompleteCallback, ReadyCallback);
+            createIframe(FaceSettings.Instance.IframeURL(), ReadyCompleteCallback, ReadyCallback, ShowIframeCallback, HideIframeCallback);
         }
 
         public static void SendChildMessage(RpcRequestMessage message)
@@ -49,19 +49,21 @@ namespace haechi.face.unity.sdk.Runtime.Module
             waitForResponse(requestId, responseCallback);
         }
 
-        public static void ShowOverlay()
+        public static void ConsoleLog(string log)
+        {
+            consoleLog(log);
+        }
+        
+        [MonoPInvokeCallback(typeof(Action))]
+        private static void ShowIframeCallback()
         {
             showOverlay(ReadyCallback);
         }
         
-        public static void HideOverlay()
+        [MonoPInvokeCallback(typeof(Action))]
+        private static void HideIframeCallback()
         {
             hideOverlay(ReadyCallback);
-        }
-
-        public static void ConsoleLog(string log)
-        {
-            consoleLog(log);
         }
 
         [MonoPInvokeCallback(typeof(Action))]

@@ -41,6 +41,7 @@ namespace haechi.face.unity.sdk.Runtime
             // Inject walletProxy instead of real Wallet. Because Wallet still not instantiated
             FaceProviderFactory factory = new FaceProviderFactory(this._safeWebviewController, 
                 FaceSettings.Instance.ServerHostURL(),
+                this,
                 this._walletProxy);
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
             
@@ -70,12 +71,12 @@ namespace haechi.face.unity.sdk.Runtime
         /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Wallet.html">Wallet</a>.
         /// </summary>
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Wallet.html">Module.Wallet</a></returns>
-        /// <exception cref="FaceException">Throws if FaceSettings is not initialized.</exception>
+        /// <exception cref="NotInitializedException">Throws if FaceSettings is not initialized.</exception>
         public Wallet Wallet()
         {
             if (!FaceSettings.IsInitialized())
             {
-                throw new FaceException(ErrorCodes.NOT_INITIALIZED);
+                throw new NotInitializedException();
             }
 
             return this._wallet;
@@ -85,12 +86,12 @@ namespace haechi.face.unity.sdk.Runtime
         /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Auth</a>.
         /// </summary>
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Module.Wallet</a></returns>
-        /// <exception cref="FaceException">Throws if FaceSettings is not initialized.</exception>
+        /// <exception cref="NotInitializedException">Throws if FaceSettings is not initialized.</exception>
         public Auth Auth()
         {
             if (!FaceSettings.IsInitialized())
             {
-                throw new FaceException(ErrorCodes.NOT_INITIALIZED);
+                throw new NotInitializedException();
             }
 
             return this._auth;

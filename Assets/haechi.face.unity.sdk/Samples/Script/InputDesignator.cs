@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using haechi.face.unity.sdk.Runtime.Type;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
