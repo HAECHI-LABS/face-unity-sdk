@@ -1,6 +1,5 @@
 using System;
 using haechi.face.unity.sdk.Runtime.Type;
-using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using Random = UnityEngine.Random;
@@ -15,7 +14,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
             : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method),
                 _parameterize(parameterList))
         {
+#if UNITY_WEBGL
+            this.From = "FACE_SDK";
+#else
             this.From = "FACE_NATIVE_SDK";
+#endif
             this.To = "FACE_IFRAME";
         }
 
@@ -44,7 +47,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 _parameterize(parameterList))
         {
             this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
+#if UNITY_WEBGL
+            this.From = "FACE_SDK";
+#else
             this.From = "FACE_NATIVE_SDK";
+#endif
             this.To = "FACE_IFRAME";
         }
         
@@ -52,7 +59,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
             : base(_generateId(), method, _parameterize(parameterList))
         {
             this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
+#if UNITY_WEBGL
+            this.From = "FACE_SDK";
+#else
             this.From = "FACE_NATIVE_SDK";
+#endif
             this.To = "FACE_IFRAME";
         }  
         
@@ -63,13 +74,13 @@ namespace haechi.face.unity.sdk.Runtime.Client
         }
         
 
-        [JsonProperty("from", Required = Required.Always)]
+        [JsonProperty("from", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
         public string From { get; private set; }
         
-        [JsonProperty("to", Required = Required.Always)]
+        [JsonProperty("to", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
         public string To { get; private set; }
         
-        [JsonProperty("blockchain")]
+        [JsonProperty("blockchain", NullValueHandling = NullValueHandling.Ignore)]
         public string Blockchain { get; private set; }
     }
 }

@@ -29,7 +29,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns>
         /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
         /// </returns>
-        /// <exception cref="FaceException">Throws FaceExceptioin when address verification fails.</exception>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
         public async Task<FaceLoginResponse> Login() 
         {
             return await this._login(FaceRpcMethod.face_logInSignUp);
@@ -42,7 +42,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns>
         /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
         /// </returns>
-        /// <exception cref="FaceException">Throws FaceExceptioin when address verification fails.</exception>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
         public async Task<FaceLoginResponse> DirectSocialLogin(string provider)
         {
             return await this._login(FaceRpcMethod.face_directSocialLogin, provider);
@@ -52,13 +52,13 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
-            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
 
+            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
             
             if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
             {
-                throw new FaceException(ErrorCodes.ADDRESS_VERIFICATION_FAILED);
+                throw new AddressVerificationFailedException();
             }
             
             return faceLoginResponse;

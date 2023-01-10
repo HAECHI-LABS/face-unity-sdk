@@ -1,5 +1,3 @@
-using Nethereum.JsonRpc.Client.RpcMessages;
-
 namespace haechi.face.unity.sdk.Runtime.Client
 {
     public class FaceRpcContext

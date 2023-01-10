@@ -3,7 +3,6 @@ using haechi.face.unity.sdk.Runtime.Exception;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -72,7 +71,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
         /// <value>
         /// To value that indicates where this rpc request received.
         /// </value>
+#if UNITY_WEBGL
+        [JsonProperty("to")] public string To { get; private set; } = "FACE_SDK";
+#else
         [JsonProperty("to")] public string To { get; private set; } = "FACE_NATIVE_SDK";
+#endif
         
         /// <value>
         /// Rpc method name.

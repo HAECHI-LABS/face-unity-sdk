@@ -72,8 +72,8 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private async Task<HttpResponseMessage> _sendPostRequestCallback<T>(T request, CancellationTokenSource cancellationTokenSource, string route = null)
         {
-            StringContent content = new StringContent(JsonConvert.SerializeObject((object) request, this._jsonSerializerSettings), Encoding.UTF8, "application/json");
-            return await this._httpClient.PostAsync(route, (HttpContent) content, cancellationTokenSource.Token).ConfigureAwait(false);
+            StringContent content = new StringContent(JsonConvert.SerializeObject(request, this._jsonSerializerSettings), Encoding.UTF8, "application/json");
+            return await this._httpClient.PostAsync(route, content, cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
         struct RequestParameters<T>
@@ -90,7 +90,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 R responseMessage;
                 
                 CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-                cancellationTokenSource.CancelAfter(ClientBase.ConnectionTimeout);
+                cancellationTokenSource.CancelAfter(ConnectionTimeout);
                 HttpResponseMessage httpResponseMessage = await parameters.Callback(parameters.Request, cancellationTokenSource, parameters.Route);
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -98,9 +98,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 }
                 using (StreamReader reader1 = new StreamReader(await httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false)))
                 {
-                    using (JsonTextReader reader2 = new JsonTextReader((TextReader)reader1))
+                    using (JsonTextReader reader2 = new JsonTextReader(reader1))
                     {
-                        responseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<R>((JsonReader)reader2);
+                        responseMessage = JsonSerializer.Create(this._jsonSerializerSettings).Deserialize<R>(reader2);
                     }
 
                 }
@@ -108,7 +108,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             }
             catch (TaskCanceledException ex)
             {
-                throw new RpcClientTimeoutException(string.Format("Rpc timeout after {0} milliseconds", (object)ClientBase.ConnectionTimeout.TotalMilliseconds), (System.Exception)ex);
+                throw new RpcClientTimeoutException($"Rpc timeout after {ConnectionTimeout.TotalMilliseconds} milliseconds", ex);
             }
             catch (HttpRequestException ex)
             {
