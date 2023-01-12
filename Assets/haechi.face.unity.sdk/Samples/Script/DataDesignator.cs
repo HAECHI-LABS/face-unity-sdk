@@ -7,37 +7,43 @@ namespace haechi.face.unity.sdk.Samples.Script
     {
         public TMP_Text loggedInAddress, loggedInId, coinBalance, result;
         public TMP_Text landscapeLoggedInAddress, landscapeLoggedInId, landscapeCoinBalance, landscapeResult;
-        public TMP_Text instruction, landscapeInstruction;
-        public TMP_InputField erc20Balance, landscapeErc20Balance;
+        public TMP_Text webLoggedInAddress, webLoggedInId, webCoinBalance, webResult;
+        public TMP_Text instruction, landscapeInstruction, webInstruction;
+        public TMP_InputField erc20Balance, landscapeErc20Balance, webErc20Balance;
 
         public void SetLoggedInAddress(string address)
         {
             this.loggedInAddress.text = address.ToLower();
             this.landscapeLoggedInAddress.text = address.ToLower();
+            this.webLoggedInAddress.text = address.ToLower();
         }
 
         public void SetLoggedInId(string userId)
         {
             this.loggedInId.text = userId;
             this.landscapeLoggedInId.text = userId;
+            this.webLoggedInId.text = userId;
         }
 
         public void SetCoinBalance(string balance)
         {
             this.coinBalance.text = balance;
             this.landscapeCoinBalance.text = balance;
+            this.webCoinBalance.text = balance;
         }
 
         public void SetResult(string response)
         {
             this.result.text = response;
             this.landscapeResult.text = response;
+            this.webResult.text = response;
         }
 
         public void SetErc20Balance(string balance)
         {
             this.erc20Balance.text = balance;
             this.landscapeErc20Balance.text = balance;
+            this.webErc20Balance.text = balance;
         }
 
         public void InitializeDataStatus()
@@ -52,6 +58,11 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeCoinBalance.text = null;
             this.landscapeResult.text = null;
             this.landscapeErc20Balance.text = null;
+            this.webLoggedInId.text = null;
+            this.webLoggedInAddress.text = null;
+            this.webCoinBalance.text = null;
+            this.webResult.text = null;
+            this.webErc20Balance.text = null;
             this.SetInstruction("You must connect to the network first.");
         }
         
@@ -74,6 +85,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this.instruction.text = text;
             this.landscapeInstruction.text = text;
+            this.webInstruction.text = text;
         }
     }
 }

@@ -2,12 +2,17 @@ using UnityEngine;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
-    public class Orientation : MonoBehaviour
+    public class UiSelector : MonoBehaviour
     {
-        public GameObject portraitUI, landscapeUI;
+        public GameObject portraitUI, landscapeUI, webGlUi;
 
         private void Update()
         {
+#if UNITY_WEBGL
+            this.portraitUI.SetActive(false);
+            this.landscapeUI.SetActive(false);
+            this.webGlUi.SetActive(true);
+#else
             if (_isPortrait())
             {
                 this.landscapeUI.SetActive(false);
@@ -17,6 +22,7 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             this.portraitUI.SetActive(false);
             this.landscapeUI.SetActive(true);
+#endif
         }
 
         private static bool _isPortrait()
