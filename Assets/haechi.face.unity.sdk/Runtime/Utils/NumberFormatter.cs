@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Numerics;
 using Nethereum.Util;
@@ -19,8 +20,11 @@ namespace haechi.face.unity.sdk.Runtime.Utils
         public static decimal HexadecimalToDecimal(string hexadecimal)
         {
             string hex = hexadecimal.StartsWith("0x") ? hexadecimal.Substring("0x".Length) : hexadecimal;
-            decimal hexNumber = decimal.Parse(BigInteger.Parse(hex, NumberStyles.AllowHexSpecifier).ToString());
-            return hexNumber;
+            if (string.IsNullOrEmpty(hex))
+            {
+                return Decimal.Zero;
+            }
+            return decimal.Parse(BigInteger.Parse(hex, NumberStyles.AllowHexSpecifier).ToString());
         }
 
         public static string DivideHexWithDecimals(string hexadecimal, int decimals)

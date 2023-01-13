@@ -7,7 +7,6 @@ using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
-using Nethereum.Web3;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -82,7 +81,6 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetLoggedInId(response.userId);
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
-                
                 this.dataDesignator.SetLogoutInstruction();
                 this.inputDesignator.SetLoggedInInputStatus();
             }, this._defaultExceptionHandler);
@@ -255,7 +253,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
             if (String.IsNullOrEmpty(loggedInAddress) || String.IsNullOrEmpty(loggedInId))
             {
-                throw new FaceException(ErrorCodes.UNAUTHORIZED);
+                throw new UnauthorizedException();
             }
         }
         

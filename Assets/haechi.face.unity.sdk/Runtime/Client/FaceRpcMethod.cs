@@ -1,7 +1,5 @@
 using System;
-using System.Threading.Tasks;
 using face_unity.haechi.face.unity.sdk.Runtime.Utils;
-using Nethereum.JsonRpc.Client.RpcMessages;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {

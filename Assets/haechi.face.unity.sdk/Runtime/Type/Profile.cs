@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.ComponentModel;
-using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Type
 {
