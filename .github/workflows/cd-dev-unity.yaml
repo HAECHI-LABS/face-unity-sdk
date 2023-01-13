@@ -1,10 +1,10 @@
 name: cd-dev-unity
 on:
-  workflow_run:
-    workflows: ["Tagging"]
-    types:
-      - completed
-
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "version of rc"
+        required: true
 jobs:
   build-android:
     name: 🚀 Build Face Unity Sample Android Dapp 🚀
@@ -31,7 +31,8 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          versioning: ${{ github.event.inputs.version }}
+          versioning: Custom
+          version: ${{ github.event.inputs.version }}
       - uses: actions/setup-node@v1
       - uses: ruby/setup-ruby@v1
         with:
@@ -70,7 +71,8 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: iOS
-          versioning: ${{ github.event.inputs.version }}
+          versioning: Custom
+          version: ${{ github.event.inputs.version }}
       # Output
       - uses: actions/upload-artifact@v2
         with:
@@ -132,8 +134,9 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
-          versioning: ${{ github.event.inputs.version }}
-      # Output
+          versioning: Custom
+          version: ${{ github.event.inputs.version }}
+          # Output
       - uses: actions/upload-artifact@v2
         with:
           name: Build-WebGL
