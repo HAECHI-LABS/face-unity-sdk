@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using AOT;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Module;
