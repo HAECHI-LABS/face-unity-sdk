@@ -1,0 +1,67 @@
+
+lane :ios do
+  setup_ci()
+  
+  ENV['GITHUB_USERNAME']="github@haechi.io"
+  ENV['MATCH_GIT_BASIC_AUTHORIZATION']=sh("echo $GITHUB_USERNAME:$HAECHI_GITHUB_PAT | base64")
+  
+  create_keychain(
+    name: "haechilabs",
+    password: "haechilabs00!!", 
+    default_keychain: true,
+    unlock: true,
+    timeout: 3600,
+    lock_when_sleeps: false
+  )
+  match(
+    keychain_name: "haechilabs",
+    keychain_password: "haechilabs00!!",
+    readonly: true,
+    type: "development"
+  )
+  match(
+    keychain_name: "haechilabs",
+    keychain_password: "haechilabs00!!",
+    readonly: true,
+    type: "adhoc"
+  )
+  update_code_signing_settings(
+    use_automatic_signing: false, # on my dev-machine I use automatic provisioning
+    path: "build/iOS/iOS/Unity-iPhone.xcodeproj",
+    team_id: "S6PKQQ75LC",
+    profile_name: "match AdHoc xyz.facewallet.dev.app 1672964869",
+    bundle_identifier: "xyz.facewallet.dev.app",
+    targets: "Unity-iPhone",
+    code_sign_identity: "iPhone Distribution"
+  )
+
+  gym(
+    project: "build/iOS/iOS/Unity-iPhone.xcodeproj",
+    scheme: "Unity-iPhone",
+    export_options: {
+       signingStyle: "manual",
+       method: "ad-hoc",
+       provisioningProfiles: {
+         "xyz.facewallet.dev.app": "match AdHoc xyz.facewallet.dev.app 1672964869"
+      }
+    },
+    xcargs: "-allowProvisioningUpdates"
+  )
+  firebase_app_distribution(
+    app: "1:478075746592:ios:123588656cf50808997f45",
+# 추후에 토큰 대신 서비스계정 정보로 업데이트 할것
+    firebase_cli_token: ENV["FIREBASE_TOKEN"],
+    groups: "FaceDev"
+  )
+end
+
+lane :android do
+  firebase_app_distribution(
+    app: "1:478075746592:android:45c8894424203ac7997f45",
+    android_artifact_type: "APK",
+    android_artifact_path: "build/Android/Android.apk",
+# 추후에 토큰 대신 서비스계정 정보로 업데이트 할것
+    firebase_cli_token: ENV["FIREBASE_TOKEN"],
+    groups: "FaceDev"
+  )
+end 
