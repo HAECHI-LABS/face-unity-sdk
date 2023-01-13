@@ -1,10 +1,10 @@
-name: face-unity-build
+name: cd-dev-unity
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Sample Dapp version"
-        required: true
+  workflow_run:
+    workflows: ["Tagging"]
+    types:
+      - completed
+
 jobs:
   build-android:
     name: 🚀 Build Face Unity Sample Android Dapp 🚀
@@ -95,9 +95,6 @@ jobs:
           key: Carthage-${{ hashFiles('**/Cartfile.resolved') }}
           restore-keys: |
             Carthage-
-      - uses: webfactory/ssh-agent@v0.7.0
-        with:
-          ssh-private-key: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
       - uses: actions/setup-node@v1
       - uses: ruby/setup-ruby@v1
         with:
@@ -105,10 +102,10 @@ jobs:
           bundler-cache: true
       - name: Distribute ios
         env:
-          #          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
   build-webgl:
     name: 🚀 Build Face Unity Sample WebGL Dapp 🚀
