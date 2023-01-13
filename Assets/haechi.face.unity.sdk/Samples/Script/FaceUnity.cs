@@ -4,12 +4,16 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Nethereum.Web3;
 using Newtonsoft.Json;
 using UnityEngine;
+using WalletConnectSharp.Network.Models;
+using WalletConnectSharp.Sign.Models.Engine;
+using WalletConnectSharp.Sign.Models.Engine.Methods;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
@@ -93,7 +97,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             FaceLoginResponse response = await this.face.Auth().Login();
             string address = response.wallet.Address;
             string balance = await this._getBalance(address);
-
+            
             return new LoginResult(balance, response.faceUserId, address);
         }
         
@@ -223,6 +227,14 @@ namespace haechi.face.unity.sdk.Samples.Script
                     this.inputDesignator.erc1155Quantity.text)
             );
             this._sendTransactionQueue(transactionTask);
+        }
+
+        public async void ConnectWallet()
+        {
+            this._validateIsLoggedIn();
+
+           this.face.Wallet().ConnectWallet(this.inputDesignator.wcUrl.text);
+            
         }
 
         public void SignMessage()

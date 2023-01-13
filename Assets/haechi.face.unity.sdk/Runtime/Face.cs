@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Exception;
@@ -24,6 +25,7 @@ namespace haechi.face.unity.sdk.Runtime
         
         private Wallet _wallet;
         private Auth _auth;
+        private WalletConnect _walletConnect;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
         
@@ -97,5 +99,6 @@ namespace haechi.face.unity.sdk.Runtime
 
             return this._auth;
         }
+
     }
 }

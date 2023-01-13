@@ -28,6 +28,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey;
+        public TMP_InputField wcUrl;
         public TMP_InputField to, amount;
         public TMP_InputField erc1155To, erc1155TokenId, erc1155Quantity, erc1155NftAddress;
         public TMP_InputField erc20To, erc20Amount, erc20TokenAddress, erc20BalanceInquiryAddress;
