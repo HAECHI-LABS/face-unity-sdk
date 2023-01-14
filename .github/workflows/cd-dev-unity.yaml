@@ -19,9 +19,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-Android-
       # Build
       - name: Build Android project
         uses: game-ci/unity-builder@v2
@@ -60,9 +60,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-IOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-IOS-
       - name: Build iOS project
         uses: game-ci/unity-builder@v2
         env:
@@ -103,12 +103,11 @@ jobs:
           ruby-version: "3.0"
           bundler-cache: true
       - name: Distribute ios
+        run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
         env:
+          HAECHI_GITHUB_PAT: ${{ github.token }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          HAECHI_GITHUB_PAT: ${{ secrets.HAECHI_GITHUB_PAT }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-        run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
   build-webgl:
     name: 🚀 Build Face Unity Sample WebGL Dapp 🚀
     runs-on: ubuntu-latest
@@ -122,9 +121,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-WebGL-
       # Build
       - name: Build WebGL project
         uses: game-ci/unity-builder@v2
