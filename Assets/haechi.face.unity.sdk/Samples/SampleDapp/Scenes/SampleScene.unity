@@ -286,5 +286,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: SampleWebviewUI
       objectReference: {fileID: 0}
+    - target: {fileID: 7359475185043555146, guid: b950af497fe03476abc5a0994faa4e8d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b950af497fe03476abc5a0994faa4e8d, type: 3}
