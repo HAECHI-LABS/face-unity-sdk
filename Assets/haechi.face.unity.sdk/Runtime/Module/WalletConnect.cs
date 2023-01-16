@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using haechi.face.unity.sdk.Runtime.Client.Face;
 using Nethereum.Model;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -19,20 +20,6 @@ using Object = UnityEngine.Object;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
-    
-    [Serializable]
-    public class WcRequestEvent<T>
-    {
-        [JsonProperty("method")]
-        public string Method { get; set; }
-        
-        [JsonProperty("id")]
-        public long Id { get; set; }
-        
-        [JsonProperty("params")]
-        public SessionRequest<T> Params { get; set;}
-    }
-
     public class WalletConnect: MonoBehaviour
     {
         private Engine _engine;
@@ -53,6 +40,20 @@ namespace haechi.face.unity.sdk.Runtime.Module
             remove
             {
                 _onPersonalSignRequest -= value;
+            }
+        }
+        
+        public delegate Task SendTransactionEvent<T>(string topic, WcRequestEvent<T> @event);
+        private event SendTransactionEvent<SendTransaction[]> _onSendTransactionEvent;
+        public event SendTransactionEvent<SendTransaction[]> OnSendTransactionEvent
+        {
+            add
+            {
+                _onSendTransactionEvent += value;
+            }
+            remove
+            {
+                _onSendTransactionEvent -= value;
             }
         }
         
@@ -91,13 +92,21 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 var payload = _walletClient.Core.Crypto
                     .Decrypt(message.Topic, message.Message)
                     .Result;
-                var json = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
-
-                Debug.Log($"json: {json}");
+                Debug.Log($"json: {payload}");
                 
-                if (json.Params.Request.Method.Equals("personal_sign"))
+                var json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
+
+
+                switch (json.Params.Request.Method)
                 {
-                    StartCoroutine(personalSignRequest(message.Topic, json));
+                    case "personal_sign":
+                        var personalSignEvent = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
+                        StartCoroutine(personalSignRequest(message.Topic, personalSignEvent));
+                        break;
+                    case "eth_sendTransaction":
+                        var sendTransactionEvent = JsonConvert.DeserializeObject<WcRequestEvent<SendTransaction[]>>(payload);
+                        StartCoroutine(sendTransactionRequest(message.Topic,  sendTransactionEvent));
+                        break;
                 }
             }
         }
@@ -106,17 +115,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             SignClientOptions options = new SignClientOptions()
             {
-                ProjectId = "fbac8c1b929e56253808ffb67c65abb0",
+                ProjectId = "5d868db873762d9d13d736cd29324fb0",
                 Metadata = new Metadata()
                 {
-                    Description = "face-eddie-test",
-                    Icons = new[] { "https://walletconnect.com/meta/favicon.ico" },
-                    Name = "face-eddie-test",
-                    Url = "https://walletconnect.com"
+                    Description = "Face Wallet Dev",
+                    Icons = new[] { "https://framerusercontent.com/images/nwVboVsol0AjcTPcRr0gdqlQODk.png" },
+                    Name = "Face Wallet Dev",
+                    Url = "https://facewallet.xyz/"
                 },
                 // Omit if you want persistant storage
-                Storage = new InMemoryStorage()
-                
+                Storage = new FileSystemStorage()
             };
 
             _walletClient = await WalletConnectSignClient.Init(options);
@@ -133,6 +141,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
         IEnumerator personalSignRequest(string topic, WcRequestEvent<string[]> @event)
         {
             yield return _onPersonalSignRequest(topic, @event);
+        }  
+        IEnumerator sendTransactionRequest(string topic, WcRequestEvent<SendTransaction[]> @event)
+        {
+            yield return _onSendTransactionEvent(topic, @event);
         }
     }
 }

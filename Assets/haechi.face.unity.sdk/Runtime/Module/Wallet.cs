@@ -145,7 +145,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
         }
 
-        public async void _initWalletConnectV2()
+        public void _initWalletConnectV2()
         {
             this._walletConnect = WalletConnect.GetInstance();
             this._walletConnect.Connect();
@@ -155,30 +155,30 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// Connect Face with Opensea via WalletConnect.
         /// </summary>
         /// <param name="collectionName">Blockchain network.</param>
-        public async void ConnectWallet(string wcUrl, [CanBeNull] string collectionName = null)
+        public async void ConnectWallet(string address, string wcUrl, [CanBeNull] string collectionName = null)
         {
-            string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
-                ? "https://opensea.io/"
-                : "https://testnets.opensea.io/";
-             FaceRpcResponse response = await this._openWalletConnect("OpenSea",
-                !string.IsNullOrEmpty(collectionName)
-                    ? $"{hostname}/collection/" + collectionName
-                    : $"{hostname}");
-            
-             Debug.Log("connect opensea" + response.ToString());
-             
-
-             Debug.Log(response.Result.ToString());
-             
-             // _openWalletConnect(wcUrl);
+            // string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
+            //     ? "https://opensea.io/"
+            //     : "https://testnets.opensea.io/";
+            //  FaceRpcResponse response = await this._openWalletConnect("OpenSea",
+            //     !string.IsNullOrEmpty(collectionName)
+            //         ? $"{hostname}/collection/" + collectionName
+            //         : $"{hostname}");
+            //
+            //  Debug.Log("connect opensea" + response.ToString());
+            //  
+            //
+            //  Debug.Log(response.Result.ToString());
+            //  
+             await _openWalletConnect(address, wcUrl);
         }
 
-        private async Task<WalletConnect> _openWalletConnect(string wcUrl)
+        private async Task<WalletConnect> _openWalletConnect(string address, string wcUrl)
         {
             WalletConnectSignClient wallet = _walletConnect.wallet;
             
             ProposalStruct @struct = await wallet.Pair(wcUrl);
-            var approveData = await wallet.Approve( @struct.ApproveProposal("0x29d34a5a41b1f18edcd37086a35aecb7acd22f13"));
+            var approveData = await wallet.Approve( @struct.ApproveProposal(address));
             await approveData.Acknowledged();
             
             _walletConnect.OnPersonalSignRequest += async (topic, @event) =>
@@ -195,17 +195,32 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     }
                 });
             };
-
+ 
+            _walletConnect.OnSendTransactionEvent += async (topic, @event) =>
+            {
+                var response = await SendTransaction(@event.Params.Request.Params[0]);
+                _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
+                {
+                    Topic = topic,
+                    Response = new JsonRpcResponse<string>()
+                    {
+                        Id = @event.Id,
+                        Result = response.transactionId,
+                        Error = null
+                    }
+                });
+            }; 
+            
             return _walletConnect;
         }
 
-        private async Task<FaceRpcResponse> _openWalletConnect(String name, String url)
-        {
-            FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
-                FaceRpcMethod.face_openWalletConnect, name, url);
-            
-            return await _provider.SendFaceRpcAsync(rpcRequest);
-        }
+        // private async Task<FaceRpcResponse> _openWalletConnect(String name, String url)
+        // {
+        //     FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
+        //         FaceRpcMethod.face_openWalletConnect, name, url);
+        //     
+        //     return await _provider.SendFaceRpcAsync(rpcRequest);
+        // }
     }
     
     /// <summary>

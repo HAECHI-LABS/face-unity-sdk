@@ -229,12 +229,10 @@ namespace haechi.face.unity.sdk.Samples.Script
             this._sendTransactionQueue(transactionTask);
         }
 
-        public async void ConnectWallet()
+        public void ConnectWallet()
         {
             this._validateIsLoggedIn();
-
-           this.face.Wallet().ConnectWallet(this.inputDesignator.wcUrl.text);
-            
+            this.face.Wallet().ConnectWallet(this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
         }
 
         public void SignMessage()

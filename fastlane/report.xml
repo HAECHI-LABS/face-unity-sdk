@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="0: setup_ci" time="0.000214">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="1: echo $HAECHI_GITHUB_PAT" time="0.007987">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="2: echo $GITHUB_USERNAME" time="0.005402">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="3: echo $GITHUB_USERNAME:$HAECHI_GITHUB_PAT | base64" time="0.013508">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="4: create_keychain" time="0.057369">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: match" time="5.064484">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>

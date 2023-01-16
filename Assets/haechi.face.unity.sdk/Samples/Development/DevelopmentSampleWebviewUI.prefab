@@ -37416,6 +37416,7 @@ GameObject:
   - component: {fileID: 4699786176643444986}
   - component: {fileID: 6243673392324459584}
   - component: {fileID: 3838643029278418765}
+  - component: {fileID: 6009322363461628329}
   m_Layer: 0
   m_Name: DevelopmentSampleWebviewUI
   m_TagString: Untagged
@@ -37670,6 +37671,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec5954c2054a343d785ba79b10119585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6009322363461628329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3157fd030c974c3ba7b6f62b1a30bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7367064740914721143
