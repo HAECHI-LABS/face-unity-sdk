@@ -4,8 +4,8 @@ storage_mode("git")
 
 type("development") # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["xyz.facewallet.dev.app"])
-username("eddie@haechi.io") # Your Apple Developer Portal username
+app_identifier(["xyz.facewallet.dev.app", "xyz.facewallet.unity.app"])
+username("github@haechi.io") # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
 # Remove the # in the beginning of the line to enable the other options
