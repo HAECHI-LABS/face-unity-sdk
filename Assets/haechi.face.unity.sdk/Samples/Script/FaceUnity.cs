@@ -233,6 +233,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this._validateIsLoggedIn();
             this.face.Wallet().ConnectWallet(this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
+            // this.face.Wallet().ConnectWallet(this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
         }
 
         public void SignMessage()

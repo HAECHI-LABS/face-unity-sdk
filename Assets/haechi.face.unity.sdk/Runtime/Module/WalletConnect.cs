@@ -136,6 +136,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             });
 
             isConnect = true;
+            
+            
+            Debug.Log("[WC] start _openWalletConnect");
+            wallet.Core.Relayer.Subscribe("a53beff379b5ccc60872c83b24c7d84d7b43b76aed13d99022e9488eff301151");
         }
 
         IEnumerator personalSignRequest(string topic, WcRequestEvent<string[]> @event)

@@ -11,6 +11,7 @@ using haechi.face.unity.sdk.Runtime.Type;
 using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
@@ -39,6 +40,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         {
             Dictionary<string, string> queryParameters = _parseQuery(uri.Query);
             bool isResponse = queryParameters.ContainsKey("response");
+           
             bool isRequest = queryParameters.ContainsKey("request");
             if ((!isResponse && !isRequest) || (isRequest && isResponse))
             {

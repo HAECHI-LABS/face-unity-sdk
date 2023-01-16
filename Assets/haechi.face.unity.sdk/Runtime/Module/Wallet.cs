@@ -1,6 +1,8 @@
 using System;
+using System.Buffers.Text;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
@@ -10,14 +12,12 @@ using JetBrains.Annotations;
 using Nethereum.ABI.Util;
 using Nethereum.Unity.Rpc;
 using UnityEngine;
-using WalletConnectSharp.Common.Utils;
-using WalletConnectSharp.Core.Controllers;
-using WalletConnectSharp.Events;
 using WalletConnectSharp.Network.Models;
 using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
 using WalletConnectSharp.Sign.Models.Engine;
 using WalletConnectSharp.Sign.Models.Engine.Methods;
+using static Org.BouncyCastle.Utilities.Encoders.Base64;
 using Task = UnityEditor.VersionControl.Task;
 
 namespace haechi.face.unity.sdk.Runtime.Module
@@ -145,42 +145,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
         }
 
-        public void _initWalletConnectV2()
+        public async void _initWalletConnectV2()
         {
             this._walletConnect = WalletConnect.GetInstance();
-            this._walletConnect.Connect();
-        }
-        
-        /// <summary>
-        /// Connect Face with Opensea via WalletConnect.
-        /// </summary>
-        /// <param name="collectionName">Blockchain network.</param>
-        public async void ConnectWallet(string address, string wcUrl, [CanBeNull] string collectionName = null)
-        {
-            // string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
-            //     ? "https://opensea.io/"
-            //     : "https://testnets.opensea.io/";
-            //  FaceRpcResponse response = await this._openWalletConnect("OpenSea",
-            //     !string.IsNullOrEmpty(collectionName)
-            //         ? $"{hostname}/collection/" + collectionName
-            //         : $"{hostname}");
-            //
-            //  Debug.Log("connect opensea" + response.ToString());
-            //  
-            //
-            //  Debug.Log(response.Result.ToString());
-            //  
-             await _openWalletConnect(address, wcUrl);
-        }
-
-        private async Task<WalletConnect> _openWalletConnect(string address, string wcUrl)
-        {
-            WalletConnectSignClient wallet = _walletConnect.wallet;
-            
-            ProposalStruct @struct = await wallet.Pair(wcUrl);
-            var approveData = await wallet.Approve( @struct.ApproveProposal(address));
-            await approveData.Acknowledged();
-            
+            await this._walletConnect.Connect();
             _walletConnect.OnPersonalSignRequest += async (topic, @event) =>
             { 
                 var response = await _signMessage(@event.Params.Request.Params[0]);
@@ -210,6 +178,63 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     }
                 });
             }; 
+        }
+
+
+        public async void ConnectOpenSea(string address)
+        { 
+            string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
+                ? "https://opensea.io/"
+                : "https://testnets.opensea.io/";
+             
+             FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
+                 FaceRpcMethod.face_openWalletConnect, "OpenSea", hostname);
+             FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
+             Debug.Log(response);
+             
+             byte[] bytetest = Convert.FromBase64String(response.Result.Value<string>("uri"));
+             string wcUrl = Encoding.UTF8.GetString(bytetest);
+             Debug.Log($"connect opensea address {address}, wc url {wcUrl}");
+             
+            await _openWalletConnect(address, wcUrl);
+        }
+        
+        
+        /// <summary>
+        /// Connect Face with Opensea via WalletConnect.
+        /// </summary>
+        /// <param name="collectionName">Blockchain network.</param>
+        public async void ConnectWallet(string address, string wcUrl, [CanBeNull] string collectionName = null)
+        {
+            // string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
+            //     ? "https://opensea.io/"
+            //     : "https://testnets.opensea.io/";
+            //  FaceRpcResponse response = await this._openWalletConnect("OpenSea",
+            //     !string.IsNullOrEmpty(collectionName)
+            //         ? $"{hostname}/collection/" + collectionName
+            //         : $"{hostname}");
+            //
+            //  Debug.Log("connect opensea" + response.ToString());
+            //  
+            //
+            //  Debug.Log(response.Result.ToString());
+            //  
+             await _openWalletConnect(address, wcUrl);
+        }
+
+        private async Task<WalletConnect> _openWalletConnect(string address, string wcUrl)
+        {
+            WalletConnectSignClient wallet = _walletConnect.wallet;
+            Debug.Log("[WC] start _openWalletConnect");
+
+            ProposalStruct @struct = await wallet.Pair(wcUrl);
+            Debug.Log("[WC] Pair");
+            var approveData = await wallet.Approve( @struct.ApproveProposal(address));
+            Debug.Log($"[WC] Approve {approveData.Topic}");
+            await approveData.Acknowledged();
+            Debug.Log("[WC] Acknowledged");
+
+            
             
             return _walletConnect;
         }
