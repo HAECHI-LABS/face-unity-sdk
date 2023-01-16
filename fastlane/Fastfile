@@ -1,11 +1,8 @@
 
 lane :ios do
   setup_ci()
-  ENV['GITHUB_USERNAME']="github@haechi.io"
-  sh("echo $HAECHI_GITHUB_PAT")
-  sh("echo $GITHUB_USERNAME")
-  sh("echo $MATCH_PASSWORD")
-  ENV['MATCH_GIT_BASIC_AUTHORIZATION']=sh("echo $GITHUB_USERNAME:$HAECHI_GITHUB_PAT | base64")
+  ENV['GITHUB_USERNAME']="haechilabs"
+  ENV['MATCH_GIT_BASIC_AUTHORIZATION']=sh("echo $GITHUB_USERNAME:$HAECHI_UNITY_PAT | base64")
   
   create_keychain(
     name: "haechilabs",
