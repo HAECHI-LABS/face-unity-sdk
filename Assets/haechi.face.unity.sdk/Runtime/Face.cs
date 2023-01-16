@@ -31,7 +31,9 @@ namespace haechi.face.unity.sdk.Runtime
         public void Initialize(FaceSettings.Parameters parameters)
         {
             FaceSettings.Init(parameters);
+#if UNITY_WEBGL
             Iframe.CreateIframe();
+#endif
             
             this._safeWebviewController = this.GetComponent<SafeWebviewController>();
             

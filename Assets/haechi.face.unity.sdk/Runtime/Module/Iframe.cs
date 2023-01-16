@@ -10,6 +10,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 {
     public class Iframe
     {
+#if UNITY_WEBGL
         private static readonly Ready ready = new Ready();
         
         [DllImport("__Internal")]
@@ -111,5 +112,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 return this._isCompleted;
             }
         }
+#endif
     }
 }

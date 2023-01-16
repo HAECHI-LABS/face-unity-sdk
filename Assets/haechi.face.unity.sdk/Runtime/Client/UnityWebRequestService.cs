@@ -45,7 +45,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
             if (www.result == UnityWebRequest.Result.ConnectionError ||
                 www.result == UnityWebRequest.Result.ProtocolError)
             {
+#if UNITY_WEBGL
                 Iframe.ConsoleLog(www.error);
+#endif
             }
             else
             {
@@ -68,7 +70,9 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 if (www.result == UnityWebRequest.Result.ConnectionError ||
                     www.result == UnityWebRequest.Result.ProtocolError)
                 {
-                    Iframe.ConsoleLog(www.error);
+#if UNITY_WEBGL
+                Iframe.ConsoleLog(www.error);
+#endif
                 }
                 else
                 {
