@@ -102,6 +102,9 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
       - name: Distribute ios
         run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
         env:
