@@ -38,6 +38,12 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_account.json"
+          json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
       - name: Distribute Android
         run: sudo fastlane android
         env:
@@ -105,6 +111,12 @@ jobs:
       - uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_account.json"
+          json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
       - name: Distribute ios
         run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
         env:
