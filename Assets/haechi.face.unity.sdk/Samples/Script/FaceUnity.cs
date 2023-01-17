@@ -232,7 +232,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         public void ConnectWallet()
         {
             this._validateIsLoggedIn();
-            this.face.Wallet().ConnectWallet(this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
+            this.face.Wallet().ConnectOpenSea(this.dataDesignator.loggedInAddress.text);
             // this.face.Wallet().ConnectWallet(this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
         }
 

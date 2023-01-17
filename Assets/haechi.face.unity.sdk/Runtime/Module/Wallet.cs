@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using Nethereum.ABI.Util;
 using Nethereum.Unity.Rpc;
 using UnityEngine;
+using WalletConnectSharp.Common.Utils;
 using WalletConnectSharp.Network.Models;
 using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
@@ -192,11 +193,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
              FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
              Debug.Log(response);
              
-             byte[] bytetest = Convert.FromBase64String(response.Result.Value<string>("uri"));
-             string wcUrl = Encoding.UTF8.GetString(bytetest);
-             Debug.Log($"connect opensea address {address}, wc url {wcUrl}");
-             
-            await _openWalletConnect(address, wcUrl);
+             await _openWalletConnectWithTopic(response.Result.Value<string>("topic"));
         }
         
         
@@ -236,6 +233,24 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
             
             
+            return _walletConnect;
+        }
+        private async Task<WalletConnect> _openWalletConnectWithTopic(string topic)
+        {
+            WalletConnectSignClient wallet = _walletConnect.wallet;
+            Debug.Log(wallet.Session.Context);
+
+            wallet.Engine.Client.Connect(new ConnectOptions().WithPairingTopic(topic));
+            
+            await wallet.Engine.Client.Pairing.Update(topic, new PairingStruct()
+            {
+                Active = true,
+                Expiry = Clock.CalculateExpiry(Clock.THIRTY_DAYS)
+            });
+            
+            wallet.Core.Relayer.Subscribe(topic);
+            Debug.Log("[WC] subscribe topic");
+
             return _walletConnect;
         }
 
