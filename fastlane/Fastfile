@@ -1,8 +1,6 @@
 
 lane :ios do
   setup_ci()
-  ENV['GITHUB_USERNAME']="github@haechi.io"
-  ENV['MATCH_GIT_BASIC_AUTHORIZATION']="Z2l0aHViQGhhZWNoaS5pbzpnaXRodWJfcGF0XzExQVJQUDI1WTB1S3JhZjFXblczSzBfcWRuY0RwSmdjVWtMQnVkaHdpTTRvYXg4V24xaGtpbVlkTmNYSkNLaGxab0hMRk1NWkpHQkpMM2lLUVQ="
   
   create_keychain(
     name: "haechilabs",
@@ -16,7 +14,7 @@ lane :ios do
     keychain_name: "haechilabs",
     keychain_password: "haechilabs00!!",
     readonly: true,
-    type: "development",
+    type: "development"
   )
   match(
     keychain_name: "haechilabs",
