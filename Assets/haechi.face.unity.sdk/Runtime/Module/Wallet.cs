@@ -1,5 +1,4 @@
 using System;
-using System.Buffers.Text;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -9,17 +8,14 @@ using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using JetBrains.Annotations;
-using Nethereum.ABI.Util;
-using Nethereum.Unity.Rpc;
 using UnityEngine;
+using WalletConnectSharp.Common.Model.Errors;
 using WalletConnectSharp.Common.Utils;
 using WalletConnectSharp.Network.Models;
 using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
 using WalletConnectSharp.Sign.Models.Engine;
 using WalletConnectSharp.Sign.Models.Engine.Methods;
-using static Org.BouncyCastle.Utilities.Encoders.Base64;
-using Task = UnityEditor.VersionControl.Task;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -182,6 +178,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
         }
 
 
+        /// <summary>
+        /// Connect Face with Opensea via WalletConnect.
+        /// </summary>
+        /// <param name="collectionName">Blockchain network.</param>
         public async void ConnectOpenSea(string address)
         { 
             string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
@@ -191,76 +191,64 @@ namespace haechi.face.unity.sdk.Runtime.Module
              FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
                  FaceRpcMethod.face_openWalletConnect, "OpenSea", hostname);
              FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
-             Debug.Log(response);
+
              
-             await _openWalletConnectWithTopic(response.Result.Value<string>("topic"));
-        }
-        
+             string encodedWcUri = response.Result.Value<string>("wcUri");
+             byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
+             string wcUri = Encoding.UTF8.GetString(wcUriBytes);
+
+             _openWalletConnect(address, wcUri);
+        } 
         
         /// <summary>
-        /// Connect Face with Opensea via WalletConnect.
+        /// Connect Face with Dapp via WalletConnect.
         /// </summary>
-        /// <param name="collectionName">Blockchain network.</param>
-        public async void ConnectWallet(string address, string wcUrl, [CanBeNull] string collectionName = null)
-        {
-            // string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
-            //     ? "https://opensea.io/"
-            //     : "https://testnets.opensea.io/";
-            //  FaceRpcResponse response = await this._openWalletConnect("OpenSea",
-            //     !string.IsNullOrEmpty(collectionName)
-            //         ? $"{hostname}/collection/" + collectionName
-            //         : $"{hostname}");
-            //
-            //  Debug.Log("connect opensea" + response.ToString());
-            //  
-            //
-            //  Debug.Log(response.Result.ToString());
-            //  
-             await _openWalletConnect(address, wcUrl);
-        }
+        /// <param name="dappName">dapp name to connect.</param>
+        /// <param name="dappUrl">dapp url to connect.</param>
+        /// <param name="address">wallet address to connect.</param>
+        public async void ConnectWallet(string dappName, string dappUrl, string address)
+        { 
+             FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
+                 FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
+             FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
+             
+             string encodedWcUri = response.Result.Value<string>("wcUri");
+             byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
+             string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
-        private async Task<WalletConnect> _openWalletConnect(string address, string wcUrl)
+             await _openWalletConnect(address, wcUri);
+        }
+        
+        private async Task _openWalletConnect(string address, string wcUri)
         {
             WalletConnectSignClient wallet = _walletConnect.wallet;
-            Debug.Log("[WC] start _openWalletConnect");
-
-            ProposalStruct @struct = await wallet.Pair(wcUrl);
-            Debug.Log("[WC] Pair");
-            var approveData = await wallet.Approve( @struct.ApproveProposal(address));
-            Debug.Log($"[WC] Approve {approveData.Topic}");
-            await approveData.Acknowledged();
-            Debug.Log("[WC] Acknowledged");
-
             
-            
-            return _walletConnect;
-        }
-        private async Task<WalletConnect> _openWalletConnectWithTopic(string topic)
-        {
-            WalletConnectSignClient wallet = _walletConnect.wallet;
-            Debug.Log(wallet.Session.Context);
-
-            wallet.Engine.Client.Connect(new ConnectOptions().WithPairingTopic(topic));
-            
-            await wallet.Engine.Client.Pairing.Update(topic, new PairingStruct()
+            ProposalStruct @struct = await wallet.Pair(wcUri);
+            FaceRpcResponse response = await _confirmWalletConnectDapp(@struct.Proposer.Metadata);
+            Boolean isConfirm = response.CastResult<Boolean>(); 
+                
+            if (isConfirm)
             {
-                Active = true,
-                Expiry = Clock.CalculateExpiry(Clock.THIRTY_DAYS)
-            });
-            
-            wallet.Core.Relayer.Subscribe(topic);
-            Debug.Log("[WC] subscribe topic");
-
-            return _walletConnect;
+                var approveData = await wallet.Approve( @struct.ApproveProposal(address));
+                await approveData.Acknowledged();
+            }
+            else
+            {
+                await wallet.Reject(new RejectParams()
+                {
+                    Id = @struct.Id.Value,
+                    Reason = ErrorResponse.FromErrorType(ErrorType.NOT_APPROVED)
+                });
+            }
         }
 
-        // private async Task<FaceRpcResponse> _openWalletConnect(String name, String url)
-        // {
-        //     FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
-        //         FaceRpcMethod.face_openWalletConnect, name, url);
-        //     
-        //     return await _provider.SendFaceRpcAsync(rpcRequest);
-        // }
+        private async Task<FaceRpcResponse> _confirmWalletConnectDapp(Metadata dappMetadata)
+        {
+            FaceRpcRequest<Metadata> faceRpcRequest = new FaceRpcRequest<Metadata>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
+
+            return await _provider.SendFaceRpcAsync(faceRpcRequest);
+        }
     }
     
     /// <summary>
