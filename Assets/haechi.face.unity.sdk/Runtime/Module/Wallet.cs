@@ -34,7 +34,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             return await this._provider.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.eth_getBalance, 
-                account,
+                account.ToLower(),
                 "latest"));
         }
 
