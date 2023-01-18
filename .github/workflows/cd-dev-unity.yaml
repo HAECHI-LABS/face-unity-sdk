@@ -150,7 +150,15 @@ jobs:
           targetPlatform: WebGL
           versioning: Custom
           version: ${{ github.event.inputs.version }}
-          # Output
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
+          project_id: prj-d-face
+          export_default_credentials: true
+      - name: Deploy
+        run: |-
+          gsutil -m rsync -r build/WebGL/WebGL gs://sample-unity-dapp.dev.facewallet.xyz
       - uses: actions/upload-artifact@v2
         with:
           name: Build-WebGL
