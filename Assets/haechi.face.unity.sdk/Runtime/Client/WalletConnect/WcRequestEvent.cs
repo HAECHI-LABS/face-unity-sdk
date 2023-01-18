@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using WalletConnectSharp.Sign.Models.Engine.Methods;
 
-namespace haechi.face.unity.sdk.Runtime.Client.Face
+namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 {
     [Serializable]
     public class WcRequestEvent<T>
