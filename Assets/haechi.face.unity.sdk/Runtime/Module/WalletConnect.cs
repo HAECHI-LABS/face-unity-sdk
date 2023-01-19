@@ -1,22 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using haechi.face.unity.sdk.Runtime.Client.Face;
-using Nethereum.Model;
+using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
 using Newtonsoft.Json;
 using UnityEngine;
+using WalletConnectSharp.Common.Model.Errors;
 using WalletConnectSharp.Core.Models.Relay;
 using WalletConnectSharp.Network.Models;
 using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
 using WalletConnectSharp.Sign.Models.Engine;
-using WalletConnectSharp.Sign.Models.Engine.Methods;
 using WalletConnectSharp.Storage;
-using JsonConvert = Unity.Plastic.Newtonsoft.Json.JsonConvert;
-using Object = UnityEngine.Object;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -28,7 +24,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private bool isConnect = false;
 
         private Queue<MessageEvent> messageQueue = new Queue<MessageEvent>();
-
+        private Queue<PairRequestEvent> pairRequestEventQueue = new Queue<PairRequestEvent>();
+        
         public delegate Task PersonalSignEvent<T>(string topic, WcRequestEvent<T> @event);
         private event PersonalSignEvent<string[]> _onPersonalSignRequest;
         public event PersonalSignEvent<string[]> OnPersonalSignRequest
@@ -84,6 +81,38 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return Encoding.ASCII.GetString(raw);;
         }
 
+        public async Task RequestPair(string address, string wcUri, PairRequestEvent.WalletConnectPairEvent confirmWalletConnectDapp)
+        {
+            pairRequestEventQueue.Enqueue(new PairRequestEvent()
+            {
+                address = address,
+                uri = wcUri,
+                confirmWalletConnectDapp = confirmWalletConnectDapp
+            });
+        }
+
+        private async Task _doPair(PairRequestEvent @event)
+        {
+            ProposalStruct @struct = await wallet.Pair(@event.uri);
+            Debug.Log($"[WC] Start Pair to {@struct.Proposer.Metadata.Name}");
+            Boolean isConfirm  = await @event.confirmWalletConnectDapp(@struct.Proposer.Metadata);
+            Debug.Log($"[WC] isConfirm {isConfirm}");
+
+            if (isConfirm)
+            {
+                var approveData = await wallet.Approve( @struct.ApproveProposal(@event.address));
+                await approveData.Acknowledged();
+            }
+            else
+            {
+                await wallet.Reject(new RejectParams()
+                {
+                    Id = @struct.Id.Value,
+                    Reason = ErrorResponse.FromErrorType(ErrorType.NOT_APPROVED)
+                });
+            }
+        }
+
         private void Update()
         {
             if (messageQueue.Count > 0)
@@ -92,10 +121,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 var payload = _walletClient.Core.Crypto
                     .Decrypt(message.Topic, message.Message)
                     .Result;
-                Debug.Log($"json: {payload}");
-                
                 var json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
-
 
                 switch (json.Params.Request.Method)
                 {
@@ -108,6 +134,12 @@ namespace haechi.face.unity.sdk.Runtime.Module
                         StartCoroutine(sendTransactionRequest(message.Topic,  sendTransactionEvent));
                         break;
                 }
+            }
+
+            if (pairRequestEventQueue.Count > 0)
+            {
+                PairRequestEvent @event = pairRequestEventQueue.Dequeue();
+                StartCoroutine(pairWallet(@event));
             }
         }
 
@@ -124,7 +156,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     Url = "https://facewallet.xyz/"
                 },
                 // Omit if you want persistant storage
-                Storage = new FileSystemStorage()
+                Storage = new InMemoryStorage()
             };
 
             _walletClient = await WalletConnectSignClient.Init(options);
@@ -145,6 +177,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
         IEnumerator sendTransactionRequest(string topic, WcRequestEvent<SendTransaction[]> @event)
         {
             yield return _onSendTransactionEvent(topic, @event);
+        }
+
+        IEnumerator pairWallet(PairRequestEvent @event)
+        {
+            yield return _doPair(@event);
         }
     }
 }

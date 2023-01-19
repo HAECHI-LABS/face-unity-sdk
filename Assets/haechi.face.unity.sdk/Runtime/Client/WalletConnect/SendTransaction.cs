@@ -1,8 +1,9 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Client.Face;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace haechi.face.unity.sdk.Runtime.Client.Face
+namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 {
     [JsonObject]
     [Serializable]

@@ -174,7 +174,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                         Error = null
                     }
                 });
-            }; 
+            };
         }
 
 
@@ -191,11 +191,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
              FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
                  FaceRpcMethod.face_openWalletConnect, "OpenSea", hostname);
              FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
-
              
-             string encodedWcUri = response.Result.Value<string>("wcUri");
+             string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
+             Debug.Log($"wc uri: {wcUri}");
 
              _openWalletConnect(address, wcUri);
         } 
@@ -212,7 +212,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                  FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
              FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
              
-             string encodedWcUri = response.Result.Value<string>("wcUri");
+             string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
@@ -221,25 +221,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
         
         private async Task _openWalletConnect(string address, string wcUri)
         {
-            WalletConnectSignClient wallet = _walletConnect.wallet;
-            
-            ProposalStruct @struct = await wallet.Pair(wcUri);
-            FaceRpcResponse response = await _confirmWalletConnectDapp(@struct.Proposer.Metadata);
-            Boolean isConfirm = response.CastResult<Boolean>(); 
-                
-            if (isConfirm)
+            await _walletConnect.RequestPair(address, wcUri, async metadata =>
             {
-                var approveData = await wallet.Approve( @struct.ApproveProposal(address));
-                await approveData.Acknowledged();
-            }
-            else
-            {
-                await wallet.Reject(new RejectParams()
-                {
-                    Id = @struct.Id.Value,
-                    Reason = ErrorResponse.FromErrorType(ErrorType.NOT_APPROVED)
-                });
-            }
+                FaceRpcResponse response = await _confirmWalletConnectDapp(metadata);
+                return response.CastResult<bool>();
+            });
         }
 
         private async Task<FaceRpcResponse> _confirmWalletConnectDapp(Metadata dappMetadata)
