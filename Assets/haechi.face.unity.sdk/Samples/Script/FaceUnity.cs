@@ -82,19 +82,36 @@ namespace haechi.face.unity.sdk.Samples.Script
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
+                Debug.Log("1");
                 this.dataDesignator.SetLoggedInId(response.userId);
+                Debug.Log("2");
+
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
+                Debug.Log("3");
+
                 this.dataDesignator.SetCoinBalance(response.balance);
+                Debug.Log("4");
+
                 this.dataDesignator.SetLogoutInstruction();
-                this.inputDesignator.SetLoggedInInputStatus();
+                Debug.Log("5");
+
+                this.inputDesignator.SetLoggedInInputStatus();                
+                Debug.Log("6");
+
             }, this._defaultExceptionHandler);
         }
         
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
+            Debug.Log("Start Login");
             FaceLoginResponse response = await this.face.Auth().Login();
             string address = response.wallet.Address;
+            Debug.Log("Login balance");
+
             string balance = await this._getBalance(address);
+            
+            Debug.Log("Login done");
+
             return new LoginResult(balance, response.faceUserId, address);
         }
         

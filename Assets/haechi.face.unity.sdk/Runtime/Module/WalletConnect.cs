@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
@@ -29,7 +27,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         }
 
         private Queue<MessageEvent> messageQueue = new Queue<MessageEvent>();
-        private Queue<PairRequestEvent> pairRequestEventQueue = new Queue<PairRequestEvent>();
+        private Queue<PairRequestEvent> requestPairEventQueue = new Queue<PairRequestEvent>();
         
         public delegate Task PersonalSignEvent<T>(string topic, WcRequestEvent<T> @event);
         private event PersonalSignEvent<string[]> _onPersonalSignRequest;
@@ -58,7 +56,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 _onSendTransactionEvent -= value;
             }
         }
-        
+
         
         public WalletConnectSignClient wallet
         {
@@ -75,24 +73,13 @@ namespace haechi.face.unity.sdk.Runtime.Module
             _instance = this;
         }
 
-        public string ConvertHexToString(string hex)
+        public void RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
         {
-            hex = hex.Substring(2).Replace("-", "");
-            byte[] raw = new byte[hex.Length / 2];
-            for (int i = 0; i < raw.Length; i++)
-            {
-                raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
-            }
-            return Encoding.ASCII.GetString(raw);;
-        }
-
-        public void RequestPair(string address, string wcUri, Wallet faceWallet)
-        {
-            pairRequestEventQueue.Enqueue(new PairRequestEvent()
+            requestPairEventQueue.Enqueue(new PairRequestEvent()
             {
                 address = address,
                 uri = wcUri,
-                faceWallet = faceWallet
+                confirmWalletConnectDapp = confirmWalletConnectDapp
             });
         }
 
@@ -104,7 +91,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 Uri = @event.uri
             });
             Debug.Log("[WC] pair success, request confirm");
-            FaceRpcResponse isConfirm = await @event.faceWallet.ConfirmWalletConnectDapp(@struct.Proposer.Metadata);
+            FaceRpcResponse isConfirm = await @event.confirmWalletConnectDapp(@struct.Proposer.Metadata);
             if (isConfirm.CastResult<bool>())
             {
                 var approveData = await wallet.Approve( @struct.ApproveProposal(@event.address));
@@ -143,9 +130,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 }
             }
 
-            if (pairRequestEventQueue.Count > 0)
+            if (requestPairEventQueue.Count > 0)
             {
-                PairRequestEvent @event = pairRequestEventQueue.Dequeue();
+                PairRequestEvent @event = requestPairEventQueue.Dequeue();
                 StartCoroutine(pairWallet(@event));
             }
         }

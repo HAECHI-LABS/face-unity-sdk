@@ -208,7 +208,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
              
-             this._walletConnect.RequestPair(address, wcUri, this);
+             this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
 #endif
         } 
         
@@ -229,7 +229,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
-             this._walletConnect.RequestPair(address, wcUri, this);
+             this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
 #endif
         }
         
@@ -241,7 +241,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await _provider.SendFaceRpcAsync(faceRpcRequest);
         }
 
-        public async Task<FaceRpcResponse> ConfirmWalletConnectDapp(Metadata dappMetadata)
+        public async Task<FaceRpcResponse> _confirmWalletConnectDapp(Metadata dappMetadata)
         {
             FaceRpcRequest<Metadata> faceRpcRequest = new FaceRpcRequest<Metadata>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
