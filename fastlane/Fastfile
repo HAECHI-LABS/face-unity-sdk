@@ -2,9 +2,6 @@
 lane :ios do
   setup_ci()
   
-  ENV['GITHUB_USERNAME']="github@haechi.io"
-  ENV['MATCH_GIT_BASIC_AUTHORIZATION']=sh("echo $GITHUB_USERNAME:$HAECHI_GITHUB_PAT | base64")
-  
   create_keychain(
     name: "haechilabs",
     password: "haechilabs00!!", 
@@ -51,7 +48,8 @@ lane :ios do
     app: "1:478075746592:ios:123588656cf50808997f45",
 # 추후에 토큰 대신 서비스계정 정보로 업데이트 할것
     firebase_cli_token: ENV["FIREBASE_TOKEN"],
-    groups: "FaceDev"
+    groups: "FaceDev",
+    service_credentials_file: "service_account.json"
   )
 end
 
@@ -62,6 +60,7 @@ lane :android do
     android_artifact_path: "build/Android/Android.apk",
 # 추후에 토큰 대신 서비스계정 정보로 업데이트 할것
     firebase_cli_token: ENV["FIREBASE_TOKEN"],
-    groups: "FaceDev"
+    groups: "FaceDev",
+    service_credentials_file: "service_account.json"
   )
 end 

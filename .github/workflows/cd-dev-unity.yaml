@@ -19,9 +19,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-Android-
       # Build
       - name: Build Android project
         uses: game-ci/unity-builder@v2
@@ -38,6 +38,12 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_account.json"
+          json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
       - name: Distribute Android
         run: sudo fastlane android
         env:
@@ -60,9 +66,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-IOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-IOS-
       - name: Build iOS project
         uses: game-ci/unity-builder@v2
         env:
@@ -102,13 +108,21 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_account.json"
+          json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
       - name: Distribute ios
+        run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
         env:
+          HAECHI_UNITY_PAT: ${{ secrets.HAECHI_UNITY_PAT }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          HAECHI_GITHUB_PAT: ${{ secrets.HAECHI_GITHUB_PAT }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
-        run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
   build-webgl:
     name: 🚀 Build Face Unity Sample WebGL Dapp 🚀
     runs-on: ubuntu-latest
@@ -122,9 +136,9 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
-            Library-
+            Library-WebGL-
       # Build
       - name: Build WebGL project
         uses: game-ci/unity-builder@v2
@@ -136,7 +150,15 @@ jobs:
           targetPlatform: WebGL
           versioning: Custom
           version: ${{ github.event.inputs.version }}
-          # Output
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
+          project_id: prj-d-face
+          export_default_credentials: true
+      - name: Deploy
+        run: |-
+          gsutil -m rsync -r build/WebGL/WebGL gs://sample-unity-dapp.dev.facewallet.xyz
       - uses: actions/upload-artifact@v2
         with:
           name: Build-WebGL
