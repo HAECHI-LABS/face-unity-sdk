@@ -15,6 +15,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
     public static class Profiles
     {
+        public static bool IsMainNet(Profile profile)
+        {
+            return profile.Equals(Profile.ProdMainnet) || profile.Equals(Profile.StageMainnet);
+        }
+        
         private static Dictionary<string, Profile> _strProfileDictionary = new Dictionary<string, Profile>
         {
             {"Local", Profile.Local},

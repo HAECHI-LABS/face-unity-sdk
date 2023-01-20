@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using haechi.face.unity.sdk.Runtime.Type;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -24,7 +25,8 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private static int _generateId()
         {
-            return Random.Range(1, 100000);
+            System.Random rand = new System.Random();
+            return rand.Next(1, 100000);
         }
 
         private static object[] _parameterize(params T[] parameterList)

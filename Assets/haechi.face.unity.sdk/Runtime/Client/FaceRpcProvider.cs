@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Numerics;
 using System.Text;
@@ -95,10 +96,12 @@ namespace haechi.face.unity.sdk.Runtime.Client
                     {FaceRpcMethod.face_logOut, new WebviewRequestSender(provider)},
                     {FaceRpcMethod.eth_sendTransaction, new WebviewRequestSender(provider)},
                     {FaceRpcMethod.personal_sign, new WebviewRequestSender(provider)},
+                    {FaceRpcMethod.face_openWalletConnect, new WebviewRequestSender(provider)},
+                    {FaceRpcMethod.face_confirmWalletConnectDapp, new WebviewRequestSender(provider)},
                     
                     {FaceRpcMethod.eth_call, new ServerRequestSender(provider)},
                     {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
-                    
+
                     {FaceRpcMethod.eth_estimateGas, new EstimateGasServerRequestSender(provider, wallet)},
                     // ...
                 };

@@ -4,11 +4,15 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using UnityEngine;
+using WalletConnectSharp.Network.Models;
+using WalletConnectSharp.Sign.Models.Engine;
+using WalletConnectSharp.Sign.Models.Engine.Methods;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
@@ -82,15 +86,20 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
                 this.dataDesignator.SetLogoutInstruction();
-                this.inputDesignator.SetLoggedInInputStatus();
+                this.inputDesignator.SetLoggedInInputStatus();                
             }, this._defaultExceptionHandler);
         }
         
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
+            Debug.Log("Start Login");
             FaceLoginResponse response = await this.face.Auth().Login();
             string address = response.wallet.Address;
+            Debug.Log("Login balance");
+
             string balance = await this._getBalance(address);
+            
+            Debug.Log("Login done");
 
             return new LoginResult(balance, response.faceUserId, address);
         }
@@ -221,6 +230,13 @@ namespace haechi.face.unity.sdk.Samples.Script
                     this.inputDesignator.GetErc1155Quantity().text)
             );
             this._sendTransactionQueue(transactionTask);
+        }
+
+        public void ConnectWallet()
+        {
+            this._validateIsLoggedIn();
+            this.face.Wallet().ConnectOpenSea(this.dataDesignator.loggedInAddress.text);
+             //this.face.Wallet().ConnectWallet( this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
         }
 
         public void SignMessage()

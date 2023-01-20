@@ -1,11 +1,17 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
+using UnityEngine;
+using WalletConnectSharp.Sign.Models;
+using WalletConnectSharp.Sign.Models.Engine;
+using WalletConnectSharp.Sign.Models.Engine.Methods;
+using WalletConnectSharp.Network.Models;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -13,16 +19,23 @@ namespace haechi.face.unity.sdk.Runtime.Module
     {
         Task<FaceRpcResponse> GetBalance(string account = null);
     }
+    
+   
 
     public class Wallet : IWallet
     {
         private readonly FaceRpcProvider _provider;
         private readonly FaceClient _client;
-
+        private WalletConnect _walletConnect;
+        
         internal Wallet(FaceRpcProvider provider)
         {
             this._provider = provider;
             this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
+            
+#if  !UNITY_WEBGL
+            this._initWalletConnectV2();
+#endif
         }
 
         /// <summary>
@@ -74,6 +87,12 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.personal_sign,
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
+        } 
+        
+        private async Task<FaceRpcResponse> _signMessage(string rawMessage)
+        {
+            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.personal_sign, rawMessage);
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         
@@ -132,6 +151,103 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 throw new FaceServerException(e);
             }
         }
+
+        private async void _initWalletConnectV2()
+        {
+            this._walletConnect = WalletConnect.GetInstance();
+            await this._walletConnect.Connect();
+            this._registryWalletConnectEvent();
+        }
+
+        private void _registryWalletConnectEvent()
+        {
+            this._walletConnect.OnPersonalSignRequest += async (topic, @event) =>
+            { 
+                var response = await _signMessage(@event.Params.Request.Params[0]);
+                _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
+                {
+                    Topic = topic,
+                    Response = new JsonRpcResponse<string>()
+                    {
+                        Id = @event.Id,
+                        Result = response.Result.ToString(),
+                        Error = null
+                    }
+                });
+            };
+            this._walletConnect.OnSendTransactionEvent += async (topic, @event) =>
+            {
+                var response = await SendTransaction(@event.Params.Request.Params[0]);
+                _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
+                {
+                    Topic = topic,
+                    Response = new JsonRpcResponse<string>()
+                    {
+                        Id = @event.Id,
+                        Result = response.transactionId,
+                        Error = null
+                    }
+                });
+            };
+        }
+
+
+        /// <summary>
+        /// Connect Face with Opensea via WalletConnect.
+        /// </summary>
+        /// <param name="collectionName">Blockchain network.</param>
+        public async void ConnectOpenSea(string address)
+        { 
+             string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
+                ? "https://opensea.io/"
+                : "https://testnets.opensea.io/";
+             FaceRpcResponse response = await _openWalletConnect("OpenSea", hostname);
+
+#if !UNITY_WEBGL
+             string encodedWcUri = response.Result.Value<string>("uri");
+             byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
+             string wcUri = Encoding.UTF8.GetString(wcUriBytes);
+             
+             this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+#endif
+        } 
+        
+        /// <summary>
+        /// Connect Face with Dapp via WalletConnect.
+        /// </summary>
+        /// <param name="dappName">dapp name to connect.</param>
+        /// <param name="dappUrl">dapp url to connect.</param>
+        /// <param name="address">wallet address to connect.</param>
+        public async void ConnectWallet(string dappName,string dappUrl, string address)
+        { 
+             FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
+                 FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
+             FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
+             
+#if !UNITY_WEBGL
+             string encodedWcUri = response.Result.Value<string>("uri");
+             byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
+             string wcUri = Encoding.UTF8.GetString(wcUriBytes);
+
+             this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+#endif
+        }
+        
+        private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl)
+        {
+            FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
+
+            return await _provider.SendFaceRpcAsync(faceRpcRequest);
+        }
+
+        public async Task<FaceRpcResponse> _confirmWalletConnectDapp(Metadata dappMetadata)
+        {
+            FaceRpcRequest<Metadata> faceRpcRequest = new FaceRpcRequest<Metadata>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
+
+            return await _provider.SendFaceRpcAsync(faceRpcRequest);
+        }
     }
     
     /// <summary>
@@ -155,4 +271,5 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return this._wallet.GetBalance(account);
         }
     }
+    
 }

@@ -15,20 +15,22 @@ namespace haechi.face.unity.sdk.Samples.Script
             getErc20BalanceBtn,
             sendErc721TransactionBtn,
             sendErc1155TransactionBtn,
-            signMessageBtn;
-        
+            signMessageBtn,
+            connectOpenSeaBtn;
         [SerializeField] internal Button landscapeSendNativeCoinTransactionBtn,
             landscapeSendErc20TransactionBtn,
             landscapeGetErc20BalanceBtn,
             landscapeSendErc721TransactionBtn,
             landscapeSendErc1155TransactionBtn,
-            landscapeSignMessageBtn;
+            landscapeSignMessageBtn,
+            landscapeConnectOpenSeaBtn;
         [SerializeField] internal Button webSendNativeCoinTransactionBtn,
             webSendErc20TransactionBtn,
             webGetErc20BalanceBtn,
             webSendErc721TransactionBtn,
             webSendErc1155TransactionBtn,
-            webSignMessageBtn;
+            webSignMessageBtn,
+            webConnectOpenSeaBtn;
         
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey;
@@ -480,6 +482,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             
             this.webMessageToSign.interactable = enable;
             this.webSignMessageBtn.interactable = enable;
+            this.webConnectOpenSeaBtn.interactable = enable;
 #else
             this.to.interactable = enable;
             this.amount.interactable = enable;
@@ -526,6 +529,9 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.signMessageBtn.interactable = enable;
             this.landscapeMessageToSign.interactable = enable;
             this.landscapeSignMessageBtn.interactable = enable;
+
+            this.connectOpenSeaBtn.interactable = enable;
+            this.landscapeConnectOpenSeaBtn.interactable = enable;
 #endif
         }
         

@@ -7,6 +7,12 @@ using UnityEngine;
 public class ActionQueue : MonoBehaviour
 {
     private static readonly Queue<Action> _executionQueue = new Queue<Action>();
+    public static ActionQueue Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
     
     private void Update()
     {

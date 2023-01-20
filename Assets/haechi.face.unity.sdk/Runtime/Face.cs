@@ -21,6 +21,7 @@ namespace haechi.face.unity.sdk.Runtime
         
         private Wallet _wallet;
         private Auth _auth;
+        private WalletConnect _walletConnect;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
         
@@ -98,5 +99,6 @@ namespace haechi.face.unity.sdk.Runtime
 
             return this._auth;
         }
+
     }
 }

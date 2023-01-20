@@ -38,6 +38,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         {
             Dictionary<string, string> queryParameters = _parseQuery(uri.Query);
             bool isResponse = queryParameters.ContainsKey("response");
+           
             bool isRequest = queryParameters.ContainsKey("request");
             if ((!isResponse && !isRequest) || (isRequest && isResponse))
             {
