@@ -30,8 +30,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private readonly FaceClient _client;
 
-        internal readonly FaceWebRequest _webRequest;
-        
         private readonly MethodHandlers _methodHandlers;
 
         private readonly IRequestSender _defaultRequestSender;
@@ -40,7 +38,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             this._webview = safeWebviewController;
             this._client = new FaceClient(uri, new HttpClient());
-            this._webRequest = new FaceWebRequest(face);
             this._methodHandlers = new MethodHandlers(this, wallet);
             this._defaultRequestSender = new WebviewRequestSender(this);
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
@@ -98,8 +95,8 @@ namespace haechi.face.unity.sdk.Runtime.Client
                     
                     {FaceRpcMethod.eth_call, new ServerRequestSender(provider)},
                     {FaceRpcMethod.eth_getBalance, new ServerRequestSender(provider)},
-                    {FaceRpcMethod.face_openWalletConnect, new WebviewRequestSender(provider, webview)},
-                    {FaceRpcMethod.face_confirmWalletConnectDapp, new WebviewRequestSender(provider, webview)},
+                    {FaceRpcMethod.face_openWalletConnect, new WebviewRequestSender(provider)},
+                    {FaceRpcMethod.face_confirmWalletConnectDapp, new WebviewRequestSender(provider)},
                     
                     {FaceRpcMethod.eth_estimateGas, new EstimateGasServerRequestSender(provider, wallet)},
                     // ...
