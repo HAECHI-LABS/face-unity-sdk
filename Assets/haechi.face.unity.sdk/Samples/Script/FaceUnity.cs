@@ -95,7 +95,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             FaceLoginResponse response = await this.face.Auth().Login();
             string address = response.wallet.Address;
             string balance = await this._getBalance(address);
-            
             return new LoginResult(balance, response.faceUserId, address);
         }
         

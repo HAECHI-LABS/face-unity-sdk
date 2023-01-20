@@ -203,14 +203,13 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 : "https://testnets.opensea.io/";
              FaceRpcResponse response = await _openWalletConnect("OpenSea", hostname);
 
-#if  UNITY_WEBGL
-             return;
-#endif
+#if !UNITY_WEBGL
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
              
              this._walletConnect.RequestPair(address, wcUri, this);
+#endif
         } 
         
         /// <summary>
@@ -225,15 +224,13 @@ namespace haechi.face.unity.sdk.Runtime.Module
                  FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
              FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
              
-#if  UNITY_WEBGL
-             return;
-#endif
-            
+#if !UNITY_WEBGL
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
              this._walletConnect.RequestPair(address, wcUri, this);
+#endif
         }
         
         private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl)

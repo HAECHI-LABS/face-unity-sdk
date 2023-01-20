@@ -3218,7 +3218,7 @@ GameObject:
   - component: {fileID: 3286215524656872350}
   - component: {fileID: 2421814465066769464}
   m_Layer: 0
-  m_Name: ConnectOpenseaButton
+  m_Name: WebWalletConnectButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10002,7 +10002,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 1320, y: 0}
-  m_SizeDelta: {x: 1320, y: 4300}
+  m_SizeDelta: {x: 1320, y: 4400}
   m_Pivot: {x: 1, y: 1}
 --- !u!1 &1486457575866480457
 GameObject:
@@ -44243,7 +44243,7 @@ GameObject:
   - component: {fileID: 5877933340528631942}
   - component: {fileID: 7640996448593103279}
   m_Layer: 0
-  m_Name: WalletConnectButton
+  m_Name: LandscapeWalletConnectButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55798,6 +55798,7 @@ MonoBehaviour:
   webSendErc721TransactionBtn: {fileID: 2894484410710573907}
   webSendErc1155TransactionBtn: {fileID: 90865514736186556}
   webSignMessageBtn: {fileID: 3905722851496400667}
+  webConnectOpenSeaBtn: {fileID: 2421814465066769464}
   profileDrd: {fileID: 7076646451398299833}
   blockchainDrd: {fileID: 4506902948165606833}
   networkDrd: {fileID: 0}
@@ -56365,7 +56366,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 290, y: 0}
+  m_AnchoredPosition: {x: 290, y: -0.18652344}
   m_SizeDelta: {x: -580, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1400928667
@@ -58817,7 +58818,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7174870381140351140}
   m_Layer: 0
-  m_Name: ConnectOpenseaButtonUI
+  m_Name: WalletConnectButtonUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
