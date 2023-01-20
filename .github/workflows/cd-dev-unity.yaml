@@ -120,7 +120,7 @@ jobs:
       - name: Distribute ios
         run: /Users/runner/hostedtoolcache/Ruby/3.0.5/x64/bin/bundle exec fastlane ios
         env:
-          HAECHI_GITHUB_PAT: ${{ github.token }}
+          HAECHI_UNITY_PAT: ${{ secrets.HAECHI_UNITY_PAT }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
   build-webgl:

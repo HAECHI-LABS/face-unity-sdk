@@ -85,12 +85,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         private async Task _doPair(PairRequestEvent @event)
         {
-            Debug.Log("[WC] do pair start");
             ProposalStruct @struct = await wallet.Engine.Pair(new PairParams()
             {
                 Uri = @event.uri
             });
-            Debug.Log("[WC] pair success, request confirm");
             FaceRpcResponse isConfirm = await @event.confirmWalletConnectDapp(@struct.Proposer.Metadata);
             if (isConfirm.CastResult<bool>())
             {
@@ -139,8 +137,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task Connect()
         {
-            Debug.Log("[WC] start client connect");
-
             SignClientOptions options = new SignClientOptions()
             {
                 ProjectId = "5d868db873762d9d13d736cd29324fb0",
@@ -155,21 +151,17 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 Storage = new InMemoryStorage()
             };
 
-            Debug.Log("[WC] create Option");
             try
             {
                 _walletClient = await WalletConnectSignClient.Init(options);
                 
                 _engine = (Engine)_walletClient.Engine;
             
-                Debug.Log("[WC] init done");
-
                 _engine.Events.ListenFor<MessageEvent>("request_wc_sessionRequest", (sender, @message) =>
                 {
                     messageQueue.Enqueue(@message.EventData);
                 });
             
-                Debug.Log("[WC] client instance connect done");
                 _isConnect = true;
             }
             catch (System.Exception e)
