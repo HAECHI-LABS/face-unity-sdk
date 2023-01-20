@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 
@@ -43,12 +42,12 @@ namespace haechi.face.unity.sdk.Runtime
         /// Initialize FaceSettings with <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.FaceSettings.Parameters.html">Parameters</a>.
         /// </summary>
         /// <param name="parameters"><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.FaceSettings.Parameters.html">Parameters</a>.</param>
-        /// <exception cref="FaceException">Throws if FaceSettings is already initialized.</exception>
+        /// <exception cref="AlreadyInitializedException">Throws if FaceSettings is already initialized.</exception>
         public static void Init(Parameters parameters)
         {
-            if (instance != null)
+            if (IsInitialized())
             {
-                throw new FaceException(ErrorCodes.ALREADY_INITIALIZED);
+                throw new AlreadyInitializedException();
             }
             instance = new FaceSettings(new parameters
             {
@@ -104,12 +103,13 @@ namespace haechi.face.unity.sdk.Runtime
             return this._parameters._apiKey;
         }
         
-        /// <returns> Return Blockchain Network such as Goerli, Mumbai, Ethereum etc.</returns>
+        /// <returns> Return Blockchain such as Ethereum, Polygon etc.</returns>
         public Blockchain Blockchain()
         {
             return Blockchains.OfBlockchainNetwork(this._parameters._network);
         }
 
+        /// <returns> Return Blockchain Network such as Goerli, Mumbai, Ethereum etc.</returns>
         public BlockchainNetwork Network()
         {
             return this._parameters._network;
@@ -140,6 +140,16 @@ namespace haechi.face.unity.sdk.Runtime
             { Profile.ProdMainnet, "https://api.facewallet.xyz" },
         };
         
+        private readonly Dictionary<Profile, string> _iframeHostMap = new Dictionary<Profile, string>
+        {
+            { Profile.Local, "http://localhost:3333" },
+            { Profile.Dev, "https://app.dev.facewallet.xyz" },
+            { Profile.StageTest, "https://app.stage-test.facewallet.xyz" },
+            { Profile.StageMainnet, "https://app.stage.facewallet.xyz" },
+            { Profile.ProdTest, "https://app.test.facewallet.xyz" },
+            { Profile.ProdMainnet, "https://app.facewallet.xyz" },
+        };
+        
         /// <returns>Returns webview client url.</returns>
         public string WebviewHostURL()
         {
@@ -150,6 +160,13 @@ namespace haechi.face.unity.sdk.Runtime
         public string ServerHostURL()
         {
             return this._serverHostMap.GetValueOrDefault(this.Environment(), this._serverHostMap[Profile.Dev]);
+        }
+        
+        /// <returns>Returns iframe host url.</returns>
+        public string IframeURL()
+        {
+            return string.Format(
+                $"{this._iframeHostMap.GetValueOrDefault(this.Environment(), this._iframeHostMap[Profile.Dev])}/?api_key={this.ApiKey()}&blockchain={this.Blockchain()}&env={this.Environment()}");
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using haechi.face.unity.sdk.Runtime.Utils;
 using NUnit.Framework;
 

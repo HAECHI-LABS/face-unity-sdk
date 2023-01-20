@@ -8,7 +8,6 @@ using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
-using Nethereum.Web3;
 using Newtonsoft.Json;
 using UnityEngine;
 using WalletConnectSharp.Network.Models;
@@ -59,15 +58,15 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         private FaceSettings.Parameters _getFaceSettingsInput()
         {
-            string apiKey = this.inputDesignator.apiKey != null
-                ? this.inputDesignator.apiKey.text 
+            string apiKey = this.inputDesignator.GetApiKey() != null
+                ? this.inputDesignator.GetApiKey().text 
                 : SAMPLE_API_KEY;
-            Profile environment = this.inputDesignator.profileDrd != null
-                ? Profiles.ValueOf(this.inputDesignator.profileDrd.captionText.text)
+            Profile environment = this.inputDesignator.GetProfileDrd() != null
+                ? Profiles.ValueOf(this.inputDesignator.GetProfileDrd().captionText.text)
                 : Profile.ProdTest;
-            BlockchainNetwork network = this.inputDesignator.blockchainDrd != null && this.inputDesignator.profileDrd != null
-                ? BlockchainNetworks.GetNetwork(this.inputDesignator.blockchainDrd.captionText.text, this.inputDesignator.profileDrd.captionText.text)
-                : BlockchainNetworks.ValueOf(this.inputDesignator.networkDrd.captionText.text);
+            BlockchainNetwork network = this.inputDesignator.GetBlockchainDrd() != null && this.inputDesignator.GetProfileDrd() != null
+                ? BlockchainNetworks.GetNetwork(this.inputDesignator.GetBlockchainDrd().captionText.text, this.inputDesignator.GetProfileDrd().captionText.text)
+                : BlockchainNetworks.ValueOf(this.inputDesignator.GetNetworkDrd().captionText.text);
 
             return new FaceSettings.Parameters
             {
@@ -86,7 +85,6 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetLoggedInId(response.userId);
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
-                
                 this.dataDesignator.SetLogoutInstruction();
                 this.inputDesignator.SetLoggedInInputStatus();
             }, this._defaultExceptionHandler);
@@ -171,9 +169,9 @@ namespace haechi.face.unity.sdk.Samples.Script
             this._validateIsLoggedIn();
 
             string data = this.face.dataFactory.CreateErc20GetBalanceData(
-                this.inputDesignator.erc20BalanceInquiryAddress.text, this.dataDesignator.loggedInAddress.text);
+                this.inputDesignator.GetErc20BalanceInquiryAddress().text, this.dataDesignator.loggedInAddress.text);
             RawTransaction request =
-                new RawTransaction(null, this.inputDesignator.erc20BalanceInquiryAddress.text, "0x0", data);
+                new RawTransaction(null, this.inputDesignator.GetErc20BalanceInquiryAddress().text, "0x0", data);
 
             Task<FaceRpcResponse> responseTask = this.face.Wallet().Call(request);
 
@@ -189,10 +187,10 @@ namespace haechi.face.unity.sdk.Samples.Script
         public void SendNativeCoinTransaction()
         {
             Task<TransactionResult> transactionTask = this._sendTransactionTask(
-                this.inputDesignator.to.text,
+                this.inputDesignator.GetTo().text,
                 () => null,
                 NumberFormatter.DecimalStringToHexadecimal(
-                    NumberFormatter.DecimalStringToIntegerString(this.inputDesignator.amount.text, 18))
+                    NumberFormatter.DecimalStringToIntegerString(this.inputDesignator.GetAmount().text, 18))
             );
             this._sendTransactionQueue(transactionTask);
         }
@@ -205,12 +203,12 @@ namespace haechi.face.unity.sdk.Samples.Script
         public void SendErc721Transaction()
         {
             Task<TransactionResult> transactionTask = this._sendTransactionTask(
-                this.inputDesignator.erc721NftAddress.text,
+                this.inputDesignator.GetErc721NftAddress().text,
                 () => this.face.dataFactory.CreateErc721SendData(
-                    this.inputDesignator.erc721NftAddress.text,
+                    this.inputDesignator.GetErc721NftAddress().text,
                     this.dataDesignator.loggedInAddress.text,
-                    this.inputDesignator.erc721To.text,
-                    this.inputDesignator.erc721TokenId.text)
+                    this.inputDesignator.GetErc721To().text,
+                    this.inputDesignator.GetErc721TokenId().text)
             );
             this._sendTransactionQueue(transactionTask);
         }
@@ -218,13 +216,13 @@ namespace haechi.face.unity.sdk.Samples.Script
         public void SendErc1155Transaction()
         {
             Task<TransactionResult> transactionTask = this._sendTransactionTask(
-                this.inputDesignator.erc1155NftAddress.text,
+                this.inputDesignator.GetErc1155NftAddress().text,
                 () => this.face.dataFactory.CreateErc1155SendBatchData(
-                    this.inputDesignator.erc1155NftAddress.text,
+                    this.inputDesignator.GetErc1155NftAddress().text,
                     this.dataDesignator.loggedInAddress.text,
-                    this.inputDesignator.erc1155To.text,
-                    this.inputDesignator.erc1155TokenId.text,
-                    this.inputDesignator.erc1155Quantity.text)
+                    this.inputDesignator.GetErc1155To().text,
+                    this.inputDesignator.GetErc1155TokenId().text,
+                    this.inputDesignator.GetErc1155Quantity().text)
             );
             this._sendTransactionQueue(transactionTask);
         }
@@ -240,7 +238,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             this._validateIsLoggedIn();
 
-            Task<FaceRpcResponse> responseTask = this.face.Wallet().SignMessage(this.inputDesignator.messageToSign.text);
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().SignMessage(this.inputDesignator.GetMessageToSign().text);
 
             this.actionQueue.Enqueue(responseTask, response =>
             {
@@ -253,10 +251,10 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<TransactionResult> _sendErc20TransactionTask()
         {
             int decimals = await this._getDecimals();
-            return await this._sendTransactionTask(this.inputDesignator.erc20TokenAddress.text, () =>
+            return await this._sendTransactionTask(this.inputDesignator.GetErc20TokenAddress().text, () =>
             {
-                string amount = this.inputDesignator.erc20Amount.text;
-                return this.face.dataFactory.CreateErc20SendData(this.inputDesignator.erc20TokenAddress.text, this.inputDesignator.erc20To.text, amount, decimals);
+                string amount = this.inputDesignator.GetErc20Amount().text;
+                return this.face.dataFactory.CreateErc20SendData(this.inputDesignator.GetErc20TokenAddress().text, this.inputDesignator.GetErc20To().text, amount, decimals);
             });
         }
 
@@ -266,7 +264,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string loggedInAddress = this.dataDesignator.loggedInAddress.text;
             if (String.IsNullOrEmpty(loggedInAddress) || String.IsNullOrEmpty(loggedInId))
             {
-                throw new FaceException(ErrorCodes.UNAUTHORIZED);
+                throw new UnauthorizedException();
             }
         }
         
@@ -305,9 +303,9 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<int> _getDecimals()
         {
             string decimalsData =
-                this.face.dataFactory.CreateErc20GetDecimalsData(this.inputDesignator.erc20TokenAddress.text);
+                this.face.dataFactory.CreateErc20GetDecimalsData(this.inputDesignator.GetErc20TokenAddress().text);
             RawTransaction decimalsRequest =
-                new RawTransaction(null, this.inputDesignator.erc20TokenAddress.text, "0x0", decimalsData);
+                new RawTransaction(null, this.inputDesignator.GetErc20TokenAddress().text, "0x0", decimalsData);
             FaceRpcResponse response = await this.face.Wallet().Call(decimalsRequest);
             return int.Parse(NumberFormatter.HexadecimalToDecimal(response.CastResult<string>()).ToStringInvariant());
         }

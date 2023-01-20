@@ -33,8 +33,8 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         /// <param name="data">Data string.</param>
         public RawTransaction(string from, string to, string value, string data)
         {
-            this.from = from;
-            this.to = to;
+            this.from = string.IsNullOrEmpty(from) ? from : from.ToLower();
+            this.to = string.IsNullOrEmpty(to) ? to : to.ToLower();
             this.value = value;
             this.data = data;
         }

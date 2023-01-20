@@ -193,7 +193,7 @@ PlayerSettings:
     Android: xyz.facewallet.dev.app
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.DefaultCompany.com.unity.template.mobile2D
-    iPhone: xyz.facewallet.dev.app
+    iPhone: xyz.facewallet.unity.app
     tvOS: com.DefaultCompany.com.unity.template.mobile2D
   buildNumber:
     Standalone: 0
@@ -264,7 +264,7 @@ PlayerSettings:
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 0
   iosCopyPluginsCodeInsteadOfSymlink: 0
-  appleDeveloperTeamID: HAECHI LABS
+  appleDeveloperTeamID: S6PKQQ75LC
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   iOSManualSigningProvisioningProfileType: 0
@@ -312,7 +312,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 4cee8337d7e98434d957e279c1c1830a, type: 3}
+      m_Icon: {fileID: 2800000, guid: 9cfa82b6b338847a08ef708862bf9451, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -842,7 +842,7 @@ PlayerSettings:
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
-  webGLTemplate: APPLICATION:Default
+  webGLTemplate: PROJECT:FaceTemplate
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 2
@@ -852,8 +852,9 @@ PlayerSettings:
   webGLDecompressionFallback: 0
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: 
+    Android: VUPLEX_CCU;VUPLEX_STANDALONE
     Standalone: VUPLEX_CCU
+    WebGL: 
     iPhone: VUPLEX_CCU
   additionalCompilerArguments: {}
   platformArchitecture: {}
