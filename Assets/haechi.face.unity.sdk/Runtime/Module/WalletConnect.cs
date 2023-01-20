@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -21,7 +22,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private Engine _engine;
         private static WalletConnect _instance;
         private WalletConnectSignClient _walletClient;
-        private bool isConnect = false;
+        private bool _isConnect = false;
+        public bool IsConnect
+        {
+            get { return _isConnect; }
+        }
 
         private Queue<MessageEvent> messageQueue = new Queue<MessageEvent>();
         private Queue<PairRequestEvent> pairRequestEventQueue = new Queue<PairRequestEvent>();
@@ -81,24 +86,26 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return Encoding.ASCII.GetString(raw);;
         }
 
-        public async Task RequestPair(string address, string wcUri, PairRequestEvent.WalletConnectPairEvent confirmWalletConnectDapp)
+        public void RequestPair(string address, string wcUri, Wallet faceWallet)
         {
             pairRequestEventQueue.Enqueue(new PairRequestEvent()
             {
                 address = address,
                 uri = wcUri,
-                confirmWalletConnectDapp = confirmWalletConnectDapp
+                faceWallet = faceWallet
             });
         }
 
         private async Task _doPair(PairRequestEvent @event)
         {
-            ProposalStruct @struct = await wallet.Pair(@event.uri);
-            Debug.Log($"[WC] Start Pair to {@struct.Proposer.Metadata.Name}");
-            Boolean isConfirm  = await @event.confirmWalletConnectDapp(@struct.Proposer.Metadata);
-            Debug.Log($"[WC] isConfirm {isConfirm}");
-
-            if (isConfirm)
+            Debug.Log("[WC] do pair start");
+            ProposalStruct @struct = await wallet.Engine.Pair(new PairParams()
+            {
+                Uri = @event.uri
+            });
+            Debug.Log("[WC] pair success, request confirm");
+            FaceRpcResponse isConfirm = await @event.faceWallet.ConfirmWalletConnectDapp(@struct.Proposer.Metadata);
+            if (isConfirm.CastResult<bool>())
             {
                 var approveData = await wallet.Approve( @struct.ApproveProposal(@event.address));
                 await approveData.Acknowledged();
@@ -145,6 +152,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task Connect()
         {
+            Debug.Log("[WC] start client connect");
+
             SignClientOptions options = new SignClientOptions()
             {
                 ProjectId = "5d868db873762d9d13d736cd29324fb0",
@@ -159,15 +168,27 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 Storage = new InMemoryStorage()
             };
 
-            _walletClient = await WalletConnectSignClient.Init(options);
-            _engine = (Engine)_walletClient.Engine;
-            
-            _engine.Events.ListenFor<MessageEvent>("request_wc_sessionRequest", (sender, @message) =>
+            Debug.Log("[WC] create Option");
+            try
             {
-                messageQueue.Enqueue(@message.EventData);
-            });
+                _walletClient = await WalletConnectSignClient.Init(options);
+                
+                _engine = (Engine)_walletClient.Engine;
+            
+                Debug.Log("[WC] init done");
 
-            isConnect = true;
+                _engine.Events.ListenFor<MessageEvent>("request_wc_sessionRequest", (sender, @message) =>
+                {
+                    messageQueue.Enqueue(@message.EventData);
+                });
+            
+                Debug.Log("[WC] client instance connect done");
+                _isConnect = true;
+            }
+            catch (System.Exception e)
+            {   
+                Debug.Log(e);
+            }
         }
 
         IEnumerator personalSignRequest(string topic, WcRequestEvent<string[]> @event)

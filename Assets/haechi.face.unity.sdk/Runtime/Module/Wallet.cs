@@ -7,15 +7,11 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
-using JetBrains.Annotations;
 using UnityEngine;
-using WalletConnectSharp.Common.Model.Errors;
-using WalletConnectSharp.Common.Utils;
-using WalletConnectSharp.Network.Models;
-using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
 using WalletConnectSharp.Sign.Models.Engine;
 using WalletConnectSharp.Sign.Models.Engine.Methods;
+using WalletConnectSharp.Network.Models;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -36,7 +32,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             this._provider = provider;
             this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
-            _initWalletConnectV2();
+            this._initWalletConnectV2();
         }
 
         /// <summary>
@@ -142,11 +138,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
         }
 
-        public async void _initWalletConnectV2()
+        private async void _initWalletConnectV2()
         {
             this._walletConnect = WalletConnect.GetInstance();
             await this._walletConnect.Connect();
-            _walletConnect.OnPersonalSignRequest += async (topic, @event) =>
+            this._registryWalletConnectEvent();
+        }
+
+        private void _registryWalletConnectEvent()
+        {
+            this._walletConnect.OnPersonalSignRequest += async (topic, @event) =>
             { 
                 var response = await _signMessage(@event.Params.Request.Params[0]);
                 _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
@@ -160,8 +161,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     }
                 });
             };
- 
-            _walletConnect.OnSendTransactionEvent += async (topic, @event) =>
+            this._walletConnect.OnSendTransactionEvent += async (topic, @event) =>
             {
                 var response = await SendTransaction(@event.Params.Request.Params[0]);
                 _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
@@ -197,7 +197,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
              Debug.Log($"wc uri: {wcUri}");
 
-             _openWalletConnect(address, wcUri);
+             this._openWalletConnect(address, wcUri);
         } 
         
         /// <summary>
@@ -206,7 +206,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <param name="dappName">dapp name to connect.</param>
         /// <param name="dappUrl">dapp url to connect.</param>
         /// <param name="address">wallet address to connect.</param>
-        public async void ConnectWallet(string dappName, string dappUrl, string address)
+        public async void ConnectWallet(string dappName,string dappUrl, string address)
         { 
              FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
                  FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
@@ -216,19 +216,27 @@ namespace haechi.face.unity.sdk.Runtime.Module
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
-             await _openWalletConnect(address, wcUri);
-        }
-        
-        private async Task _openWalletConnect(string address, string wcUri)
-        {
-            await _walletConnect.RequestPair(address, wcUri, async metadata =>
-            {
-                FaceRpcResponse response = await _confirmWalletConnectDapp(metadata);
-                return response.CastResult<bool>();
-            });
+             this._directConnect(address, wcUri);
         }
 
-        private async Task<FaceRpcResponse> _confirmWalletConnectDapp(Metadata dappMetadata)
+        private async void _directConnect(string address, string uri)
+        {
+            Debug.Log($"[WC] do pair start (wallet connect is {_walletConnect.IsConnect}");
+            ProposalStruct @struct = await _walletConnect.wallet.Pair(new PairParams()
+            {
+                Uri = uri
+            });
+            Debug.Log("[WC] pair success, request confirm");
+            var approveData = await _walletConnect.wallet.Approve(@struct.ApproveProposal(address));
+            await approveData.Acknowledged();
+        }
+        
+        private void _openWalletConnect(string address, string wcUri)
+        {
+            this._walletConnect.RequestPair(address, wcUri, this);
+        }
+
+        public async Task<FaceRpcResponse> ConfirmWalletConnectDapp(Metadata dappMetadata)
         {
             FaceRpcRequest<Metadata> faceRpcRequest = new FaceRpcRequest<Metadata>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
