@@ -55803,7 +55803,6 @@ MonoBehaviour:
   blockchainDrd: {fileID: 4506902948165606833}
   networkDrd: {fileID: 0}
   apiKey: {fileID: 389753301694835831}
-  wcUrl: {fileID: 0}
   to: {fileID: 6147168659665961078}
   amount: {fileID: 4367333565420932018}
   erc1155To: {fileID: 3015307830651937730}
@@ -56366,7 +56365,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 290, y: -0.18652344}
+  m_AnchoredPosition: {x: 290, y: 0}
   m_SizeDelta: {x: -580, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1400928667
