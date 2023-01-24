@@ -6,9 +6,9 @@ namespace haechi.face.unity.sdk.Samples.Script
 {
     public class InputDesignator : MonoBehaviour
     {
-        [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, logoutBtn, getBalanceBtn;
-        [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
-        [SerializeField] internal Button webInitializeBtn, webSwitchNetworkBtn, webLoginBtn, webGoogleLoginBtn, webFacebookLoginBtn, webAppleLoginBtn, webLogoutBtn, webGetBalanceBtn;
+        [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, loginWithGoogleIdTokenBtn , logoutBtn, getBalanceBtn;
+        [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLoginWithGoogleIdTokenBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
+        [SerializeField] internal Button webInitializeBtn, webSwitchNetworkBtn, webLoginBtn, webGoogleLoginBtn, webFacebookLoginBtn, webAppleLoginBtn, webLogoutBtn, webGetBalanceBtn, webGoogleIdTokenBtn;
 
         [SerializeField] internal Button sendNativeCoinTransactionBtn,
             sendErc20TransactionBtn,
@@ -34,6 +34,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey;
+        public TMP_InputField privateKey;
         public TMP_InputField to, amount;
         public TMP_InputField erc1155To, erc1155TokenId, erc1155Quantity, erc1155NftAddress;
         public TMP_InputField erc20To, erc20Amount, erc20TokenAddress, erc20BalanceInquiryAddress;
@@ -422,6 +423,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.webGoogleLoginBtn.interactable = enable;
             this.webFacebookLoginBtn.interactable = enable;
             this.webAppleLoginBtn.interactable = enable;
+            this.webGoogleIdTokenBtn.interactable = enable;
 #else
             this.loginBtn.interactable = enable;
             this.landscapeLoginBtn.interactable = enable;
@@ -431,6 +433,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeFacebookLoginBtn.interactable = enable;
             this.appleLoginBtn.interactable = enable;
             this.landscapeAppleLoginBtn.interactable = enable;
+            this.loginWithGoogleIdTokenBtn.interactable = enable;
+            this.landscapeLoginWithGoogleIdTokenBtn.interactable = enable;
 #endif
         }
         

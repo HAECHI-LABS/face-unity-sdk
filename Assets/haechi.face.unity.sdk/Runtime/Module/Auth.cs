@@ -3,6 +3,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Utils;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -47,10 +48,48 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             return await this._login(FaceRpcMethod.face_directSocialLogin, provider);
         }
+        
+        /// <summary>
+        /// login with id token. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> to parameter.
+        /// </summary>
+        /// <returns>
+        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
+        /// </returns>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
+        public async Task<FaceLoginResponse> LoginWithIdToken(string idToken, string privateKey)
+        {
+            string sig = RsaSigner.Sign(privateKey, idToken);
+            
+            Debug.Log($"id Token : {idToken}");
+            Debug.Log($"id sig : {sig}");
+            
+            return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, 
+                new []{new FaceLoginIdTokenRequest{
+                                        IdToken = idToken,
+                                        Sig = sig
+                                    }});
+        }
 
         private async Task<FaceLoginResponse> _login(FaceRpcMethod method, params string[] parameterList)
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), method, parameterList);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
+
+            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
+            FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
+            
+            if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
+            {
+                throw new AddressVerificationFailedException();
+            }
+            
+            return faceLoginResponse;
+        }
+        
+        private async Task<FaceLoginResponse> _loginWithIdToken(FaceRpcMethod method, params FaceLoginIdTokenRequest[] parameterList)
+        {
+            FaceRpcRequest<FaceLoginIdTokenRequest> request = new FaceRpcRequest<FaceLoginIdTokenRequest>(FaceSettings.Instance.Blockchain(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
 
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();

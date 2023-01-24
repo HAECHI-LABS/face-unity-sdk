@@ -24,7 +24,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         [SerializeField] internal InputDesignator inputDesignator;
         [SerializeField] internal Face face;
         [SerializeField] internal ActionQueue actionQueue;
-        
+
         private void Start()
         {
             Application.targetFrameRate = 60;
@@ -102,6 +102,25 @@ namespace haechi.face.unity.sdk.Samples.Script
             Debug.Log("Login done");
 
             return new LoginResult(balance, response.faceUserId, address);
+        } 
+        
+        public async Task LoginWithIdTokenAndGetBalanceAsync(string idToken)
+        {
+            Debug.Log("Start Login");
+            FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(idToken, this.inputDesignator.privateKey.text);
+            string address = response.wallet.Address;
+            Debug.Log("Login balance");
+
+            string balance = await this._getBalance(address);
+            
+            Debug.Log("Login done");
+
+            var loginResult = new LoginResult(balance, response.faceUserId, address);
+            this.dataDesignator.SetLoggedInId(loginResult.userId);
+            this.dataDesignator.SetLoggedInAddress(loginResult.userAddress);
+            this.dataDesignator.SetCoinBalance(loginResult.balance);
+            this.dataDesignator.SetLogoutInstruction();
+            this.inputDesignator.SetLoggedInInputStatus();         
         }
         
         public void GoogleLoginAndGetBalance()
