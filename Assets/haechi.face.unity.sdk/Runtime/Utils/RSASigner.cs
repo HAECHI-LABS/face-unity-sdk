@@ -52,7 +52,6 @@ namespace haechi.face.unity.sdk.Runtime.Utils
             retval = "-----BEGIN "+ pemHeader +"-----\r\n" +
                      retval +
                      "\r\n-----END "+ pemHeader +"-----\r\n";
-            Debug.Log(retval);
             return retval;
         }
         

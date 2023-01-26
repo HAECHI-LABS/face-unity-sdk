@@ -73,17 +73,24 @@ namespace haechi.face.unity.sdk.Runtime.Module
             _instance = this;
         }
 
-        public void RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
+        public async Task<Metadata> RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
         {
-            requestPairEventQueue.Enqueue(new PairRequestEvent()
+            return await _doPair(new PairRequestEvent()
             {
                 address = address,
                 uri = wcUri,
                 confirmWalletConnectDapp = confirmWalletConnectDapp
-            });
+            });  
+            
+            // requestPairEventQueue.Enqueue(new PairRequestEvent()
+            // {
+            //     address = address,
+            //     uri = wcUri,
+            //     confirmWalletConnectDapp = confirmWalletConnectDapp
+            // });
         }
 
-        private async Task _doPair(PairRequestEvent @event)
+        private async Task<Metadata> _doPair(PairRequestEvent @event)
         {
             ProposalStruct @struct = await wallet.Engine.Pair(new PairParams()
             {
@@ -94,6 +101,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             {
                 var approveData = await wallet.Approve( @struct.ApproveProposal(@event.address));
                 await approveData.Acknowledged();
+                return @struct.Proposer.Metadata;
             }
             else
             {
@@ -102,6 +110,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     Id = @struct.Id.Value,
                     Reason = ErrorResponse.FromErrorType(ErrorType.NOT_APPROVED)
                 });
+                return null;
             }
         }
 

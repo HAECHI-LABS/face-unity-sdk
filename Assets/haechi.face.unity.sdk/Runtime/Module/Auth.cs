@@ -61,9 +61,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             string sig = RsaSigner.Sign(privateKey, idToken);
             
-            Debug.Log($"id Token : {idToken}");
-            Debug.Log($"id sig : {sig}");
-            
             return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, 
                 new []{new FaceLoginIdTokenRequest{
                                         IdToken = idToken,

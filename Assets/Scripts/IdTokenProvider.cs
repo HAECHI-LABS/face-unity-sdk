@@ -36,6 +36,7 @@ public class IdTokenProvider : MonoBehaviour
     
     public async void LoginGoogle()
     {
+#if UNITY_IPHONE
         GoogleSignIn.Configuration = _configuration;
         GoogleSignIn.Configuration.RequestIdToken = true;
         GoogleSignIn.Configuration.UseGameSignIn = false;
@@ -45,12 +46,21 @@ public class IdTokenProvider : MonoBehaviour
             "https://www.googleapis.com/auth/userinfo.profile",
             "openid"
         };
-
-#if UNITY_IPHONE
         GoogleSignIn.DefaultInstance.SignIn().ContinueWith(_loginProcess, TaskScheduler.FromCurrentSynchronizationContext());
 #elif UNITY_ANDROID
+        GoogleSignIn.Configuration = _configuration;
+        GoogleSignIn.Configuration.RequestIdToken = true;
+        GoogleSignIn.Configuration.UseGameSignIn = false;
+        GoogleSignIn.Configuration.AdditionalScopes = new[]
+        {
+            "email", "profile", "https://www.googleapis.com/auth/userinfo.email",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "openid"
+        };
         var user = await GoogleSignIn.DefaultInstance.SignIn();
         await _faceUnity.LoginWithIdTokenAndGetBalanceAsync(user.IdToken);
+#elif UNITY_WEBGL
+        GoogleSignInForWebGL.GoogleSignIn(gameObject, "LoginProcessForWebGL");
 #endif
     }
 
@@ -76,5 +86,10 @@ public class IdTokenProvider : MonoBehaviour
         }
     }
 #elif UNITY_ANDROID
+#elif UNITY_WEBGL
+    public void LoginProcessForWebGL(string idToken)
+    {
+        _faceUnity.LoginWithIdTokenAndGetBalanceAsync(idToken);
+    }
 #endif
 }

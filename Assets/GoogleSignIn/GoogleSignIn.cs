@@ -90,20 +90,24 @@ namespace Google {
 #if UNITY_ANDROID || UNITY_IOS
           theInstance = new GoogleSignIn(new GoogleSignInImpl(Configuration));
 #else
-          theInstance = new GoogleSignIn(null);
-          throw new SignInException(
-              GoogleSignInStatusCode.DeveloperError,
-              "This platform is not supported by GoogleSignIn");
+          theInstance = null;
+          // new GoogleSignIn(null);
+          // throw new SignInException(
+          //     GoogleSignInStatusCode.DeveloperError,
+          //     "This platform is not supported by GoogleSignIn");
 #endif
         }
         return theInstance;
       }
     }
 
+#if UNITY_ANDROID || UNITY_IOS
+
     internal GoogleSignIn(GoogleSignInImpl impl) {
       this.impl = impl;
     }
-
+#endif
+    
     public void EnableDebugLogging(bool flag) {
             impl.EnableDebugLogging(flag);
     }

@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <title>Unity WebGL Player | DevFaceUnitySample</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
   </head>
-  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+  <body style="text-align: center; padding: 0; border: 0; margin: 0">
     <div id="unity-container" class="unity-content">
-      <canvas id="unity-canvas" width=1280 height=2000 style="width: 1280px; height: 2000px; background: #231F20"></canvas>
+      <canvas
+        id="unity-canvas"
+        width="1280"
+        height="2000"
+        style="width: 1280px; height: 2000px; background: #231f20"
+      ></canvas>
       <script src="Build/FaceWebgl.loader.js"></script>
       <script>
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
           // Mobile device style: fill the whole browser client area with the game canvas:
-          var meta = document.createElement('meta');
-          meta.name = 'viewport';
-          meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-          document.getElementsByTagName('head')[0].appendChild(meta);
+          var meta = document.createElement("meta");
+          meta.name = "viewport";
+          meta.content =
+            "width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes";
+          document.getElementsByTagName("head")[0].appendChild(meta);
 
           var canvas = document.querySelector("#unity-canvas");
           canvas.style.width = "100%";
@@ -40,11 +47,15 @@
       </script>
     </div>
     <script>
-      document.addEventListener('wheel', onScroll, false);
-      document.addEventListener('mousemove', onMouse, false);
-      var content = document.getElementsByClassName('unity-content');
-      function onMouse() { content[0].style['pointer-events'] = 'auto'; }
-      function onScroll() { content[0].style['pointer-events'] = 'none'; }
+      document.addEventListener("wheel", onScroll, false);
+      document.addEventListener("mousemove", onMouse, false);
+      var content = document.getElementsByClassName("unity-content");
+      function onMouse() {
+        content[0].style["pointer-events"] = "auto";
+      }
+      function onScroll() {
+        content[0].style["pointer-events"] = "none";
+      }
     </script>
   </body>
 </html>
