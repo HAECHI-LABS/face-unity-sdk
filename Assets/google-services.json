@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "965931844205-joeaogogpn0uvrbo8anfgim9gp1ujvff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.facewallet.dev.app",
+            "certificate_hash": "452340e3146fc76468f5edaff99da490cdc02fb7"
+          }
+        },
+        {
           "client_id": "965931844205-q64ebkmn6atutksvi6b0rv2hkdm9gor5.apps.googleusercontent.com",
           "client_type": 3
         }

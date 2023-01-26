@@ -34,7 +34,7 @@ public class IdTokenProvider : MonoBehaviour
         
     }
     
-    public void LoginGoogle()
+    public async void LoginGoogle()
     {
         GoogleSignIn.Configuration = _configuration;
         GoogleSignIn.Configuration.RequestIdToken = true;
@@ -45,10 +45,17 @@ public class IdTokenProvider : MonoBehaviour
             "https://www.googleapis.com/auth/userinfo.profile",
             "openid"
         };
-        GoogleSignIn.DefaultInstance.SignIn().ContinueWith(loginProcess, TaskScheduler.FromCurrentSynchronizationContext());
+
+#if UNITY_IPHONE
+        GoogleSignIn.DefaultInstance.SignIn().ContinueWith(_loginProcess, TaskScheduler.FromCurrentSynchronizationContext());
+#elif UNITY_ANDROID
+        var user = await GoogleSignIn.DefaultInstance.SignIn();
+        await _faceUnity.LoginWithIdTokenAndGetBalanceAsync(user.IdToken);
+#endif
     }
 
-    private void loginProcess(Task<GoogleSignInUser> task){
+#if UNITY_IPHONE
+    private void _loginProcess(Task<GoogleSignInUser> task){
         if (task.IsFaulted) {
             using (IEnumerator<System.Exception> enumerator = task.Exception.InnerExceptions.GetEnumerator ()) {
                 if (enumerator.MoveNext ()) {
@@ -68,4 +75,6 @@ public class IdTokenProvider : MonoBehaviour
             _faceUnity.LoginWithIdTokenAndGetBalanceAsync(task.Result.IdToken);
         }
     }
+#elif UNITY_ANDROID
+#endif
 }

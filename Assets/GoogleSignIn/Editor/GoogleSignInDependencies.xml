@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <dependencies>
   <!-- See https://github.com/googlesamples/unity-jar-resolver#usage for
     how to configure dependencies -->
@@ -12,7 +12,7 @@
 
   <!-- iOS Cocoapod dependencies can be specified by each iosPod element. -->
   <iosPods>
-    <iosPod name="GoogleSignIn" version=">= 4.0.2" bitcodeEnabled="false"
+    <iosPod name="GoogleSignIn" version="&lt; 5.0.0" bitcodeEnabled="false"
         minTargetSdk="6.0">
     </iosPod>
   </iosPods>
