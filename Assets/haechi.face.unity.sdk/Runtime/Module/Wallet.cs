@@ -213,7 +213,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
-             
+             Debug.Log($"wc uri: {wcUri}");
              var dappMetadata = await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
              return dappMetadata;
 #endif
