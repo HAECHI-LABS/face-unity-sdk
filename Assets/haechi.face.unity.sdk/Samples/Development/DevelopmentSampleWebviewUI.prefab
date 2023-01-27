@@ -392,7 +392,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5547013891850941219}
         m_TargetAssemblyTypeName: IdTokenProvider, Assembly-CSharp
         m_MethodName: LoginGoogle
         m_Mode: 1
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5547013891850941219}
         m_TargetAssemblyTypeName: IdTokenProvider, Assembly-CSharp
         m_MethodName: LoginGoogle
         m_Mode: 1
@@ -63123,7 +63123,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 5547013891850941219}
         m_TargetAssemblyTypeName: IdTokenProvider, Assembly-CSharp
         m_MethodName: LoginGoogle
         m_Mode: 1
