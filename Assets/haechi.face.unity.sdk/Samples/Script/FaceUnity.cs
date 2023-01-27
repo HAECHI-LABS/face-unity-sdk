@@ -4,15 +4,11 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
-using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using UnityEngine;
-using WalletConnectSharp.Network.Models;
-using WalletConnectSharp.Sign.Models.Engine;
-using WalletConnectSharp.Sign.Models.Engine.Methods;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {

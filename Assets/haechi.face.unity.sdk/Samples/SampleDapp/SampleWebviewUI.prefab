@@ -18841,7 +18841,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: ConnectWallet
@@ -48958,10 +48958,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
-        m_MethodName: SignMessage
+        m_MethodName: ConnectWallet
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -56483,7 +56483,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: ConnectWallet
