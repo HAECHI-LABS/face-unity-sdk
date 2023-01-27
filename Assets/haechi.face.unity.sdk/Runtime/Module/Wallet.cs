@@ -208,15 +208,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 ? "https://opensea.io/"
                 : "https://testnets.opensea.io/";
              FaceRpcResponse response = await _openWalletConnect("OpenSea", hostname);
-
 #if !UNITY_WEBGL
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
              Debug.Log($"wc uri: {wcUri}");
-             var dappMetadata = await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+             var dappMetadata =
+ await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
              return dappMetadata;
 #endif
+             return null;
         } 
         
         /// <summary>
@@ -230,15 +231,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
              FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
                  FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
              FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
-             
 #if !UNITY_WEBGL
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
-             var dappMetadata = await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+             var dappMetadata =
+ await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
              return dappMetadata;
 #endif
+             return null;
         }
         
         private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl)

@@ -392,7 +392,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5152114253613655056}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: IdTokenProvider, Assembly-CSharp
         m_MethodName: LoginGoogle
         m_Mode: 1
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5152114253613655056}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: IdTokenProvider, Assembly-CSharp
         m_MethodName: LoginGoogle
         m_Mode: 1
@@ -56910,18 +56910,18 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1590378247905861819}
-  - component: {fileID: 3861405243794463702}
   - component: {fileID: 7449822048980144266}
   - component: {fileID: 7700186165668400205}
+  - component: {fileID: 5716737932123275364}
+  - component: {fileID: 3861405243794463702}
   - component: {fileID: 5108564810060022851}
   - component: {fileID: 5677593703189642839}
-  - component: {fileID: 5716737932123275364}
   - component: {fileID: 4182979263354653513}
   - component: {fileID: 4699786176643444986}
   - component: {fileID: 6243673392324459584}
   - component: {fileID: 3838643029278418765}
   - component: {fileID: 873302884}
-  - component: {fileID: 5152114253613655056}
+  - component: {fileID: 5547013891850941219}
   m_Layer: 0
   m_Name: DevelopmentSampleWebviewUI
   m_TagString: Untagged
@@ -56947,22 +56947,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3861405243794463702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7359475185043555146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54d88f355ac04846893fff8d48014a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dataDesignator: {fileID: 4182979263354653513}
-  inputDesignator: {fileID: 4699786176643444986}
-  face: {fileID: 5677593703189642839}
-  actionQueue: {fileID: 3838643029278418765}
 --- !u!114 &7449822048980144266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57008,6 +56992,42 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!114 &5716737932123275364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &3861405243794463702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7359475185043555146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54d88f355ac04846893fff8d48014a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataDesignator: {fileID: 4182979263354653513}
+  inputDesignator: {fileID: 4699786176643444986}
+  face: {fileID: 5677593703189642839}
+  actionQueue: {fileID: 3838643029278418765}
 --- !u!114 &5108564810060022851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57032,26 +57052,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739618d557f747faa8b1a99b1429eb3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5716737932123275364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7359475185043555146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &4182979263354653513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57100,7 +57100,7 @@ MonoBehaviour:
   googleLoginBtn: {fileID: 1466664235603000608}
   facebookLoginBtn: {fileID: 5944884152189520990}
   appleLoginBtn: {fileID: 2655912643376446150}
-  loginWithGoogleIdTokenBtn: {fileID: 1400513692}
+  loginWithGoogleIdTokenBtn: {fileID: 0}
   logoutBtn: {fileID: 7509362687234489419}
   getBalanceBtn: {fileID: 4645619518048142931}
   landscapeInitializeBtn: {fileID: 264812918763093987}
@@ -57109,7 +57109,7 @@ MonoBehaviour:
   landscapeGoogleLoginBtn: {fileID: 6845396688832209664}
   landscapeFacebookLoginBtn: {fileID: 7247070055378934351}
   landscapeAppleLoginBtn: {fileID: 7240680742282796259}
-  landscapeLoginWithGoogleIdTokenBtn: {fileID: 1934709292}
+  landscapeLoginWithGoogleIdTokenBtn: {fileID: 0}
   landscapeLogoutBtn: {fileID: 1055543197010635224}
   landscapeGetBalanceBtn: {fileID: 3961982743762702091}
   webInitializeBtn: {fileID: 5639374327655819258}
@@ -57120,7 +57120,7 @@ MonoBehaviour:
   webAppleLoginBtn: {fileID: 2151558563698121530}
   webLogoutBtn: {fileID: 384029217090337673}
   webGetBalanceBtn: {fileID: 7059608772265639589}
-  webGoogleIdTokenBtn: {fileID: 8614991962316336040}
+  webGoogleIdTokenBtn: {fileID: 0}
   sendNativeCoinTransactionBtn: {fileID: 100431558688669814}
   sendErc20TransactionBtn: {fileID: 3422003851029918722}
   getErc20BalanceBtn: {fileID: 1859041018421446843}
@@ -57146,7 +57146,7 @@ MonoBehaviour:
   blockchainDrd: {fileID: 4506902948165606833}
   networkDrd: {fileID: 0}
   apiKey: {fileID: 389753301694835831}
-  privateKey: {fileID: 8352166173494688590}
+  privateKey: {fileID: 0}
   to: {fileID: 6147168659665961078}
   amount: {fileID: 4367333565420932018}
   erc1155To: {fileID: 3015307830651937730}
@@ -57236,7 +57236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3157fd030c974c3ba7b6f62b1a30bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5152114253613655056
+--- !u!114 &5547013891850941219
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63123,7 +63123,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5152114253613655056}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: IdTokenProvider, Assembly-CSharp
         m_MethodName: LoginGoogle
         m_Mode: 1
