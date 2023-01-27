@@ -33,8 +33,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             webConnectOpenSeaBtn;
         
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
-        public TMP_InputField apiKey;
-        public TMP_InputField privateKey;
+        public TMP_InputField apiKey, privateKey;
         public TMP_InputField to, amount;
         public TMP_InputField erc1155To, erc1155TokenId, erc1155Quantity, erc1155NftAddress;
         public TMP_InputField erc20To, erc20Amount, erc20TokenAddress, erc20BalanceInquiryAddress;
@@ -42,7 +41,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         public TMP_InputField messageToSign;
 
         public TMP_Dropdown landscapeProfileDrd, landscapeBlockchainDrd, landscapeNetworkDrd;
-        public TMP_InputField landscapeApiKey;
+        public TMP_InputField landscapeApiKey, landscapePrivateKey;
         public TMP_InputField landscapeTo, landscapeAmount;
 
         public TMP_InputField landscapeErc1155To,
@@ -59,7 +58,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         public TMP_InputField landscapeMessageToSign;
         
         public TMP_Dropdown webProfileDrd, webBlockchainDrd, webNetworkDrd;
-        public TMP_InputField webApiKey;
+        public TMP_InputField webApiKey, webPrivateKey;
         public TMP_InputField webTo, webAmount;
 
         public TMP_InputField webErc1155To,
@@ -112,6 +111,12 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 this.apiKey.onValueChanged.AddListener(value => { SetInputText(this.landscapeApiKey, value); });
                 this.landscapeApiKey.onValueChanged.AddListener(value => { SetInputText(this.apiKey, value); });   
+            }
+
+            if (this.privateKey != null)
+            {
+                this.privateKey.onValueChanged.AddListener(value => { SetInputText(this.landscapePrivateKey, value); });
+                this.landscapePrivateKey.onValueChanged.AddListener(value => { SetInputText(this.privateKey, value); });   
             }
 
             this.to.onValidateInput += delegate(string s, int i, char c) { return char.ToLower(c); };
@@ -266,6 +271,15 @@ namespace haechi.face.unity.sdk.Samples.Script
 #endif
         }
         
+        public TMP_InputField GetPrivateKey()
+        {
+#if UNITY_WEBGL
+            return this.webPrivateKey;
+#else
+            return this.privateKey;
+#endif
+        }
+        
         public TMP_InputField GetTo()
         {
 #if UNITY_WEBGL
@@ -395,9 +409,14 @@ namespace haechi.face.unity.sdk.Samples.Script
         private void EnableConnectWalletSection(bool enable)
         {
 #if UNITY_WEBGL
-            if (this.apiKey != null)
+            if (this.webApiKey != null)
             {
                 this.webApiKey.interactable = enable;
+            }
+            
+            if (this.webPrivateKey != null)
+            {
+                this.webPrivateKey.interactable = enable;
             }
 
             this.webInitializeBtn.GetComponent<Button>().gameObject.SetActive(enable);
@@ -407,6 +426,12 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 this.apiKey.interactable = enable;
                 this.landscapeApiKey.interactable = enable;
+            }
+
+            if (this.privateKey != null)
+            {
+                this.privateKey.interactable = enable;
+                this.landscapePrivateKey.interactable = enable;
             }
 
             this.initializeBtn.GetComponent<Button>().gameObject.SetActive(enable);

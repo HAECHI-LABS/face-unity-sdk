@@ -14,6 +14,11 @@ namespace haechi.face.unity.sdk.Runtime
             public string ApiKey;
             
             /// <value>
+            /// Private key.
+            /// </value>
+            public string PrivateKey;
+            
+            /// <value>
             /// Environment such as Testnet, Mainnet.
             /// </value>
             public Profile? Environment;
@@ -27,6 +32,7 @@ namespace haechi.face.unity.sdk.Runtime
         private struct parameters
         {
             public string _apiKey;
+            public string _privateKey;
             public Profile _environment;
             public BlockchainNetwork _network;
         }
@@ -52,6 +58,7 @@ namespace haechi.face.unity.sdk.Runtime
             instance = new FaceSettings(new parameters
             {
                 _apiKey = parameters.ApiKey,
+                _privateKey = parameters.PrivateKey,
                 _environment = parameters.Environment ?? _getDefaultProfile(parameters.Network),
                 _network = parameters.Network
             });
@@ -101,6 +108,12 @@ namespace haechi.face.unity.sdk.Runtime
         public string ApiKey()
         {
             return this._parameters._apiKey;
+        }
+        
+        /// <returns>Return Private key.</returns>
+        public string PrivateKey()
+        {
+            return this._parameters._privateKey;
         }
         
         /// <returns> Return Blockchain such as Ethereum, Polygon etc.</returns>

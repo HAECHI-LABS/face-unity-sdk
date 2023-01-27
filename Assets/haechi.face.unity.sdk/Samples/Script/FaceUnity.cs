@@ -4,15 +4,11 @@ using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
-using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using UnityEngine;
-using WalletConnectSharp.Network.Models;
-using WalletConnectSharp.Sign.Models.Engine;
-using WalletConnectSharp.Sign.Models.Engine.Methods;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
@@ -20,6 +16,8 @@ namespace haechi.face.unity.sdk.Samples.Script
     {
         private static string SAMPLE_API_KEY =
             "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB";
+        private static string SAMPLE_PRIVATE_KEY = 
+            "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJLbedwNLvHyeZO4rUUU3QR9ijS+jrGFMEwE1ZVtCy5+/rRfyG/f5NsBDckjIwSEuj5z7fWhiu+tDQbZ72PzK8lgRScu4T49oAGjTLdXmb2D+p1MHmn14R+pmUOtxSXXNSvhbusnAXCROUAVIo6pUI+ebyjOZwzLKsQeCXYBt6GtAgMBAAECgYAEfQa9bf24UVPb6vIIwXl70KZvtD9CN7LhL+ijN4D2+9SnCKJkoPAqrV6Rfixsz+2tSPfF4RkQ+DYEtpZ1dJIq+kNxqRjb7TEHcduYYQwgkJZe2LPd1LS5bnvLGSbGMHHy7+MYNm6M/ghdHoDU+tkYLNFT19BX7MKbBWQPpoH/gQJBAJllv/CZQBhofxLZO0xsM8xcxTo3MFQoos89+Kdym+a8i/WqD49IgIsiK3adn/GCtjSeKJhPlrd5iNUqTBywUk0CQQD1Fdv9q++RmpuhD6LQtGzeeoNzld7xRjWjHVwHvp7/6xeSCyO8sHKydUF/NmV+Jy8vFpJn6b1AvagtgqALanzhAkBaP1eeWLsx4QCp+S3+90W+PPI4HtILIWEv5jjNYws/w7vgC25eEPy3XqINhgzcjNdfu5EMkv6L8S/Eob7nvgCdAkALF4ArTNq8xjiA44pE08WRlA3a7091r+3BghSmLRRZFLSuYV6urXWjafca4MVbHj7ebLEXjtaH1Y2E8cJ4gctBAkBPXs2bRZpI5ULwyYknWaq77gfuappmShgiCv7TUKixt5KqZy8DUU13x/WTUCWjthF/lmgkVq+FvsnG49dF8TM7";
         [SerializeField] internal DataDesignator dataDesignator;
         [SerializeField] internal InputDesignator inputDesignator;
         [SerializeField] internal Face face;
@@ -59,8 +57,11 @@ namespace haechi.face.unity.sdk.Samples.Script
         private FaceSettings.Parameters _getFaceSettingsInput()
         {
             string apiKey = this.inputDesignator.GetApiKey() != null
-                ? this.inputDesignator.GetApiKey().text 
+                ? this.inputDesignator.GetApiKey().text
                 : SAMPLE_API_KEY;
+            string privateKey = this.inputDesignator.GetPrivateKey() != null
+                ? this.inputDesignator.GetPrivateKey().text 
+                : SAMPLE_PRIVATE_KEY;
             Profile environment = this.inputDesignator.GetProfileDrd() != null
                 ? Profiles.ValueOf(this.inputDesignator.GetProfileDrd().captionText.text)
                 : Profile.ProdTest;
@@ -71,6 +72,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             return new FaceSettings.Parameters
             {
                 ApiKey = apiKey,
+                PrivateKey = privateKey,
                 Environment = environment,
                 Network = network
             };
@@ -107,7 +109,9 @@ namespace haechi.face.unity.sdk.Samples.Script
         public async Task LoginWithIdTokenAndGetBalanceAsync(string idToken)
         {
             Debug.Log("Start Login");
-            FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(idToken, this.inputDesignator.privateKey.text);
+            FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(
+                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(FaceSettings.Instance.PrivateKey(), idToken))
+            );
             string address = response.wallet.Address;
             Debug.Log("Login balance");
 
@@ -115,7 +119,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             
             Debug.Log("Login done");
 
-            var loginResult = new LoginResult(balance, response.faceUserId, address);
+            LoginResult loginResult = new LoginResult(balance, response.faceUserId, address);
             this.dataDesignator.SetLoggedInId(loginResult.userId);
             this.dataDesignator.SetLoggedInAddress(loginResult.userAddress);
             this.dataDesignator.SetCoinBalance(loginResult.balance);
