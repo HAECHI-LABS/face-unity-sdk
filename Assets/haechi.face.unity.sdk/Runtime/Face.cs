@@ -47,6 +47,8 @@ namespace haechi.face.unity.sdk.Runtime
                 this,
                 this._walletProxy);
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
+
+            this._registryFaceUnityScripts();
             
             Web3 web3 = new Web3(this.provider);
             this._wallet = new Wallet(this.provider);
@@ -98,6 +100,14 @@ namespace haechi.face.unity.sdk.Runtime
             }
 
             return this._auth;
+        }
+
+        private void _registryFaceUnityScripts()
+        {
+            if (gameObject.GetComponent<WalletConnect>() == null)
+            {
+                gameObject.AddComponent<WalletConnect>();
+            }
         }
 
     }
