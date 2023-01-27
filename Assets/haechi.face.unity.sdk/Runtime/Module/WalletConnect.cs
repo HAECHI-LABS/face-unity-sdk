@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,7 +28,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
         }
 
         private Queue<MessageEvent> messageQueue = new Queue<MessageEvent>();
-        private Queue<PairRequestEvent> requestPairEventQueue = new Queue<PairRequestEvent>();
         
         public delegate Task PersonalSignEvent<T>(string topic, WcRequestEvent<T> @event);
         private event PersonalSignEvent<string[]> _onPersonalSignRequest;
@@ -73,27 +73,41 @@ namespace haechi.face.unity.sdk.Runtime.Module
             _instance = this;
         }
 
-        public void RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
+        public async Task<Metadata> RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
         {
-            requestPairEventQueue.Enqueue(new PairRequestEvent()
-            {
-                address = address,
-                uri = wcUri,
-                confirmWalletConnectDapp = confirmWalletConnectDapp
-            });
+            Debug.Log("Start RequestPair");
+            return await _doPair(address, wcUri, confirmWalletConnectDapp);
         }
 
-        private async Task _doPair(PairRequestEvent @event)
+        private async Task<Metadata> _doPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, bool isRetry = false)
         {
-            ProposalStruct @struct = await wallet.Engine.Pair(new PairParams()
+            Debug.Log($"connect is {_isConnect}");
+            ProposalStruct @struct;
+            try
             {
-                Uri = @event.uri
-            });
-            FaceRpcResponse isConfirm = await @event.confirmWalletConnectDapp(@struct.Proposer.Metadata);
+                @struct = await wallet.Engine.Pair(new PairParams()
+                {
+                    Uri = wcUri
+                });
+            }
+            catch (WalletConnectException e)
+            {
+                Debug.LogWarning($"Wallet Connect Exception Try Reconnect :: {e}");
+                
+                if (isRetry)
+                {
+                    throw;
+                }
+
+                await this.wallet.Core.Relayer.Init();
+                return await _doPair(address, wcUri, confirmWalletConnectDapp, true);
+            }
+            FaceRpcResponse isConfirm = await confirmWalletConnectDapp(@struct.Proposer.Metadata);
             if (isConfirm.CastResult<bool>())
             {
-                var approveData = await wallet.Approve( @struct.ApproveProposal(@event.address));
+                var approveData = await wallet.Approve( @struct.ApproveProposal(address));
                 await approveData.Acknowledged();
+                return @struct.Proposer.Metadata;
             }
             else
             {
@@ -102,6 +116,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     Id = @struct.Id.Value,
                     Reason = ErrorResponse.FromErrorType(ErrorType.NOT_APPROVED)
                 });
+                return null;
             }
         }
 
@@ -127,12 +142,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
                         break;
                 }
             }
-
-            if (requestPairEventQueue.Count > 0)
-            {
-                PairRequestEvent @event = requestPairEventQueue.Dequeue();
-                StartCoroutine(pairWallet(@event));
-            }
         }
 
         public async Task Connect()
@@ -148,7 +157,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     Url = "https://facewallet.xyz/"
                 },
                 // Omit if you want persistant storage
-                Storage = new InMemoryStorage()
+                Storage = new FileSystemStorage(Application.persistentDataPath + "/wc")
             };
 
             try
@@ -166,6 +175,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
             catch (System.Exception e)
             {   
+                Debug.Log("Wallet Connect Error");
                 Debug.Log(e);
             }
         }
@@ -177,11 +187,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
         IEnumerator sendTransactionRequest(string topic, WcRequestEvent<SendTransaction[]> @event)
         {
             yield return _onSendTransactionEvent(topic, @event);
-        }
-
-        IEnumerator pairWallet(PairRequestEvent @event)
-        {
-            yield return _doPair(@event);
         }
     }
 }

@@ -122,7 +122,7 @@ namespace haechi.face.unity.sdk.Runtime
         
         private readonly Dictionary<Profile, string> _webviewHostMap = new Dictionary<Profile, string>
         {
-            { Profile.Local, "http://localhost:3333" },
+            { Profile.Local,  "http://localhost:3333" },
             { Profile.Dev, "https://app.dev.facewallet.xyz" },
             { Profile.StageTest, "https://app.stage-test.facewallet.xyz" },
             { Profile.StageMainnet, "https://app.stage.facewallet.xyz" },

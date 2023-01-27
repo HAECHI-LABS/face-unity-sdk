@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
+using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
@@ -89,10 +90,14 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         } 
-        
-        private async Task<FaceRpcResponse> _signMessage(string rawMessage)
+
+        private async Task<FaceRpcResponse> _signMessageWithMetadata(string message, Metadata metadata)
         {
-            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.personal_sign, rawMessage);
+            WcFaceRpcRequest<string> rpcRequest = 
+                new WcFaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+                FaceRpcMethod.personal_sign,
+                WcFaceMetadata.Converted(metadata),
+                message);
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         
@@ -162,8 +167,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private void _registryWalletConnectEvent()
         {
             this._walletConnect.OnPersonalSignRequest += async (topic, @event) =>
-            { 
-                var response = await _signMessage(@event.Params.Request.Params[0]);
+            {
+                var dappMetadata = _walletConnect.wallet.Session.Get(topic).Peer.Metadata;
+                var response = await _signMessageWithMetadata(@event.Params.Request.Params[0], dappMetadata);
                 _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
                 {
                     Topic = topic,
@@ -196,7 +202,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// Connect Face with Opensea via WalletConnect.
         /// </summary>
         /// <param name="collectionName">Blockchain network.</param>
-        public async void ConnectOpenSea(string address)
+        public async Task<Metadata> ConnectOpenSea(string address)
         { 
              string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
                 ? "https://opensea.io/"
@@ -207,8 +213,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
-             
-             this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+             Debug.Log($"wc uri: {wcUri}");
+             var dappMetadata = await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+             return dappMetadata;
 #endif
         } 
         
@@ -218,7 +225,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <param name="dappName">dapp name to connect.</param>
         /// <param name="dappUrl">dapp url to connect.</param>
         /// <param name="address">wallet address to connect.</param>
-        public async void ConnectWallet(string dappName,string dappUrl, string address)
+        public async Task<Metadata> ConnectDappWithWalletConnect(string dappName,string dappUrl, string address)
         { 
              FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
                  FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
@@ -229,7 +236,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
-             this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+             var dappMetadata = await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+             return dappMetadata;
 #endif
         }
         
