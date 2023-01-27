@@ -109,7 +109,9 @@ namespace haechi.face.unity.sdk.Samples.Script
         public async Task LoginWithIdTokenAndGetBalanceAsync(string idToken)
         {
             Debug.Log("Start Login");
-            FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(idToken, RsaSigner.Sign(FaceSettings.Instance.PrivateKey(), idToken));
+            FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(
+                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(FaceSettings.Instance.PrivateKey(), idToken))
+            );
             string address = response.wallet.Address;
             Debug.Log("Login balance");
 
@@ -117,7 +119,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             
             Debug.Log("Login done");
 
-            var loginResult = new LoginResult(balance, response.faceUserId, address);
+            LoginResult loginResult = new LoginResult(balance, response.faceUserId, address);
             this.dataDesignator.SetLoggedInId(loginResult.userId);
             this.dataDesignator.SetLoggedInAddress(loginResult.userAddress);
             this.dataDesignator.SetCoinBalance(loginResult.balance);

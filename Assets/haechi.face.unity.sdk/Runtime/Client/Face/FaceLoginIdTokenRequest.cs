@@ -12,5 +12,11 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         
         [JsonProperty("sig")]
         public string Sig { get; set; }
+
+        public FaceLoginIdTokenRequest(string idToken, string sig)
+        {
+            this.IdToken = idToken;
+            this.Sig = sig;
+        }
     }
 }

@@ -57,13 +57,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
         /// </returns>
         /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
-        public async Task<FaceLoginResponse> LoginWithIdToken(string idToken, string sig)
+        public async Task<FaceLoginResponse> LoginWithIdToken(FaceLoginIdTokenRequest loginIdTokenRequest)
         {
-            return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, 
-                new []{new FaceLoginIdTokenRequest{
-                                        IdToken = idToken,
-                                        Sig = sig
-                                    }});
+            return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, loginIdTokenRequest);
         }
 
         private async Task<FaceLoginResponse> _login(FaceRpcMethod method, params string[] parameterList)
