@@ -10,12 +10,13 @@ using haechi.face.unity.sdk.Runtime.Type;
 using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
     internal static class SafeWebviewProtocol
     {
-        public static string Scheme = "facewebview";
+        public static string Scheme = Application.identifier;
         
         public static string EncodeQueryParams(Parameters parameters)
         {
