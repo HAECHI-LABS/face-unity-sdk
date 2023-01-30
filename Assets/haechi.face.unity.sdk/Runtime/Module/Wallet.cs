@@ -212,10 +212,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
              string encodedWcUri = response.Result.Value<string>("uri");
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
-             Debug.Log($"wc uri: {wcUri}");
-             var dappMetadata =
- await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
-             return dappMetadata;
+             try
+             {
+                 var dappMetadata =
+                     await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+                 return dappMetadata;
+             }
+             catch (System.Exception e)
+             {
+                 return await ConnectOpenSea(address);
+             }
 #endif
              return null;
         } 
@@ -236,9 +242,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
              byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
              string wcUri = Encoding.UTF8.GetString(wcUriBytes);
 
-             var dappMetadata =
- await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
-             return dappMetadata;
+             try
+             {
+                 var dappMetadata =
+                     await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+                 return dappMetadata;
+             }
+             catch (System.Exception e)
+             {
+                 return await ConnectDappWithWalletConnect(dappName, dappName, address);
+             }
 #endif
              return null;
         }
