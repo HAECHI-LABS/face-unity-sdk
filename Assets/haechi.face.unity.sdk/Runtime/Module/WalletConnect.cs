@@ -7,6 +7,7 @@ using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
 using Newtonsoft.Json;
 using UnityEngine;
 using WalletConnectSharp.Common.Model.Errors;
+using WalletConnectSharp.Common.Utils;
 using WalletConnectSharp.Core.Models.Relay;
 using WalletConnectSharp.Network.Models;
 using WalletConnectSharp.Sign;
@@ -75,37 +76,25 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task<Metadata> RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
         {
-            Debug.Log("Start RequestPair");
             return await _doPair(address, wcUri, confirmWalletConnectDapp);
         }
 
         private async Task<Metadata> _doPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, bool isRetry = false)
         {
-            Debug.Log($"connect is {_isConnect}");
-            ProposalStruct @struct;
+            ProposalStruct @struct = new ProposalStruct();
             try
             {
-                @struct = await wallet.Engine.Pair(new PairParams()
-                {
-                    Uri = wcUri
-                });
+                @struct = await wallet.Pair(wcUri).WithTimeout(10000);
             }
-            catch (WalletConnectException e)
+            catch (System.Exception e)
             {
-                Debug.LogWarning($"Wallet Connect Exception Try Reconnect :: {e}");
-                
-                if (isRetry)
-                {
-                    throw;
-                }
-
-                await this.wallet.Core.Relayer.Init();
-                return await _doPair(address, wcUri, confirmWalletConnectDapp, true);
+                throw e;
             }
+            
             FaceRpcResponse isConfirm = await confirmWalletConnectDapp(@struct.Proposer.Metadata);
             if (isConfirm.CastResult<bool>())
             {
-                var approveData = await wallet.Approve( @struct.ApproveProposal(address));
+                IApprovedData approveData = await wallet.Approve( @struct.ApproveProposal(address));
                 await approveData.Acknowledged();
                 return @struct.Proposer.Metadata;
             }
@@ -125,19 +114,19 @@ namespace haechi.face.unity.sdk.Runtime.Module
             if (messageQueue.Count > 0)
             {
                 MessageEvent message = messageQueue.Dequeue();
-                var payload = _walletClient.Core.Crypto
+                string payload = _walletClient.Core.Crypto
                     .Decrypt(message.Topic, message.Message)
                     .Result;
-                var json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
+                WcRequestEvent<object> json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
 
                 switch (json.Params.Request.Method)
                 {
                     case "personal_sign":
-                        var personalSignEvent = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
+                        WcRequestEvent<string[]> personalSignEvent = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
                         StartCoroutine(personalSignRequest(message.Topic, personalSignEvent));
                         break;
                     case "eth_sendTransaction":
-                        var sendTransactionEvent = JsonConvert.DeserializeObject<WcRequestEvent<SendTransaction[]>>(payload);
+                        WcRequestEvent<SendTransaction[]> sendTransactionEvent = JsonConvert.DeserializeObject<WcRequestEvent<SendTransaction[]>>(payload);
                         StartCoroutine(sendTransactionRequest(message.Topic,  sendTransactionEvent));
                         break;
                 }

@@ -83,6 +83,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             return;
 #elif UNITY_EDITOR || UNITY_STANDALONE
             redirectUri = LocalTestWebServer.Start(this);
+#elif UNITY_ANDROID || UNITY_IOS
+            redirectUri = $"{FaceSettings.Instance.Scheme()}://{FaceSettings.Instance.Scheme()}" ;
 #endif
             
             string queryParams = SafeWebviewProtocol.EncodeQueryParams(new SafeWebviewProtocol.Parameters
