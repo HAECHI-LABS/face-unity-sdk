@@ -16,7 +16,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 {
     internal static class SafeWebviewProtocol
     {
-        public static string Scheme = Application.identifier;
+        public static string Scheme = FaceSettings.Instance.Scheme();
         
         public static string EncodeQueryParams(Parameters parameters)
         {

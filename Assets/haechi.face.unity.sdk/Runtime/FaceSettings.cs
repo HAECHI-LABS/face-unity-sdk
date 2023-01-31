@@ -27,6 +27,11 @@ namespace haechi.face.unity.sdk.Runtime
             /// Blockchain Network such as Goerli, Mumbai, Ethereum etc.
             /// </value>
             public BlockchainNetwork Network;
+
+            /// <value>
+            /// Deeplink scheme used on webview (only used android)
+            /// </value>
+            public string Scheme;
         }
 
         private struct parameters
@@ -35,6 +40,7 @@ namespace haechi.face.unity.sdk.Runtime
             public string _privateKey;
             public Profile _environment;
             public BlockchainNetwork _network;
+            public string _scheme;
         }
         
         private static FaceSettings instance;
@@ -60,7 +66,8 @@ namespace haechi.face.unity.sdk.Runtime
                 _apiKey = parameters.ApiKey,
                 _privateKey = parameters.PrivateKey,
                 _environment = parameters.Environment ?? _getDefaultProfile(parameters.Network),
-                _network = parameters.Network
+                _network = parameters.Network,
+                _scheme = parameters.Scheme
             });
         }
 
@@ -126,6 +133,12 @@ namespace haechi.face.unity.sdk.Runtime
         public BlockchainNetwork Network()
         {
             return this._parameters._network;
+        }
+
+        /// <returns> Return Deeplink Scheme</returns>
+        public string Scheme()
+        {
+            return this._parameters._scheme;
         }
 
         public void SetNetwork(BlockchainNetwork network)

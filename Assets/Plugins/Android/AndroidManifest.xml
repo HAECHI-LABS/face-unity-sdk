@@ -10,8 +10,8 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="facewebview" android:host="facewebview" />
-        <data android:scheme="xyz.facewallet.dev.app" android:host="xyz.facewallet.dev.app" />
+        <data android:scheme="faceunity" android:host="faceunity" />
+        <data android:scheme="faceunitydev" android:host="faceunitydev" />
       </intent-filter>
     </activity>
   </application>
