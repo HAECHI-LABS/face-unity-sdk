@@ -94,7 +94,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcResponse isConfirm = await confirmWalletConnectDapp(@struct.Proposer.Metadata);
             if (isConfirm.CastResult<bool>())
             {
-                var approveData = await wallet.Approve( @struct.ApproveProposal(address));
+                IApprovedData approveData = await wallet.Approve( @struct.ApproveProposal(address));
                 await approveData.Acknowledged();
                 return @struct.Proposer.Metadata;
             }
@@ -114,19 +114,19 @@ namespace haechi.face.unity.sdk.Runtime.Module
             if (messageQueue.Count > 0)
             {
                 MessageEvent message = messageQueue.Dequeue();
-                var payload = _walletClient.Core.Crypto
+                string payload = _walletClient.Core.Crypto
                     .Decrypt(message.Topic, message.Message)
                     .Result;
-                var json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
+                WcRequestEvent<object> json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
 
                 switch (json.Params.Request.Method)
                 {
                     case "personal_sign":
-                        var personalSignEvent = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
+                        WcRequestEvent<string[]> personalSignEvent = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
                         StartCoroutine(personalSignRequest(message.Topic, personalSignEvent));
                         break;
                     case "eth_sendTransaction":
-                        var sendTransactionEvent = JsonConvert.DeserializeObject<WcRequestEvent<SendTransaction[]>>(payload);
+                        WcRequestEvent<SendTransaction[]> sendTransactionEvent = JsonConvert.DeserializeObject<WcRequestEvent<SendTransaction[]>>(payload);
                         StartCoroutine(sendTransactionRequest(message.Topic,  sendTransactionEvent));
                         break;
                 }

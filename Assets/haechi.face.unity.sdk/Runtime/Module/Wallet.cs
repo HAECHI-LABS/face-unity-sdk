@@ -168,8 +168,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             this._walletConnect.OnPersonalSignRequest += async (topic, @event) =>
             {
-                var dappMetadata = _walletConnect.wallet.Session.Get(topic).Peer.Metadata;
-                var response = await _signMessageWithMetadata(@event.Params.Request.Params[0], dappMetadata);
+                Metadata dappMetadata = _walletConnect.wallet.Session.Get(topic).Peer.Metadata;
+                FaceRpcResponse response = await _signMessageWithMetadata(@event.Params.Request.Params[0], dappMetadata);
                 _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
                 {
                     Topic = topic,
@@ -183,7 +183,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             };
             this._walletConnect.OnSendTransactionEvent += async (topic, @event) =>
             {
-                var response = await SendTransaction(@event.Params.Request.Params[0]);
+                TransactionRequestId response = await SendTransaction(@event.Params.Request.Params[0]);
                 _walletConnect.wallet.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
                 {
                     Topic = topic,
@@ -207,23 +207,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
              string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
                 ? "https://opensea.io/"
                 : "https://testnets.opensea.io/";
-             FaceRpcResponse response = await _openWalletConnect("OpenSea", hostname);
-#if !UNITY_WEBGL
-             string encodedWcUri = response.Result.Value<string>("uri");
-             byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
-             string wcUri = Encoding.UTF8.GetString(wcUriBytes);
-             try
-             {
-                 var dappMetadata =
-                     await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
-                 return dappMetadata;
-             }
-             catch (System.Exception e)
-             {
-                 return await ConnectOpenSea(address);
-             }
-#endif
-             return null;
+             
+             return await this._connectDappWithWalletConnect("OpenSea", hostname, address);
         } 
         
         /// <summary>
@@ -233,34 +218,38 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <param name="dappUrl">dapp url to connect.</param>
         /// <param name="address">wallet address to connect.</param>
         public async Task<Metadata> ConnectDappWithWalletConnect(string dappName,string dappUrl, string address)
-        { 
-             FaceRpcRequest<String> rpcRequest = new FaceRpcRequest<String>(FaceSettings.Instance.Blockchain(), 
-                 FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
-             FaceRpcResponse response = await _provider.SendFaceRpcAsync(rpcRequest);
-#if !UNITY_WEBGL
-             string encodedWcUri = response.Result.Value<string>("uri");
-             byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
-             string wcUri = Encoding.UTF8.GetString(wcUriBytes);
-
-             try
-             {
-                 var dappMetadata =
-                     await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
-                 return dappMetadata;
-             }
-             catch (System.Exception e)
-             {
-                 return await ConnectDappWithWalletConnect(dappName, dappName, address);
-             }
-#endif
-             return null;
+        {
+            return await _connectDappWithWalletConnect(dappName, dappUrl, address);
         }
-        
-        private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl)
+
+        private async Task<Metadata> _connectDappWithWalletConnect(string dappName,string dappUrl, string address, string status = null)
+        {
+            FaceRpcResponse response = await this._openWalletConnect(dappName, dappUrl, status);
+            
+#if !UNITY_WEBGL
+            string encodedWcUri = response.Result.Value<string>("uri");
+            byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
+            string wcUri = Encoding.UTF8.GetString(wcUriBytes);
+
+            try
+            {
+                Metadata dappMetadata =
+                    await this._walletConnect.RequestPair(address, wcUri,  async metadata => await this._confirmWalletConnectDapp(metadata));
+                return dappMetadata;
+            }
+            catch (System.Exception e)
+            {
+                return await _connectDappWithWalletConnect(dappName, dappName, address, "invalid");
+            }
+#endif
+            return null;
+        }
+
+        private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl, string status = null)
         {
             FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
-
+            
             return await _provider.SendFaceRpcAsync(faceRpcRequest);
         }
 
