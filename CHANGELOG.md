@@ -1,4 +1,20 @@
 
+<a name="1.1.4"></a>
+## Release: [1.1.4](https://github.com/HAECHI-LABS/core/releases/tag/1.1.4)
+### Features
+- Move private key to sample
+- Add wallet connect error
+- Add custom scheme at face initialize
+- Change webview deeplink scheme
+- Add wallet connect exception
+
+### Bug Fixes
+- Check private key null error on production sample dapp
+
+### Code Refactoring
+- Remove var keyword
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
