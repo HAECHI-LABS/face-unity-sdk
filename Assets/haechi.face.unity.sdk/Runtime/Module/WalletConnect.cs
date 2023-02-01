@@ -84,10 +84,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
             ProposalStruct @struct = new ProposalStruct();
             try
             {
-                @struct = await wallet.Pair(wcUri).WithTimeout(10000);
+                @struct = await wallet.Pair(wcUri).WithTimeout(5000);
             }
             catch (System.Exception e)
             {
+                await wallet.Core.Relayer.Init();
                 throw e;
             }
             

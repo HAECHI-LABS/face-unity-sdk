@@ -12,7 +12,7 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 using UnityEngine;
 
-namespace haechi.face.unity.sdk.Runtime.Utils
+namespace haechi.face.unity.sdk.Samples.Script
 {
     public class RsaSigner : MonoBehaviour
     {
