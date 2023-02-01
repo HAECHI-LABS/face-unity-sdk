@@ -88,6 +88,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
             catch (System.Exception e)
             {
+                await wallet.Core.Relayer.Init();
                 throw e;
             }
             

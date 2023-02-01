@@ -222,9 +222,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await _connectDappWithWalletConnect(dappName, dappUrl, address);
         }
 
-        private async Task<Metadata> _connectDappWithWalletConnect(string dappName,string dappUrl, string address, string status = null)
+        private async Task<Metadata> _connectDappWithWalletConnect(string dappName,string dappUrl, string address, bool invalid = false)
         {
-            FaceRpcResponse response = await this._openWalletConnect(dappName, dappUrl, status);
+            FaceRpcResponse response = await this._openWalletConnect(dappName, dappUrl, invalid);
             
 #if !UNITY_WEBGL
             string encodedWcUri = response.Result.Value<string>("uri");
@@ -239,16 +239,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
             catch (System.Exception e)
             {
-                return await _connectDappWithWalletConnect(dappName, dappName, address, "invalid");
+                return await _connectDappWithWalletConnect(dappName, dappName, address, true);
             }
 #endif
             return null;
         }
 
-        private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl, string status = null)
+        private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl, bool invalid = false)
         {
             FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
-                FaceRpcMethod.face_openWalletConnect, dappName, dappUrl);
+                FaceRpcMethod.face_openWalletConnect, dappName, dappUrl, (invalid ? "invalid" : null));
             
             return await _provider.SendFaceRpcAsync(faceRpcRequest);
         }
