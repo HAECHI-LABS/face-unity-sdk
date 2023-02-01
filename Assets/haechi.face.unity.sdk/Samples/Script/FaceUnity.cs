@@ -67,7 +67,6 @@ namespace haechi.face.unity.sdk.Samples.Script
                 : BlockchainNetworks.ValueOf(this.inputDesignator.GetNetworkDrd().captionText.text);
             string scheme = Application.identifier == "xyz.facewallet.unity.dev" ? "faceunity" : "faceunitydev";
             
-            
             return new FaceSettings.Parameters
             {
                 ApiKey = apiKey,
@@ -108,8 +107,12 @@ namespace haechi.face.unity.sdk.Samples.Script
         public async Task LoginWithIdTokenAndGetBalanceAsync(string idToken)
         {
             Debug.Log("Start Login");
+
             FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(
-                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(this.inputDesignator.GetPrivateKey().text, idToken))
+                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(
+                    (this.inputDesignator.GetPrivateKey() == null
+                        ? SAMPLE_PRIVATE_KEY
+                        : this.inputDesignator.GetPrivateKey().text), idToken))
             );
             string address = response.wallet.Address;
             Debug.Log("Login balance");
