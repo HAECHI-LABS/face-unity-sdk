@@ -59,9 +59,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             string apiKey = this.inputDesignator.GetApiKey() != null
                 ? this.inputDesignator.GetApiKey().text
                 : SAMPLE_API_KEY;
-            string privateKey = this.inputDesignator.GetPrivateKey() != null
-                ? this.inputDesignator.GetPrivateKey().text 
-                : SAMPLE_PRIVATE_KEY;
             Profile environment = this.inputDesignator.GetProfileDrd() != null
                 ? Profiles.ValueOf(this.inputDesignator.GetProfileDrd().captionText.text)
                 : Profile.ProdTest;
@@ -74,7 +71,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             return new FaceSettings.Parameters
             {
                 ApiKey = apiKey,
-                PrivateKey = privateKey,
                 Environment = environment,
                 Network = network,
                 Scheme = scheme
@@ -113,7 +109,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             Debug.Log("Start Login");
             FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(
-                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(FaceSettings.Instance.PrivateKey(), idToken))
+                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(this.inputDesignator.GetPrivateKey().text, idToken))
             );
             string address = response.wallet.Address;
             Debug.Log("Login balance");
