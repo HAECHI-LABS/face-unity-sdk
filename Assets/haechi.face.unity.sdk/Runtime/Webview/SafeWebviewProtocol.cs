@@ -31,7 +31,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"env={parameters.Env}&" +
                    $"blockchain={parameters.Blockchain}&" +
                    $"hostname={parameters.Hostname}&" +
-                   (!string.IsNullOrEmpty(parameters.Schema) ? $"schema={parameters.Schema}&" : "")+
+                   (!string.IsNullOrEmpty(parameters.RedirectUrl) ? $"redirectUrl={parameters.RedirectUrl}&" : "")+
                    $"webview_version={Face.WEBVIEW_VERSION}";
         }
 
@@ -78,7 +78,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             public Profile Env;
             public Blockchain Blockchain;
             public string Hostname;
-            [CanBeNull] public string Schema;
+            [CanBeNull] public string RedirectUrl;
         }
     }
 }

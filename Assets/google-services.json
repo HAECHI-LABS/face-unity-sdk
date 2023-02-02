@@ -48,6 +48,50 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965931844205:android:60da4718b53e39d6cd7564",
+        "android_client_info": {
+          "package_name": "xyz.facewallet.unity.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965931844205-jofep8gd7g0q6su29fbv8ih4qhc206tj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.facewallet.unity.app",
+            "certificate_hash": "452340e3146fc76468f5edaff99da490cdc02fb7"
+          }
+        },
+        {
+          "client_id": "965931844205-q64ebkmn6atutksvi6b0rv2hkdm9gor5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7gdz9_UY4ShuB98heKIw8XH27YMA30qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "965931844205-q64ebkmn6atutksvi6b0rv2hkdm9gor5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "965931844205-tt978gju3l3fa97amqp431falebfrqu7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "xyz.facewallet.dev.app"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
