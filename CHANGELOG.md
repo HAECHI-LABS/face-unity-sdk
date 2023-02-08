@@ -1,4 +1,10 @@
 
+<a name="1.2.0"></a>
+## Release: [1.2.0](https://github.com/HAECHI-LABS/core/releases/tag/1.2.0)
+### Features
+- Change schema to redirectUrl in Face RPC Protocol
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
