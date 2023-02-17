@@ -9,7 +9,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
         ETHEREUM,
         POLYGON,
         BNB_SMART_CHAIN,
-        KLAYTN
+        KLAYTN,
+        MEVERSE,
     }
 
     public static class Blockchains
@@ -34,6 +35,10 @@ namespace haechi.face.unity.sdk.Runtime.Type
                     return Blockchain.KLAYTN;
                 case BlockchainNetwork.BAOBAB:
                     return Blockchain.KLAYTN;
+                case BlockchainNetwork.MEVERSE:
+                    return Blockchain.MEVERSE;
+                case BlockchainNetwork.MEVERSE_TESTNET:
+                    return Blockchain.MEVERSE;
                 default:
                     throw new InvalidEnumArgumentException();
             }
@@ -88,6 +93,17 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageMainnet, BlockchainNetwork.POLYGON },
                         { Profile.ProdTest, BlockchainNetwork.MUMBAI },
                         { Profile.ProdMainnet, BlockchainNetwork.POLYGON }
+                    }
+                },
+                {
+                    Blockchain.MEVERSE, new Dictionary<Profile, BlockchainNetwork>
+                    {
+                        { Profile.Local, BlockchainNetwork.MEVERSE_TESTNET },
+                        { Profile.Dev, BlockchainNetwork.MEVERSE_TESTNET },
+                        { Profile.StageTest, BlockchainNetwork.MEVERSE_TESTNET },
+                        { Profile.StageMainnet, BlockchainNetwork.MEVERSE },
+                        { Profile.ProdTest, BlockchainNetwork.MEVERSE_TESTNET },
+                        { Profile.ProdMainnet, BlockchainNetwork.MEVERSE }
                     }
                 }
             };

@@ -69,7 +69,8 @@ namespace haechi.face.unity.sdk.Runtime
             if (blockchainNetwork.Equals(BlockchainNetwork.BAOBAB) || 
                 blockchainNetwork.Equals(BlockchainNetwork.GOERLI) || 
                 blockchainNetwork.Equals(BlockchainNetwork.MUMBAI) || 
-                blockchainNetwork.Equals(BlockchainNetwork.BNB_SMART_CHAIN_TESTNET))
+                blockchainNetwork.Equals(BlockchainNetwork.BNB_SMART_CHAIN_TESTNET) ||
+                blockchainNetwork.Equals(BlockchainNetwork.MEVERSE_TESTNET))
             {
                 return Profile.ProdTest;
             }

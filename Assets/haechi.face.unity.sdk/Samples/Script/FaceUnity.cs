@@ -9,19 +9,22 @@ using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
     public class FaceUnity : MonoBehaviour
     {
-        private static string SAMPLE_API_KEY =
-            "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB";
-        private static string SAMPLE_PRIVATE_KEY = 
-            "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJLbedwNLvHyeZO4rUUU3QR9ijS+jrGFMEwE1ZVtCy5+/rRfyG/f5NsBDckjIwSEuj5z7fWhiu+tDQbZ72PzK8lgRScu4T49oAGjTLdXmb2D+p1MHmn14R+pmUOtxSXXNSvhbusnAXCROUAVIo6pUI+ebyjOZwzLKsQeCXYBt6GtAgMBAAECgYAEfQa9bf24UVPb6vIIwXl70KZvtD9CN7LhL+ijN4D2+9SnCKJkoPAqrV6Rfixsz+2tSPfF4RkQ+DYEtpZ1dJIq+kNxqRjb7TEHcduYYQwgkJZe2LPd1LS5bnvLGSbGMHHy7+MYNm6M/ghdHoDU+tkYLNFT19BX7MKbBWQPpoH/gQJBAJllv/CZQBhofxLZO0xsM8xcxTo3MFQoos89+Kdym+a8i/WqD49IgIsiK3adn/GCtjSeKJhPlrd5iNUqTBywUk0CQQD1Fdv9q++RmpuhD6LQtGzeeoNzld7xRjWjHVwHvp7/6xeSCyO8sHKydUF/NmV+Jy8vFpJn6b1AvagtgqALanzhAkBaP1eeWLsx4QCp+S3+90W+PPI4HtILIWEv5jjNYws/w7vgC25eEPy3XqINhgzcjNdfu5EMkv6L8S/Eob7nvgCdAkALF4ArTNq8xjiA44pE08WRlA3a7091r+3BghSmLRRZFLSuYV6urXWjafca4MVbHj7ebLEXjtaH1Y2E8cJ4gctBAkBPXs2bRZpI5ULwyYknWaq77gfuappmShgiCv7TUKixt5KqZy8DUU13x/WTUCWjthF/lmgkVq+FvsnG49dF8TM7";
         [SerializeField] internal DataDesignator dataDesignator;
         [SerializeField] internal InputDesignator inputDesignator;
         [SerializeField] internal Face face;
         [SerializeField] internal ActionQueue actionQueue;
+        [SerializeField] private SampleDappData sampleDappData;
+        
+        // TODO: 이벤트 를 통해 UI 부분을 다루는 InputDesignator, DataDesignator 와 dependency 없애기
+        // TODO: 필요한 데이터는 데이터 모델 (SampleDappData) 에서 가져오기
+        [Header("Broadcast to")] 
+        [SerializeField] private VoidEventChannelSO ConnectToBlockchainNetwork = default;
 
         private void Start()
         {
@@ -30,14 +33,17 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public void InitializeFace()
         {
-            this.face.Initialize(this._getFaceSettingsInput());
+            this.face.Initialize(this.sampleDappData.Parameters());
             this.dataDesignator.SetLoginInstruction();
             this.inputDesignator.SetWalletConnectedInputStatus();
+            
+            this.ConnectToBlockchainNetwork.RaiseEvent();
         }
         
         public void SwitchNetwork()
         {
             Task<string> responseTask = this._switchNetworkAndGetBalanceAsync();
+            this.ConnectToBlockchainNetwork.RaiseEvent();
 
             this.actionQueue.Enqueue(responseTask, balance =>
             {
@@ -48,32 +54,10 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         private async Task<string> _switchNetworkAndGetBalanceAsync()
         {
-            FaceSettings.Parameters faceSettings = this._getFaceSettingsInput();
+            FaceSettings.Parameters faceSettings = this.sampleDappData.Parameters();
             await this.face.Wallet().SwitchNetwork(faceSettings.Network);
             string balance = await this._getBalance(this.dataDesignator.loggedInAddress.text);
             return balance;
-        }
-
-        private FaceSettings.Parameters _getFaceSettingsInput()
-        {
-            string apiKey = this.inputDesignator.GetApiKey() != null
-                ? this.inputDesignator.GetApiKey().text
-                : SAMPLE_API_KEY;
-            Profile environment = this.inputDesignator.GetProfileDrd() != null
-                ? Profiles.ValueOf(this.inputDesignator.GetProfileDrd().captionText.text)
-                : Profile.ProdTest;
-            BlockchainNetwork network = this.inputDesignator.GetBlockchainDrd() != null && this.inputDesignator.GetProfileDrd() != null
-                ? BlockchainNetworks.GetNetwork(this.inputDesignator.GetBlockchainDrd().captionText.text, this.inputDesignator.GetProfileDrd().captionText.text)
-                : BlockchainNetworks.ValueOf(this.inputDesignator.GetNetworkDrd().captionText.text);
-            string scheme = Application.identifier == "xyz.facewallet.unity.dev" ? "faceunity" : "faceunitydev";
-            
-            return new FaceSettings.Parameters
-            {
-                ApiKey = apiKey,
-                Environment = environment,
-                Network = network,
-                Scheme = scheme
-            };
         }
 
         public void LoginAndGetBalance()
@@ -111,7 +95,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(
                 new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(
                     (this.inputDesignator.GetPrivateKey() == null
-                        ? SAMPLE_PRIVATE_KEY
+                        ? this.sampleDappData.SamplePrivateKey
                         : this.inputDesignator.GetPrivateKey().text), idToken))
             );
             string address = response.wallet.Address;
