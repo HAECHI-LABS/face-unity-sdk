@@ -20172,6 +20172,8 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: BAOBAB
       m_Image: {fileID: 0}
+    - m_Text: MEVERSE_TESTNET
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

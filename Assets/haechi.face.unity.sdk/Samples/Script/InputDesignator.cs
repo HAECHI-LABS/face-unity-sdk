@@ -111,6 +111,12 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeErc20TokenAddress.text = contractData.ERC20Decimal18.ToLower();
             this.landscapeErc721NftAddress.text = contractData.ERC721.ToLower();
             this.landscapeErc1155NftAddress.text = contractData.ERC1155.ToLower();
+            
+            // web
+            this.webErc20BalanceInquiryAddress.text = contractData.ERC20Decimal18.ToLower();
+            this.webErc20TokenAddress.text = contractData.ERC20Decimal18.ToLower();
+            this.webErc721NftAddress.text = contractData.ERC721.ToLower();
+            this.webErc1155NftAddress.text = contractData.ERC1155.ToLower();
         }
 
         private void Start()
