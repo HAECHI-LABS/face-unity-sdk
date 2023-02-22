@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d75ca9edd2b4e28b50b6cd7ff60c230, type: 3}
+  m_Name: Contracts
+  m_EditorClassIdentifier: 
+  contractDataList:
+  - blockchainNetwork: 0
+    erc20Decimal18ContractAddress: 0x8A904F0Fb443D62B6A2835483b087aBECF93a137
+    erc20Decimal6ContractAddress: TODO
+    erc721ContractAddress: TODO
+    erc1155ContractAddress: TODO
+  - blockchainNetwork: 1
+    erc20Decimal18ContractAddress: 0xB112d79fc314E1F6901984F0b4fA7680057BFB63
+    erc20Decimal6ContractAddress: 0xE54b3408C4c8C034e700A8af0Cbc8c9622037eC6
+    erc721ContractAddress: 0xdb8f0880a8516A42d4b5F6463CB7EBe969102d6e
+    erc1155ContractAddress: 0x21af2e7801eCb07C377f6104e139FDcE5CDf1C35
+  - blockchainNetwork: 2
+    erc20Decimal18ContractAddress: 0xfce04dd232006d0da001f6d54bb5a7fc969dbc08
+    erc20Decimal6ContractAddress: TODO
+    erc721ContractAddress: TODO
+    erc1155ContractAddress: TODO
+  - blockchainNetwork: 3
+    erc20Decimal18ContractAddress: 0xfce04dd232006d0da001f6d54bb5a7fc969dbc08
+    erc20Decimal6ContractAddress: 0xDF152758ce04EcEdfD9642c42b9Ce3090B68Ac2D
+    erc721ContractAddress: 0x1CB4d2F2055299ca23BC310260ABaf72C5ACe800
+    erc1155ContractAddress: 0x174d83e7547624fc9239b68b6ebd685822ef8de9
+  - blockchainNetwork: 4
+    erc20Decimal18ContractAddress: 0xab3e0c68e867f1c81a6660960fdfcf53402b33bf
+    erc20Decimal6ContractAddress: 0xe63c2f4bdd0df2b18b0a4e0210d4b1e95a23dff9
+    erc721ContractAddress: 0xb3484b204c96b366e1004e94bc50fe637322da47
+    erc1155ContractAddress: TODO
+  - blockchainNetwork: 5
+    erc20Decimal18ContractAddress: 0x4c253d0f5de4dac61c5355aaa3efe0872dfadfff
+    erc20Decimal6ContractAddress: 0x21881fbff62d55b19b5ded57d8c5dc014da04ea2
+    erc721ContractAddress: 0x2d65997da649f79ff79ac49501d786cc4973a715
+    erc1155ContractAddress: 0x6631af506cdc0c78f62cee6913d081a0f50a8707
+  - blockchainNetwork: 6
+    erc20Decimal18ContractAddress: 0xab3e0c68e867f1c81a6660960fdfcf53402b33bf
+    erc20Decimal6ContractAddress: 0xb3484b204c96b366e1004e94bc50fe637322da47
+    erc721ContractAddress: 0xa2fab648f2cfd5cea88492808214fce0cca15b5e
+    erc1155ContractAddress: TODO
+  - blockchainNetwork: 7
+    erc20Decimal18ContractAddress: 0xb5567463c35dE682072A669425d6776B178Be3E4
+    erc20Decimal6ContractAddress: 0x4C253D0f5De4dAC61c5355aaA3EFe0872dfaDFfF
+    erc721ContractAddress: 0x7059f425113f6630bd3871d778f0c289939a0da8
+    erc1155ContractAddress: 0x73b4c267cb84f8437d0cf89c2c98d687d2543a34
+  - blockchainNetwork: 8
+    erc20Decimal18ContractAddress: TODO
+    erc20Decimal6ContractAddress: TODO
+    erc721ContractAddress: TODO
+    erc1155ContractAddress: TODO
+  - blockchainNetwork: 9
+    erc20Decimal18ContractAddress: 0x63C1664c1Ee107D762C7ed7517Ca1cD25bc33C0b
+    erc20Decimal6ContractAddress: 0x72c943436A9218C72836e7eC0E241b763869b417
+    erc721ContractAddress: 0xF512373412168439B2e587dCfc13e839F0D8472f
+    erc1155ContractAddress: 0x16B23A1EB0e216b803A8280041fF62f6aFd2B78e

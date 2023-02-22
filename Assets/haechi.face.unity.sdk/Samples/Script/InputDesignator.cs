@@ -1,11 +1,21 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
+    // TODO: InputDesignator 가 너무 거대해서 'Connect Network', 'ERC20 Trasnaction' ... 와 같은 섹션으로 구분하면 어떨까?
+    // TODO: event 를 통해 FaceUnity 클래스와 통신한다면 FaceUnity 복잡도도 높아지지 않을 것
     public class InputDesignator : MonoBehaviour
     {
+        [Header("Listening on")] 
+        [SerializeField] private VoidEventChannelSO ConnectToBlockchain;
+        
+        [Space(10)]
+        [Header("UI References")]
+        [SerializeField] private SampleDappData sampleDappData;
+        
         [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, loginWithGoogleIdTokenBtn , logoutBtn, getBalanceBtn;
         [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLoginWithGoogleIdTokenBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
         [SerializeField] internal Button webInitializeBtn, webSwitchNetworkBtn, webLoginBtn, webGoogleLoginBtn, webFacebookLoginBtn, webAppleLoginBtn, webLogoutBtn, webGetBalanceBtn, webGoogleIdTokenBtn;
@@ -31,7 +41,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             webSendErc1155TransactionBtn,
             webSignMessageBtn,
             webConnectOpenSeaBtn;
-        
+
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey, privateKey;
         public TMP_InputField to, amount;
@@ -73,6 +83,35 @@ namespace haechi.face.unity.sdk.Samples.Script
 
         public TMP_InputField webErc721To, webErc721TokenId, webErc721NftAddress;
         public TMP_InputField webMessageToSign;
+
+        private void OnEnable()
+        {
+            this.ConnectToBlockchain.OnEventRaised += this.UpdateContractAddresses;
+        }
+
+        private void OnDisable()
+        {
+            this.ConnectToBlockchain.OnEventRaised -= this.UpdateContractAddresses;
+        }
+
+        private void UpdateContractAddresses()
+        {
+            
+            ContractData contractData = this.sampleDappData.CurrentContractData();
+            Debug.Log($"UpdateContractAddresses: {contractData.ERC20Decimal18}");
+            
+            // portrait
+            this.erc20BalanceInquiryAddress.text = contractData.ERC20Decimal18.ToLower();
+            this.erc20TokenAddress.text = contractData.ERC20Decimal18.ToLower();
+            this.erc721NftAddress.text = contractData.ERC721.ToLower();
+            this.erc1155NftAddress.text = contractData.ERC1155.ToLower();
+            
+            // landscape
+            this.landscapeErc20BalanceInquiryAddress.text = contractData.ERC20Decimal18.ToLower(); 
+            this.landscapeErc20TokenAddress.text = contractData.ERC20Decimal18.ToLower();
+            this.landscapeErc721NftAddress.text = contractData.ERC721.ToLower();
+            this.landscapeErc1155NftAddress.text = contractData.ERC1155.ToLower();
+        }
 
         private void Start()
         {
@@ -132,6 +171,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             {
                 SetInputText(this.landscapeErc1155Quantity, value);
             });
+            
             this.erc1155NftAddress.onValidateInput += delegate(string s, int i, char c) { return char.ToLower(c); };
             this.erc1155NftAddress.onValueChanged.AddListener(value =>
             {
@@ -140,6 +180,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.erc20To.onValidateInput += delegate(string s, int i, char c) { return char.ToLower(c); };
             this.erc20To.onValueChanged.AddListener(value => { SetInputText(this.landscapeErc20To, value); });
             this.erc20Amount.onValueChanged.AddListener(value => { SetInputText(this.landscapeErc20Amount, value); });
+
             this.erc20TokenAddress.onValidateInput += delegate(string s, int i, char c) { return char.ToLower(c); };
             this.erc20TokenAddress.onValueChanged.AddListener(value =>
             {

@@ -13,7 +13,9 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BNB_SMART_CHAIN,
         BNB_SMART_CHAIN_TESTNET,
         KLAYTN,
-        BAOBAB
+        BAOBAB,
+        MEVERSE,
+        MEVERSE_TESTNET,
     }
 
     public static class BlockchainNetworks
