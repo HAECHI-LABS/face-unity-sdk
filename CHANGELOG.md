@@ -1,4 +1,13 @@
 
+<a name="1.3.0"></a>
+## Release: [1.3.0](https://github.com/HAECHI-LABS/core/releases/tag/1.3.0)
+### Features
+- Add MEVerse chain
+
+### Bug Fixes
+- Sample dapp to automatically update contract address on webgl
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
