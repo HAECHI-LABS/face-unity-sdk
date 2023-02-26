@@ -14,10 +14,10 @@ using WalletConnectSharp.Storage;
 
 namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 {
-    public class WalletConnectV2 : MonoBehaviour, IWalletConnect
+    public class WalletConnectV2Client : MonoBehaviour, IWalletConnectClient
     {
         private Engine _engine;
-        private static WalletConnectV2 _instance;
+        private static WalletConnectV2Client _instance;
         private WalletConnectSignClient _walletClient;
         private Queue<MessageEvent> _messageQueue = new Queue<MessageEvent>();
         
@@ -31,7 +31,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
         
         public WalletConnectSignClient Client => _walletClient;
 
-        public static WalletConnectV2 GetInstance()
+        public static WalletConnectV2Client GetInstance()
         {
             return _instance;
         }
