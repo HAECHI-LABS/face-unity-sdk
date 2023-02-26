@@ -9,7 +9,6 @@ using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.Util;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace haechi.face.unity.sdk.Samples.Script
 {
@@ -29,6 +28,11 @@ namespace haechi.face.unity.sdk.Samples.Script
         private void Start()
         {
             Application.targetFrameRate = 60;
+        }
+
+        public void Test()
+        {
+            // this.face._walletConnectV1.Test();
         }
 
         public void InitializeFace()
@@ -70,7 +74,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
                 this.dataDesignator.SetLogoutInstruction();
-                this.inputDesignator.SetLoggedInInputStatus();                
+                this.inputDesignator.SetLoggedInInputStatus();
             }, this._defaultExceptionHandler);
         }
         
@@ -241,10 +245,10 @@ namespace haechi.face.unity.sdk.Samples.Script
             this._sendTransactionQueue(transactionTask);
         }
 
-        public void ConnectWallet()
+        public async void ConnectWallet()
         {
             this._validateIsLoggedIn();
-            this.face.Wallet().ConnectOpenSea(this.dataDesignator.loggedInAddress.text);
+            await this.face.WalletConnect().ConnectOpenSea(this.dataDesignator.loggedInAddress.text);
              //this.face.Wallet().ConnectWallet( this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
         }
 
