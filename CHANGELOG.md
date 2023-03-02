@@ -1,4 +1,10 @@
 
+<a name="1.3.1"></a>
+## Release: [1.3.1](https://github.com/HAECHI-LABS/core/releases/tag/1.3.1)
+### Features
+- Add isLoggedIn mathod on Auth module
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
