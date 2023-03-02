@@ -48,6 +48,19 @@ namespace haechi.face.unity.sdk.Runtime.Type
             return EnumUtils.FindEquals<Blockchain>(value);
         }
         
+        public static int GetPlatformCoinDecimals(this Blockchain blockchain)
+        {
+            switch (blockchain)
+            {
+                case Blockchain.ETHEREUM:
+                case Blockchain.POLYGON:
+                case Blockchain.BNB_SMART_CHAIN:
+                case Blockchain.KLAYTN:
+                default:
+                    return 18;
+            }
+        }
+
         public static Dictionary<Blockchain, Dictionary<Profile, BlockchainNetwork>> Map =
             new Dictionary<Blockchain, Dictionary<Profile, BlockchainNetwork>>
             {

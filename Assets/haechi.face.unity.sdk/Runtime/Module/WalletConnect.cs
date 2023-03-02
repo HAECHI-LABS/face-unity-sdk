@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -38,7 +39,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             this._walletConnectV2 = (WalletConnectV2Client) this._walletConnectClientSupplier.Supply(WalletConnectVersion.V2);
 #if  !UNITY_WEBGL
             this._initWalletConnectV1();
-            // this._initWalletConnectV2();
+            this._initWalletConnectV2();
 #endif
         }
         
@@ -84,6 +85,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             {
                 return null;
             }
+            catch (System.Exception e)
+            {
+                throw e;
+            }
         }
         
         /// <summary>
@@ -101,6 +106,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             catch (PlatformNotSupportedException e)
             {
                 return null;
+            }
+            catch (System.Exception e)
+            {
+                throw e;
             }
         }
 
@@ -128,13 +137,20 @@ namespace haechi.face.unity.sdk.Runtime.Module
             try
             {
                 DappMetadata dappMetadata = await walletConnectClient.RequestPair(address, wcUri, 
-                    async metadata => await this._confirmWalletConnectDapp(metadata), dappName, dappUrl);
+                    async metadata => await this._confirmWalletConnectDapp(metadata), dappName);
                 return dappMetadata;
             }
             catch (System.Exception e)
             {
                 Debug.Log(e.Message);
                 Debug.Log(e.StackTrace);
+                
+                /*
+                 * TO-BE-FIXED:
+                 * This usually happens when session expired.
+                 * Logout first, and then log in again.
+                 * Later, this will be fixed if Auth().IsLoggedIn() method actually check the session from server.
+                 */
                 return await _connectDappWithWalletConnect(dappName, dappName, address, true);
             }
 #endif
@@ -159,28 +175,43 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         private void _registryWalletConnectV1Event()
         {
-
+            this._walletConnectV1.OnTermSignRequest += async (topic, @event) =>
+            {
+                ClientMeta dappMetadata = this._walletConnectV1.Session.DappMetadata;
+                FaceRpcResponse response = await this._signMessageWithMetadata(@event.Parameters[0], WcFaceMetadata.V1Converted(dappMetadata));
+                NetworkMessage networkMessage = await this._walletConnectV1.Session.CreateNetworkMessage(
+                    new WcConnectRequest<string>(@event.ID, response.Result.ToString()),
+                    this._walletConnectV1.Session.DappPeerId,
+                    "pub",
+                    false);
+                await this._walletConnectV1.Session.SendRequest(networkMessage);
+#if UNITY_IOS
+                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
+                await this._walletConnectV1.Session.SendRequest(networkMessage);
+                this._walletConnectV1.TermSignNetworkMessageQueue
+                    .Enqueue(new Dictionary<DateTime, NetworkMessage> {{DateTime.Now, networkMessage}});
+#endif
+            };
             this._walletConnectV1.OnPersonalSignRequest += async (topic, @event) =>
             {
                 ClientMeta dappMetadata = this._walletConnectV1.Session.DappMetadata;
                 FaceRpcResponse response = await this._signMessageWithMetadata(@event.Parameters[0], WcFaceMetadata.V1Converted(dappMetadata));
-                await this._walletConnectV1.Session.SendRequest(
-                    new WcConnectRequest<string>(@event.ID, response.Result.ToString()), 
-                    this._walletConnectV1.Session.DappPeerId, 
-                    "pub", 
-                    false
-                );
+                await this._walletConnectV1.Session.SendPersonalSignRequest(@event.ID, response.Result.ToString());
+#if UNITY_IOS
+                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
+                await this._walletConnectV1.Session.SendPersonalSignRequest(@event.ID, response.Result.ToString());
+#endif
             };
             this._walletConnectV1.OnSendTransactionEvent += async (topic, @event) =>
             {
                 TransactionData transactionData = @event.Parameters[0];
                 TransactionRequestId response = await this._wallet.SendTransaction(new RawTransaction(transactionData.from, transactionData.to, transactionData.value, transactionData.data));
-                await this._walletConnectV1.Session.SendRequest(
-                    new WcConnectRequest<string>(@event.ID, response.transactionId), 
-                    this._walletConnectV1.Session.DappPeerId, 
-                    "pub", 
-                    false
-                );
+                Debug.Log(response.transactionId);
+                await this._walletConnectV1.Session.SendTransactionRequest(@event.ID, response.transactionId);
+#if UNITY_IOS
+                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
+                await this._walletConnectV1.Session.SendTransactionRequest(@event.ID, response.transactionId);
+#endif
             };
         }
 

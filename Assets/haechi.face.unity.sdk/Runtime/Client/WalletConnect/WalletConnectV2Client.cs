@@ -74,12 +74,14 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
             yield return this.OnSendTransactionEvent?.Invoke(topic, @event);
         }
 
-        public async Task<DappMetadata> RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName = null, string dappUrl = null)
+        public async Task<DappMetadata> RequestPair(string address, string wcUri, 
+            PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName)
         {
-            return await _doPair(address, wcUri, confirmWalletConnectDapp);
+            return await _doPair(address, wcUri, confirmWalletConnectDapp, dappName);
         }
 
-        private async Task<DappMetadata> _doPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
+        private async Task<DappMetadata> _doPair(string address, string wcUri, 
+            PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName)
         {
             ProposalStruct @struct = new ProposalStruct();
             try

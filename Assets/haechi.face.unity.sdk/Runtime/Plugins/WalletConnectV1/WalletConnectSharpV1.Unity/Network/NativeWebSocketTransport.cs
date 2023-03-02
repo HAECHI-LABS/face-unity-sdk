@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DefaultNamespace;
 using Newtonsoft.Json;
 using UnityEngine;
 using WalletConnectSharpV1.Core.Events;
@@ -46,7 +44,7 @@ namespace WalletConnectSharpV1.Unity.Network
                 return client != null && (client.State == WebSocketState.Open || client.State == WebSocketState.Closing) && opened;
             }
         }
-
+        
         public void AttachEventDelegator(EventDelegator eventDelegator)
         {
             this._eventDelegator = eventDelegator;
@@ -54,6 +52,7 @@ namespace WalletConnectSharpV1.Unity.Network
 
         public void Dispose()
         {
+            this._eventDelegator.Clear();
             if (client != null)
             {
                 client.CancelConnection();
@@ -100,9 +99,9 @@ namespace WalletConnectSharpV1.Unity.Network
             
             TaskCompletionSource<bool> eventCompleted = new TaskCompletionSource<bool>(TaskCreationOptions.None);
 
-            nextClient.OnOpen += () =>
+            nextClient.OnOpen += async () =>
             {
-                CompleteOpen();
+                await CompleteOpen();
                 
                 // subscribe now
                 if (this.OpenReceived != null)
@@ -117,11 +116,10 @@ namespace WalletConnectSharpV1.Unity.Network
             nextClient.OnMessage += OnMessageReceived;
             nextClient.OnClose += ClientTryReconnect;
             nextClient.OnError += (e) => {
-
                 Debug.Log("[WebSocket] OnError " + e);
                 HandleError(new Exception(e));
             };
-
+            
             nextClient.Connect().ContinueWith(t => HandleError(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
 
             Debug.Log("[WebSocket] Waiting for Open " + url);
@@ -134,17 +132,17 @@ namespace WalletConnectSharpV1.Unity.Network
             Debug.LogError(e);
         }
 
-        private async void CompleteOpen()
+        private async Task CompleteOpen()
         {
             await Close();
             this.client = this.nextClient;
             this.nextClient = null;
-            QueueSubscriptions();
+            await QueueSubscriptions();
             opened = true;
-            FlushQueue();
+            await FlushQueue();
         }
 
-        private async void FlushQueue()
+        private async Task FlushQueue()
         {
             Debug.Log("[WebSocket] Flushing Queue");
             Debug.Log("[WebSocket] Queue Count: " + _queuedMessages.Count);
@@ -157,7 +155,7 @@ namespace WalletConnectSharpV1.Unity.Network
             Debug.Log("[WebSocket] Queue Flushed");
         }
 
-        private void QueueSubscriptions()
+        private Task QueueSubscriptions()
         {
             foreach (var topic in subscribedTopics)
             {
@@ -165,10 +163,12 @@ namespace WalletConnectSharpV1.Unity.Network
             }
 
             Debug.Log("[WebSocket] Queued " + subscribedTopics.Count + " subscriptions");
+            return Task.CompletedTask;
         }
         
         private async void ClientTryReconnect(WebSocketCloseCode closeCode)
         {
+            Debug.Log("ClientTryReconnect");
             if (wasPaused)
             {
                 Debug.Log("[WebSocket] Application paused, retry attempt aborted");
@@ -179,16 +179,11 @@ namespace WalletConnectSharpV1.Unity.Network
             await _socketOpen();
         }
 
-        public void CancelConnection()
-        {
-            client.CancelConnection();
-        }
-
-
         private async void OnMessageReceived(byte[] bytes)
         {
             string json = System.Text.Encoding.UTF8.GetString(bytes);
-
+            
+            Debug.Log($"OnMessageReceived: {json}");
             try
             {
                 var msg = JsonConvert.DeserializeObject<NetworkMessage>(json);
@@ -201,7 +196,6 @@ namespace WalletConnectSharpV1.Unity.Network
                     Topic = msg.Topic
                 });
 
-                Debug.Log("On Message Received: " + json);
                 if (this.MessageReceived != null)
                     MessageReceived(this, new MessageReceivedEventArgs(msg, this));
             }
@@ -242,6 +236,12 @@ namespace WalletConnectSharpV1.Unity.Network
                     throw;
             }
         }
+
+        public async Task QueueAndFlush()
+        {
+            await this.QueueSubscriptions();
+            await this.FlushQueue();
+        }
         
         public async Task SendMessage(NetworkMessage message)
         {
@@ -250,10 +250,12 @@ namespace WalletConnectSharpV1.Unity.Network
                 _queuedMessages.Enqueue(message);
                 await _socketOpen();
             }
-            
-            string finalJson = JsonConvert.SerializeObject(message);
-
-            await this.client.SendText(finalJson);
+            else
+            {
+                string finalJson = JsonConvert.SerializeObject(message);
+                
+                await this.client.SendText(finalJson);   
+            }
         }
 
         public async Task Subscribe(string topic)
@@ -303,35 +305,5 @@ namespace WalletConnectSharpV1.Unity.Network
             subscribedTopics.Clear();
             _queuedMessages.Clear();
         }
-
-        //#if UNITY_IOS
-        private IEnumerator OnApplicationPause(bool pauseStatus)
-        {
-            if (pauseStatus)
-            {
-                Debug.Log("[WebSocket] Pausing");
-                wasPaused = true;
-                
-                //We need to close the Websocket Properly
-                var closeTask = Task.Run(Close);
-                var coroutineInstruction = new WaitForTask(closeTask);
-                yield return coroutineInstruction;
-            }
-            else if (wasPaused)
-            {
-                Debug.Log("[WebSocket] Resuming");
-                var openTask = Task.Run(() => Open(currentUrl, false));
-                var coroutineInstruction = new WaitForTask(openTask);
-                yield return coroutineInstruction;
-
-                foreach (var topic in subscribedTopics)
-                {
-                    var subTask = Task.Run(() => Subscribe(topic));
-                    var coroutineSubInstruction = new WaitForTask(subTask);
-                    yield return coroutineSubInstruction;
-                }
-            }
-        }
-        //#endif
     }
 }

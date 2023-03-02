@@ -7,8 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using AOT;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Collections;
 
@@ -524,6 +522,7 @@ namespace NativeWebSocket
 
         public Task SendText(string message)
         {
+            Debug.Log($"[{DateTime.Now}] Sending Message..: {message}");
             var encoded = Encoding.UTF8.GetBytes(message);
 
             // m_Socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
@@ -547,7 +546,6 @@ namespace NativeWebSocket
             lock (OutgoingMessageLock)
             {
                 sending = isSending;
-
                 // If not, we are now.
                 if (!isSending)
                 {

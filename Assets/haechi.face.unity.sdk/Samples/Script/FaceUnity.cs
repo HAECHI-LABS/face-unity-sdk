@@ -86,7 +86,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             Debug.Log("Login balance");
 
             string balance = await this._getBalance(address);
-            
+            Debug.Log($"balance: {balance}");
             Debug.Log("Login done");
 
             return new LoginResult(balance, response.faceUserId, address);
@@ -315,7 +315,9 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<string> _getBalance(string address)
         {
             FaceRpcResponse response = await this.face.Wallet().GetBalance(address);
-            return NumberFormatter.DivideHexWithDecimals(response.CastResult<string>(), 18);
+            return NumberFormatter.DivideHexWithDecimals(
+                response.CastResult<string>(), 
+                FaceSettings.Instance.Blockchain().GetPlatformCoinDecimals());
         }
 
         private async Task<int> _getDecimals()

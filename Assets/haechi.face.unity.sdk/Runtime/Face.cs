@@ -26,7 +26,7 @@ namespace haechi.face.unity.sdk.Runtime
         private WalletConnect _walletConnect;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
-        
+
         private WalletProxy _walletProxy;
         private AuthProxy _authProxy;
         
@@ -37,7 +37,7 @@ namespace haechi.face.unity.sdk.Runtime
 #if UNITY_WEBGL
             Iframe.CreateIframe();
 #endif
-            
+
             this._safeWebviewController = this.GetComponent<SafeWebviewController>();
             
             this._walletProxy = new WalletProxy();
@@ -70,24 +70,29 @@ namespace haechi.face.unity.sdk.Runtime
         {
             await this._walletConnect.DisconnectWalletConnectV1();
             FaceSettings.Destruct();
-            
             this.provider = null;
             this.dataFactory = null;
             this._auth = null;
             this._wallet = null;
             this._walletConnect = null;
 #if !UNITY_WEBGL
-            if (gameObject.GetComponent<NativeWebSocketTransport>() != null)
+            if (this.gameObject.GetComponent<NativeWebSocketTransport>() != null)
             {
-                Destroy(gameObject.GetComponent<NativeWebSocketTransport>());
+                Destroy(this.gameObject.GetComponent<NativeWebSocketTransport>());
             }
-            if (gameObject.GetComponent<WalletConnectV1Client>() != null)
+            if (this.gameObject.GetComponent<WalletConnectV1Client>() != null)
             {
-                Destroy(gameObject.GetComponent<WalletConnectV1Client>());
+                Destroy(this.gameObject.GetComponent<WalletConnectV1Client>());
             }
-            if (gameObject.GetComponent<WalletConnectV2Client>() != null)
+            // For iOS AppDelegate plugin, need to add WalletConnectV1Client as a GameObject
+            if (GameObject.Find("WalletConnectV1Client") != null)
             {
-                Destroy(gameObject.GetComponent<WalletConnectV2Client>());
+                Destroy(GameObject.Find("WalletConnectV1Client"));
+            }
+
+            if (this.gameObject.GetComponent<WalletConnectV2Client>() != null)
+            {
+                Destroy(this.gameObject.GetComponent<WalletConnectV2Client>());
             }
 #endif
         }
@@ -139,17 +144,20 @@ namespace haechi.face.unity.sdk.Runtime
 
         private void _registryFaceUnityScripts()
         {
-            if (gameObject.GetComponent<NativeWebSocketTransport>() == null)
+            if (this.gameObject.GetComponent<NativeWebSocketTransport>() == null)
             {
-                gameObject.AddComponent<NativeWebSocketTransport>();
+                this.gameObject.AddComponent<NativeWebSocketTransport>();
             }
-            if (gameObject.GetComponent<WalletConnectV1Client>() == null)
+            // For iOS AppDelegate plugin, need to add WalletConnectV1Client as a GameObject
+            if (GameObject.Find("WalletConnectV1Client") == null)
             {
-                gameObject.AddComponent<WalletConnectV1Client>();
+                GameObject nativeWebSocketTransport = new GameObject();
+                nativeWebSocketTransport.name = "WalletConnectV1Client";
+                nativeWebSocketTransport.AddComponent<WalletConnectV1Client>();
             }
-            if (gameObject.GetComponent<WalletConnectV2Client>() == null)
+            if (this.gameObject.GetComponent<WalletConnectV2Client>() == null)
             {
-                gameObject.AddComponent<WalletConnectV2Client>();
+                this.gameObject.AddComponent<WalletConnectV2Client>();
             }
         }
     }

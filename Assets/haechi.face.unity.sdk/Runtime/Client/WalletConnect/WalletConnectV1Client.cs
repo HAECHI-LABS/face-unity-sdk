@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
 using WalletConnectSharpV1.Core.Events;
 using WalletConnectSharpV1.Core.Models;
 using WalletConnectSharpV1.Core.Models.Ethereum;
+using WalletConnectSharpV1.Core.Utils;
 using WalletConnectSharpV1.Unity;
 using WalletConnectSharpV1.Unity.Network;
 
@@ -20,7 +22,15 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
         private WalletConnectUnitySession _walletConnectUnitySession;
         private static WalletConnectV1Client _instance;
         private Queue<JsonRpcRequest> _messageQueue = new Queue<JsonRpcRequest>();
+        
+        private Queue<EthPersonalSign> _termSignMessageQueue = new Queue<EthPersonalSign>();
+        private Queue<DateTime> _connectRequestTimeQueue = new Queue<DateTime>();
+        internal Queue<Dictionary<DateTime, NetworkMessage>> TermSignNetworkMessageQueue = new Queue<Dictionary<DateTime, NetworkMessage>>();
 
+        public delegate Task TermSignEvent(string topic, EthPersonalSign @event);
+        
+        public event TermSignEvent OnTermSignRequest;
+        
         public delegate Task PersonalSignEvent(string topic, EthPersonalSign @event);
         
         public event PersonalSignEvent OnPersonalSignRequest;
@@ -44,8 +54,14 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
             _instance = this;
         }
 
-        private void Update()
+        private async void Update()
         {
+            if (this._termSignMessageQueue.Count > 0)
+            {
+                EthPersonalSign payload = this._termSignMessageQueue.Dequeue();
+                this.StartCoroutine(this._termSignRequest(payload.Event, payload));
+            }
+            
             if (this._messageQueue.Count > 0)
             {
                 JsonRpcRequest request = this._messageQueue.Dequeue();
@@ -54,15 +70,23 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                 {
                     case "personal_sign":
                         EthPersonalSign ethPersonalSign = (EthPersonalSign)request;
-                        this.StartCoroutine(this._personalSignRequest(request.Event, ethPersonalSign));
+                        this.StartCoroutine(this._personalSignRequest(ethPersonalSign.Event, ethPersonalSign));
                         break;
                     case "eth_sendTransaction":
+                        Debug.Log("eth_sendTransaction");
                         EthSendTransaction ethSendTransaction = (EthSendTransaction)request;
-                        this.StartCoroutine(this._sendTransactionRequest(request.Event, ethSendTransaction));
+                        this.StartCoroutine(this._sendTransactionRequest(ethSendTransaction.Event, ethSendTransaction));
                         break;
                 }
             }
         }
+        
+#if UNITY_IOS
+        private IEnumerator _termSignRequest(string topic, EthPersonalSign @event)
+        {
+            yield return this.OnTermSignRequest?.Invoke(topic, @event);
+        }
+#endif
         
         private IEnumerator _personalSignRequest(string topic, EthPersonalSign @event)
         {
@@ -74,9 +98,19 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
             yield return this.OnSendTransactionEvent?.Invoke(topic, @event);
         }
 
-        public async Task<DappMetadata> RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName, string dappUrl)
+        public async Task<DappMetadata> RequestPair(string address, string wcUri, 
+            PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName)
         {
-            return await _doPair(address, dappName, dappUrl, wcUri, confirmWalletConnectDapp);
+            try
+            {
+                return await _doPair(address, wcUri, confirmWalletConnectDapp, dappName);
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log($"Error message: {e.Message}");
+                Debug.Log($"Error StackTrace: {e.StackTrace}");
+                throw new ApplicationException("Failed to connect with dapp");
+            }
         }
 
         public async Task DisconnectIfSessionExist()
@@ -92,31 +126,57 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
             }
         }
 
-        private async Task<DappMetadata> _doPair(string address, string dappName, string dappUrl, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
+        private async Task<DappMetadata> _doPair(string address, string wcUri, 
+            PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName)
         {
             await this.DisconnectIfSessionExist();
-            this._walletConnectUnitySession = new WalletConnectUnitySession(CreateNewSession(address, wcUri));
+            this._walletConnectUnitySession = new WalletConnectUnitySession(this._createNewSession(address, wcUri));
 
             TaskCompletionSource<bool> confirmCompleted = new TaskCompletionSource<bool>(TaskCreationOptions.None);
             this._walletConnectUnitySession.OnSessionCreated += async (sender, connectSession) =>
             {
-                bool isConfirm = (await confirmWalletConnectDapp(new DappMetadata(connectSession.DappMetadata))).CastResult<bool>();
-                confirmCompleted.TrySetResult(isConfirm);
+                bool isConfirmed = (await confirmWalletConnectDapp(new DappMetadata(connectSession.DappMetadata))).CastResult<bool>();
+                Debug.Log($"[OnSessionCreated]isConfirmed?: {isConfirmed}");
+                confirmCompleted.TrySetResult(isConfirmed);
             };
-
+            
             await this._walletConnectUnitySession.Connect();
 
             Task<bool> task = confirmCompleted.Task;
             if (await Task.WhenAny(task, Task.Delay(120000)) == task) {
+                Debug.Log($"Is connection confirmed: {task.Result}");
                 if (task.Result)
                 {
+                    // Send connect request for pc dapp user
                     await this._walletConnectUnitySession.SendConnectRequest();
+                    // Open again to avoid connection lost
+                    await this._walletConnectUnitySession.Transport.Open(this._walletConnectUnitySession.Transport.URL, false);
+                    
+                    /*
+                     * Most users will be able to connect through this line,
+                     * but some using Safari on iPhone may not be able to send messages.
+                     * This is due to Safari's connection failures, which occur more than twice when resuming Safari,
+                     * causing a reconnection delay of approximately 1 to 6 seconds.
+                     */
+                    await this._walletConnectUnitySession.SendConnectRequest();
+                    
+                    this._connectRequestTimeQueue.Enqueue(DateTime.Now);
+                    expand_background_time(this.gameObject.name);
+
                     this._walletConnectUnitySession.Events.ListenFor("personal_sign",
                         (object sender, GenericEvent<EthPersonalSign> @event) =>
                         {
                             if (this._messageQueue.All(r => r.ID != @event.Response.ID))
                             {
-                                this._messageQueue.Enqueue(@event.Response);   
+                                EthPersonalSign payload = @event.Response;
+#if UNITY_IOS
+                                if (this._isOpenseaTermsSign(payload))
+                                {
+                                    this._termSignMessageQueue.Enqueue(payload);
+                                    return;
+                                }
+#endif
+                                this._messageQueue.Enqueue(payload);
                             }
                         });
                     this._walletConnectUnitySession.Events.ListenFor("eth_sendTransaction",
@@ -124,7 +184,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                         {
                             if (this._messageQueue.All(r => r.ID != @event.Response.ID))
                             {
-                                this._messageQueue.Enqueue(@event.Response);   
+                                this._messageQueue.Enqueue(@event.Response);
                             }
                         });
                     return new DappMetadata(this._walletConnectUnitySession.DappMetadata);
@@ -141,12 +201,30 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                             networkId = this._walletConnectUnitySession.NetworkId,
                             accounts = this._walletConnectUnitySession.Accounts,
                             rpcUrl = ""
-                        }), this._walletConnectUnitySession.DappPeerId, "pub", false);
+                        }), this._walletConnectUnitySession.DappPeerId, "pub", true);
             }
             return null;
         }
 
-        private SavedSession CreateNewSession(string address, string wcUri)
+#if UNITY_IOS
+        private bool _isOpenseaTermsSign(EthPersonalSign payload)
+        {
+            if (payload.Event.Equals(ValidJsonRpcRequestMethods.PersonalSign))
+            {
+                string hexMessage = payload.Parameters[0];
+                string plainMessage = HexByteConvertorExtensions.FromHexToPlain(hexMessage);
+                if (plainMessage.Contains("Welcome to OpenSea!") 
+                    && plainMessage.Contains("Click to sign in and accept the OpenSea Terms of Service: https://opensea.io/"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }  
+#endif
+
+        private SavedSession _createNewSession(string address, string wcUri)
         {
             string clientId = Guid.NewGuid().ToString();
             return new SavedSession(clientId, BlockchainNetworks.GetChainId(FaceSettings.Instance.Network()), wcUri,
@@ -160,5 +238,54 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                     }, 
                     "Face Wallet"));
         }
+        
+#if UNITY_IOS
+        
+        [DllImport("__Internal")]
+        extern static void expand_background_time(string objectName);
+        
+        [DllImport("__Internal")]
+        extern static void normalize_background_time();
+
+        [DllImport("__Internal")]
+        extern static void pause_unity();
+
+        public async void OnAdditionalFrame()
+        {
+            while (this._connectRequestTimeQueue.Count > 0)
+            {
+                DateTime connectRequestTime = this._connectRequestTimeQueue.Dequeue();
+                // Timeout 30 seconds. This is for pc dapp user who will not turn the app into background mode.
+                if (DateTime.Now.Subtract(connectRequestTime).TotalSeconds > 30)
+                {
+                    continue;
+                }
+                
+                // Usually, browser app websocket disconnects after 1 to 6 seconds.
+                // So to avoid sending message to disconnected websocket, delay 10 seconds.
+                await Task.Delay(6500);
+                await this._walletConnectUnitySession.SendConnectRequest();
+            }
+            
+            while (this.TermSignNetworkMessageQueue.Count > 0)
+            {
+                Dictionary<DateTime, NetworkMessage> signNetworkMessage = this.TermSignNetworkMessageQueue.Dequeue();
+                DateTime queuedTime = signNetworkMessage.Keys.First();
+                if (DateTime.Now.Subtract(queuedTime).TotalSeconds > 30)
+                {
+                    continue;
+                }
+                
+                // Usually, browser app websocket disconnects after 1 to 6 seconds.
+                // So to avoid sending message to disconnected websocket, delay 10 seconds.
+                await Task.Delay(6500);
+                await this._walletConnectUnitySession.SendRequest(signNetworkMessage[queuedTime]);
+            }
+            
+            Debug.Log("Pausing..\n");
+            normalize_background_time();
+            pause_unity();
+        }
+#endif
     }
 }

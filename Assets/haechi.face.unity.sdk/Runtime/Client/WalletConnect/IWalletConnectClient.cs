@@ -7,7 +7,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
     public interface IWalletConnectClient
     {
         public Task<DappMetadata> RequestPair(string address, string wcUri,
-            PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName, string dappUrl);
+            PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, string dappName);
     }
 
     public class WalletConnectClientSupplier
