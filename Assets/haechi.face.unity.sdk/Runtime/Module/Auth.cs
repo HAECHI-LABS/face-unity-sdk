@@ -17,6 +17,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
     public class Auth : IAuth
     {
         private readonly FaceRpcProvider _provider;
+        private FaceLoginResponse _currentUser;
         
         internal Auth(FaceRpcProvider provider)
         {
@@ -62,6 +63,15 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, loginIdTokenRequest);
         }
 
+        /// <summary>
+        /// Check is logged in
+        /// </summary>
+        /// <returns>Boolean value. If logged in, returns true.</returns>
+        public bool IsLoggedIn()
+        {
+            return this._currentUser != null;
+        }
+
         private async Task<FaceLoginResponse> _login(FaceRpcMethod method, params string[] parameterList)
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), method, parameterList);
@@ -74,8 +84,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
             {
                 throw new AddressVerificationFailedException();
             }
-            
-            return faceLoginResponse;
+
+            this._currentUser = faceLoginResponse;
+            return this._currentUser;
         }
         
         private async Task<FaceLoginResponse> _loginWithIdToken(FaceRpcMethod method, params FaceLoginIdTokenRequest[] parameterList)
@@ -91,7 +102,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 throw new AddressVerificationFailedException();
             }
             
-            return faceLoginResponse;
+            this._currentUser = faceLoginResponse;
+            return this._currentUser;
         }
 
         /// <summary>
@@ -102,7 +114,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_logOut);
-            return await this._provider.SendFaceRpcAsync(request);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
+            this._currentUser = null;
+            return response;
         }
     }
 
