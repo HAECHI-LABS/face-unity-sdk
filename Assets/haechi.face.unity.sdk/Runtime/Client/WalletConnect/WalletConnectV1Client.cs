@@ -22,11 +22,11 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
         private WalletConnectUnitySession _walletConnectUnitySession;
         private static WalletConnectV1Client _instance;
         private Queue<JsonRpcRequest> _messageQueue = new Queue<JsonRpcRequest>();
-        
+#if UNITY_IOS
         private Queue<EthPersonalSign> _termSignMessageQueue = new Queue<EthPersonalSign>();
         private Queue<DateTime> _connectRequestTimeQueue = new Queue<DateTime>();
         internal Queue<Dictionary<DateTime, NetworkMessage>> TermSignNetworkMessageQueue = new Queue<Dictionary<DateTime, NetworkMessage>>();
-
+#endif
         public delegate Task TermSignEvent(string topic, EthPersonalSign @event);
         
         public event TermSignEvent OnTermSignRequest;
@@ -56,11 +56,13 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 
         private async void Update()
         {
+#if UNITY_IOS
             if (this._termSignMessageQueue.Count > 0)
             {
                 EthPersonalSign payload = this._termSignMessageQueue.Dequeue();
                 this.StartCoroutine(this._termSignRequest(payload.Event, payload));
             }
+#endif
             
             if (this._messageQueue.Count > 0)
             {
@@ -152,6 +154,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                     // Open again to avoid connection lost
                     await this._walletConnectUnitySession.Transport.Open(this._walletConnectUnitySession.Transport.URL, false);
                     
+#if UNITY_IOS
                     /*
                      * Most users will be able to connect through this line,
                      * but some using Safari on iPhone may not be able to send messages.
@@ -162,6 +165,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                     
                     this._connectRequestTimeQueue.Enqueue(DateTime.Now);
                     expand_background_time(this.gameObject.name);
+#endif
 
                     this._walletConnectUnitySession.Events.ListenFor("personal_sign",
                         (object sender, GenericEvent<EthPersonalSign> @event) =>

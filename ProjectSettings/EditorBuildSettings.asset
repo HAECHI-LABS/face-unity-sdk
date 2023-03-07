@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 90a5df728cb184f8297584ef8de05006
   - enabled: 1
     path: Assets/haechi.face.unity.sdk/Samples/SampleDapp/Scenes/SampleScene.unity
     guid: 4512be75148d84852be207c9dd79ed62
