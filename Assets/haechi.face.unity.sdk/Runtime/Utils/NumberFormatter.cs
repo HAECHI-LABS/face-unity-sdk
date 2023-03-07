@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Numerics;
 using Nethereum.Util;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Utils
 {
@@ -19,17 +20,23 @@ namespace haechi.face.unity.sdk.Runtime.Utils
 
         public static decimal HexadecimalToDecimal(string hexadecimal)
         {
+            
             string hex = hexadecimal.StartsWith("0x") ? hexadecimal.Substring("0x".Length) : hexadecimal;
+            hex = hex.Length % 2 != 0 ? $"0{hex}" : $"00{hex}";
+            Debug.Log($"Hex: {hex}");
             if (string.IsNullOrEmpty(hex))
             {
                 return Decimal.Zero;
             }
-            return decimal.Parse(BigInteger.Parse(hex, NumberStyles.AllowHexSpecifier).ToString());
+            Debug.Log($"BigInteger: {BigInteger.Parse(hex, NumberStyles.HexNumber).ToString()}");
+            return decimal.Parse(BigInteger.Parse(hex, NumberStyles.HexNumber).ToString());
         }
 
         public static string DivideHexWithDecimals(string hexadecimal, int decimals)
         {
             decimal number = HexadecimalToDecimal(hexadecimal);
+            Debug.Log($"Number: {number}");
+            Debug.Log($"Dividing..: {decimal.Parse(BigInteger.Pow(10, decimals).ToString())}");
             return decimal.Divide(number, decimal.Parse(BigInteger.Pow(10, decimals).ToString()))
                 .ToStringInvariant();
         }

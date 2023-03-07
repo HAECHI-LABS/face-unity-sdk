@@ -50027,7 +50027,6 @@ GameObject:
   - component: {fileID: 5677593703189642839}
   - component: {fileID: 536193889}
   - component: {fileID: 536193888}
-  - component: {fileID: 5126802548754664185}
   - component: {fileID: 3068087885185546341}
   m_Layer: 0
   m_Name: SampleWebviewUI
@@ -50189,18 +50188,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec5954c2054a343d785ba79b10119585, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5126802548754664185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7359475185043555146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3157fd030c974c3ba7b6f62b1a30bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &3068087885185546341

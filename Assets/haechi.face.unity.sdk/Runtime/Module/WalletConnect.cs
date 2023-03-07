@@ -1,182 +1,277 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
+using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
-using Newtonsoft.Json;
+using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
-using WalletConnectSharp.Common.Model.Errors;
-using WalletConnectSharp.Common.Utils;
-using WalletConnectSharp.Core.Models.Relay;
 using WalletConnectSharp.Network.Models;
-using WalletConnectSharp.Sign;
 using WalletConnectSharp.Sign.Models;
 using WalletConnectSharp.Sign.Models.Engine;
-using WalletConnectSharp.Storage;
+using WalletConnectSharp.Sign.Models.Engine.Methods;
+using WalletConnectSharpV1.Core.Models;
+using WalletConnectSharpV1.Core.Models.Ethereum;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
-    public class WalletConnect: MonoBehaviour
+    public class WalletConnect
     {
-        private Engine _engine;
-        private static WalletConnect _instance;
-        private WalletConnectSignClient _walletClient;
-        private bool _isConnect = false;
-        public bool IsConnect
-        {
-            get { return _isConnect; }
-        }
-
-        private Queue<MessageEvent> messageQueue = new Queue<MessageEvent>();
+        private readonly Wallet _wallet;
+        private readonly WalletConnectClientSupplier _walletConnectClientSupplier;
+        private readonly WalletConnectV1Client _walletConnectV1;
+        private readonly WalletConnectV2Client _walletConnectV2;
         
-        public delegate Task PersonalSignEvent<T>(string topic, WcRequestEvent<T> @event);
-        private event PersonalSignEvent<string[]> _onPersonalSignRequest;
-        public event PersonalSignEvent<string[]> OnPersonalSignRequest
+        // Later, will add Aptos, Near, Solana in this array
+        private readonly Blockchain[] unsupportedBlockchains = new Blockchain[] { };
+        
+        private static Regex WC_URI_V1_REGEX = new Regex(@"wc:([^@]+)@([^?]+)\?bridge=([^&])+&key=(\w+)");
+        private static Regex WC_URI_V2_REGEX = new Regex(@"wc:([^@]+)@2\?relay-protocol=([^&])+&symKey=(\w+)");
+        
+        public WalletConnect(Wallet wallet)
         {
-            add
-            {
-                _onPersonalSignRequest += value;
-            }
-            remove
-            {
-                _onPersonalSignRequest -= value;
-            }
+            this._wallet = wallet;
+            this._walletConnectClientSupplier = new WalletConnectClientSupplier();
+            this._walletConnectV1 = (WalletConnectV1Client) this._walletConnectClientSupplier.Supply(WalletConnectVersion.V1);
+            this._walletConnectV2 = (WalletConnectV2Client) this._walletConnectClientSupplier.Supply(WalletConnectVersion.V2);
+#if  !UNITY_WEBGL
+            this._initWalletConnectV1();
+            this._initWalletConnectV2();
+#endif
         }
         
-        public delegate Task SendTransactionEvent<T>(string topic, WcRequestEvent<T> @event);
-        private event SendTransactionEvent<SendTransaction[]> _onSendTransactionEvent;
-        public event SendTransactionEvent<SendTransaction[]> OnSendTransactionEvent
+        private void _initWalletConnectV1()
         {
-            add
-            {
-                _onSendTransactionEvent += value;
-            }
-            remove
-            {
-                _onSendTransactionEvent -= value;
-            }
-        }
-
-        
-        public WalletConnectSignClient wallet
-        {
-            get { return _walletClient; }
+            this._registryWalletConnectV1Event();
         }
         
-        public static WalletConnect GetInstance()
+        private async void _initWalletConnectV2()
         {
-            return _instance;
+            await this._walletConnectV2.Connect();
+            this._registryWalletConnectV2Event();
         }
 
-        private void Awake()
+        /// <summary>
+        /// Connect Face with Opensea via WalletConnect V1.
+        /// Use WalletConnect V1 until 28th, June, 2023, or until OpenSea migrate to V2.
+        /// </summary>
+        /// <param name="address">Wallet address.</param>
+        public async Task<DappMetadata> ConnectOpenSea(string address)
+        { 
+             string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
+                ? "https://opensea.io/"
+                : "https://testnets.opensea.io/";
+             
+             return await this.ConnectDappWithWalletConnectV1(address, "OpenSea", hostname);
+        } 
+        
+        /// <summary>
+        /// Connect Face with Dapp via WalletConnect V1.
+        /// This version will be officially deprecated on 28th, June, 2023.
+        /// See <a href="https://medium.com/walletconnect/weve-reset-the-clock-on-the-walletconnect-v1-0-shutdown-now-scheduled-for-june-28-2023-ead2d953b595">here</a>.
+        /// </summary>
+        /// <param name="address">wallet address to connect.</param>
+        /// <param name="dappName">dapp name to connect.</param>
+        /// <param name="dappUrl">dapp url to connect.</param>
+        public async Task<DappMetadata> ConnectDappWithWalletConnectV1(string address, string dappName, string dappUrl)
         {
-            _instance = this;
-        }
-
-        public async Task<Metadata> RequestPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
-        {
-            return await _doPair(address, wcUri, confirmWalletConnectDapp);
-        }
-
-        private async Task<Metadata> _doPair(string address, string wcUri, PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp, bool isRetry = false)
-        {
-            ProposalStruct @struct = new ProposalStruct();
             try
             {
-                @struct = await wallet.Pair(wcUri).WithTimeout(5000);
+                return await _connectDappWithWalletConnect(address, dappName, dappUrl);
+            } catch (PlatformNotSupportedException e)
+            {
+                return null;
             }
             catch (System.Exception e)
             {
-                await wallet.Core.Relayer.Init();
                 throw e;
             }
-            
-            FaceRpcResponse isConfirm = await confirmWalletConnectDapp(@struct.Proposer.Metadata);
-            if (isConfirm.CastResult<bool>())
+        }
+        
+        /// <summary>
+        /// Connect Face with Dapp via WalletConnect V2.
+        /// </summary>
+        /// <param name="address">wallet address to connect.</param>
+        /// <param name="dappName">dapp name to connect.</param>
+        /// <param name="dappUrl">dapp url to connect.</param>
+        public async Task<DappMetadata> ConnectDappWithWalletConnectV2(string address, string dappName, string dappUrl)
+        {
+            try
             {
-                IApprovedData approveData = await wallet.Approve( @struct.ApproveProposal(address));
-                await approveData.Acknowledged();
-                return @struct.Proposer.Metadata;
+                return await _connectDappWithWalletConnect(address, dappName, dappUrl);
+            }
+            catch (PlatformNotSupportedException e)
+            {
+                return null;
+            }
+            catch (System.Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task DisconnectWalletConnectV1()
+        {
+            await this._walletConnectV1.DisconnectIfSessionExist();
+        }
+
+        private async Task<DappMetadata> _connectDappWithWalletConnect(string address, string dappName,string dappUrl, bool invalid = false)
+        {
+            if (unsupportedBlockchains.Contains(FaceSettings.Instance.Blockchain()))
+            {
+                throw new NotSupportedException();
+            }
+            FaceRpcResponse response = await this._openWalletConnect(dappName, dappUrl, invalid);
+            
+#if !UNITY_WEBGL
+            string encodedWcUri = response.Result.Value<string>("uri");
+            byte[] wcUriBytes = Convert.FromBase64String(encodedWcUri);
+            string wcUri = Encoding.UTF8.GetString(wcUriBytes);
+            WalletConnectVersion walletConnectVersion = getWalletConnectVersionByUri(wcUri);
+            IWalletConnectClient walletConnectClient =
+                this._walletConnectClientSupplier.Supply(walletConnectVersion);
+            
+            try
+            {
+                DappMetadata dappMetadata = await walletConnectClient.RequestPair(address, wcUri, 
+                    async metadata => await this._confirmWalletConnectDapp(metadata), dappName);
+                return dappMetadata;
+            }
+            catch (System.Exception e)
+            {
+                Debug.Log(e.Message);
+                Debug.Log(e.StackTrace);
+                
+                /*
+                 * TO-BE-FIXED:
+                 * This usually happens when session expired.
+                 * Logout first, and then log in again.
+                 * Later, this will be fixed if Auth().IsLoggedIn() method actually check the session from server.
+                 */
+                return await _connectDappWithWalletConnect(dappName, dappName, address, true);
+            }
+#endif
+            throw new PlatformNotSupportedException("WebGL does not support _connectDappWithWalletConnect() method");
+        }
+
+        private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl, bool invalid = false)
+        {
+            FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_openWalletConnect, dappName, dappUrl, (invalid ? "invalid" : null));
+            
+            return await this._wallet.Provider.SendFaceRpcAsync(faceRpcRequest);
+        }
+
+        public async Task<FaceRpcResponse> _confirmWalletConnectDapp<T>(T dappMetadata)
+        {
+            FaceRpcRequest<T> faceRpcRequest = new FaceRpcRequest<T>(FaceSettings.Instance.Blockchain(),
+                FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
+
+            return await this._wallet.Provider.SendFaceRpcAsync(faceRpcRequest);
+        }
+
+        private void _registryWalletConnectV1Event()
+        {
+            this._walletConnectV1.OnTermSignRequest += async (topic, @event) =>
+            {
+                ClientMeta dappMetadata = this._walletConnectV1.Session.DappMetadata;
+                FaceRpcResponse response = await this._signMessageWithMetadata(@event.Parameters[0], WcFaceMetadata.V1Converted(dappMetadata));
+                NetworkMessage networkMessage = await this._walletConnectV1.Session.CreateNetworkMessage(
+                    new WcConnectRequest<string>(@event.ID, response.Result.ToString()),
+                    this._walletConnectV1.Session.DappPeerId,
+                    "pub",
+                    false);
+                await this._walletConnectV1.Session.SendRequest(networkMessage);
+#if UNITY_IOS
+                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
+                await this._walletConnectV1.Session.SendRequest(networkMessage);
+                this._walletConnectV1.TermSignNetworkMessageQueue
+                    .Enqueue(new Dictionary<DateTime, NetworkMessage> {{DateTime.Now, networkMessage}});
+#endif
+            };
+            this._walletConnectV1.OnPersonalSignRequest += async (topic, @event) =>
+            {
+                ClientMeta dappMetadata = this._walletConnectV1.Session.DappMetadata;
+                FaceRpcResponse response = await this._signMessageWithMetadata(@event.Parameters[0], WcFaceMetadata.V1Converted(dappMetadata));
+                await this._walletConnectV1.Session.SendPersonalSignRequest(@event.ID, response.Result.ToString());
+#if UNITY_IOS
+                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
+                await this._walletConnectV1.Session.SendPersonalSignRequest(@event.ID, response.Result.ToString());
+#endif
+            };
+            this._walletConnectV1.OnSendTransactionEvent += async (topic, @event) =>
+            {
+                TransactionData transactionData = @event.Parameters[0];
+                TransactionRequestId response = await this._wallet.SendTransaction(new RawTransaction(transactionData.from, transactionData.to, transactionData.value, transactionData.data));
+                Debug.Log(response.transactionId);
+                await this._walletConnectV1.Session.SendTransactionRequest(@event.ID, response.transactionId);
+#if UNITY_IOS
+                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
+                await this._walletConnectV1.Session.SendTransactionRequest(@event.ID, response.transactionId);
+#endif
+            };
+        }
+
+        private void _registryWalletConnectV2Event()
+        {
+            this._walletConnectV2.OnPersonalSignRequest += async (topic, @event) =>
+            {
+                Metadata dappMetadata = _walletConnectV2.Client.Session.Get(topic).Peer.Metadata;
+                FaceRpcResponse response = await this._signMessageWithMetadata(@event.Params.Request.Params[0], WcFaceMetadata.V2Converted(dappMetadata));
+                await _walletConnectV2.Client.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
+                {
+                    Topic = topic,
+                    Response = new JsonRpcResponse<string>()
+                    {
+                        Id = @event.Id,
+                        Result = response.Result.ToString(),
+                        Error = null
+                    }
+                });
+            };
+            this._walletConnectV2.OnSendTransactionEvent += async (topic, @event) =>
+            {
+                TransactionRequestId response = await this._wallet.SendTransaction(@event.Params.Request.Params[0]);
+                await _walletConnectV2.Client.Respond<SessionRequest<string[]>, string>(new RespondParams<string>()
+                {
+                    Topic = topic,
+                    Response = new JsonRpcResponse<string>()
+                    {
+                        Id = @event.Id,
+                        Result = response.transactionId,
+                        Error = null
+                    }
+                });
+            };
+        }
+        
+        private async Task<FaceRpcResponse> _signMessageWithMetadata(string message, WcFaceMetadata metadata)
+        {
+            WcFaceRpcRequest<string> rpcRequest = 
+                new WcFaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+                    FaceRpcMethod.personal_sign,
+                    metadata,
+                    message);
+            return await this._wallet.Provider.SendFaceRpcAsync(rpcRequest);
+        }
+
+        private WalletConnectVersion getWalletConnectVersionByUri(string wcUri)
+        {
+            if (WC_URI_V1_REGEX.IsMatch(wcUri))
+            {
+                return WalletConnectVersion.V1;
+            } 
+            else if (WC_URI_V2_REGEX.IsMatch(wcUri))
+            {
+                return WalletConnectVersion.V2;
             }
             else
             {
-                await wallet.Reject(new RejectParams()
-                {
-                    Id = @struct.Id.Value,
-                    Reason = ErrorResponse.FromErrorType(ErrorType.NOT_APPROVED)
-                });
-                return null;
+                throw new NotSupportedException("Given uri does not match with any of WalletConnect version");
             }
-        }
-
-        private void Update()
-        {
-            if (messageQueue.Count > 0)
-            {
-                MessageEvent message = messageQueue.Dequeue();
-                string payload = _walletClient.Core.Crypto
-                    .Decrypt(message.Topic, message.Message)
-                    .Result;
-                WcRequestEvent<object> json = JsonConvert.DeserializeObject<WcRequestEvent<object>>(payload);
-
-                switch (json.Params.Request.Method)
-                {
-                    case "personal_sign":
-                        WcRequestEvent<string[]> personalSignEvent = JsonConvert.DeserializeObject<WcRequestEvent<string[]>>(payload);
-                        StartCoroutine(personalSignRequest(message.Topic, personalSignEvent));
-                        break;
-                    case "eth_sendTransaction":
-                        WcRequestEvent<SendTransaction[]> sendTransactionEvent = JsonConvert.DeserializeObject<WcRequestEvent<SendTransaction[]>>(payload);
-                        StartCoroutine(sendTransactionRequest(message.Topic,  sendTransactionEvent));
-                        break;
-                }
-            }
-        }
-
-        public async Task Connect()
-        {
-            SignClientOptions options = new SignClientOptions()
-            {
-                ProjectId = "5d868db873762d9d13d736cd29324fb0",
-                Metadata = new Metadata()
-                {
-                    Description = "Face Wallet Dev",
-                    Icons = new[] { "https://framerusercontent.com/images/nwVboVsol0AjcTPcRr0gdqlQODk.png" },
-                    Name = "Face Wallet Dev",
-                    Url = "https://facewallet.xyz/"
-                },
-                // Omit if you want persistant storage
-                Storage = new FileSystemStorage(Application.persistentDataPath + "/wc")
-            };
-
-            try
-            {
-                _walletClient = await WalletConnectSignClient.Init(options);
-                
-                _engine = (Engine)_walletClient.Engine;
-            
-                _engine.Events.ListenFor<MessageEvent>("request_wc_sessionRequest", (sender, @message) =>
-                {
-                    messageQueue.Enqueue(@message.EventData);
-                });
-            
-                _isConnect = true;
-            }
-            catch (System.Exception e)
-            {   
-                Debug.Log("Wallet Connect Error");
-                Debug.Log(e);
-            }
-        }
-
-        IEnumerator personalSignRequest(string topic, WcRequestEvent<string[]> @event)
-        {
-            yield return _onPersonalSignRequest(topic, @event);
-        }  
-        IEnumerator sendTransactionRequest(string topic, WcRequestEvent<SendTransaction[]> @event)
-        {
-            yield return _onSendTransactionEvent(topic, @event);
         }
     }
 }

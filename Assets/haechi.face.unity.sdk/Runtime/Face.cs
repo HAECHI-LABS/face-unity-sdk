@@ -1,10 +1,12 @@
 using haechi.face.unity.sdk.Runtime.Client;
+using haechi.face.unity.sdk.Runtime.Client.WalletConnect;
 using haechi.face.unity.sdk.Runtime.Contract;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.Web3;
 using UnityEngine;
+using WalletConnectSharpV1.Unity.Network;
 
 namespace haechi.face.unity.sdk.Runtime
 {
@@ -19,12 +21,12 @@ namespace haechi.face.unity.sdk.Runtime
         /// </value>
         public const int WEBVIEW_VERSION = 1;
         
-        private Wallet _wallet;
         private Auth _auth;
+        private Wallet _wallet;
         private WalletConnect _walletConnect;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
-        
+
         private WalletProxy _walletProxy;
         private AuthProxy _authProxy;
         
@@ -35,7 +37,7 @@ namespace haechi.face.unity.sdk.Runtime
 #if UNITY_WEBGL
             Iframe.CreateIframe();
 #endif
-            
+
             this._safeWebviewController = this.GetComponent<SafeWebviewController>();
             
             this._walletProxy = new WalletProxy();
@@ -47,13 +49,14 @@ namespace haechi.face.unity.sdk.Runtime
                 this,
                 this._walletProxy);
             this.provider = (FaceRpcProvider)factory.CreateUnityRpcClient();
-
+#if !UNITY_WEBGL
             this._registryFaceUnityScripts();
-            
+#endif
             Web3 web3 = new Web3(this.provider);
-            this._wallet = new Wallet(this.provider);
             this._auth = new Auth(this.provider);
-            
+            this._wallet = new Wallet(this.provider);
+            this._walletConnect = new WalletConnect(this._wallet);
+
             // Now register real wallet
             this._walletProxy.Register(this._wallet);
             this._authProxy.Register(this._auth);
@@ -63,13 +66,50 @@ namespace haechi.face.unity.sdk.Runtime
         /// <summary>
         /// Disconnect Face Wallet.&#10; If this method be called, need to initialize again to connect with Face Wallet.
         /// </summary>
-        public void Disconnect()
+        public async void Disconnect()
         {
+            await this._walletConnect.DisconnectWalletConnectV1();
             FaceSettings.Destruct();
-            
             this.provider = null;
             this.dataFactory = null;
+            this._auth = null;
             this._wallet = null;
+            this._walletConnect = null;
+#if !UNITY_WEBGL
+            if (this.gameObject.GetComponent<NativeWebSocketTransport>() != null)
+            {
+                Destroy(this.gameObject.GetComponent<NativeWebSocketTransport>());
+            }
+            if (this.gameObject.GetComponent<WalletConnectV1Client>() != null)
+            {
+                Destroy(this.gameObject.GetComponent<WalletConnectV1Client>());
+            }
+            // For iOS AppDelegate plugin, need to add WalletConnectV1Client as a GameObject
+            if (GameObject.Find("WalletConnectV1Client") != null)
+            {
+                Destroy(GameObject.Find("WalletConnectV1Client"));
+            }
+
+            if (this.gameObject.GetComponent<WalletConnectV2Client>() != null)
+            {
+                Destroy(this.gameObject.GetComponent<WalletConnectV2Client>());
+            }
+#endif
+        }
+        
+        /// <summary>
+        /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Auth</a>.
+        /// </summary>
+        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Module.Wallet</a></returns>
+        /// <exception cref="NotInitializedException">Throws if FaceSettings is not initialized.</exception>
+        public Auth Auth()
+        {
+            if (!FaceSettings.IsInitialized())
+            {
+                throw new NotInitializedException();
+            }
+
+            return this._auth;
         }
 
         /// <summary>
@@ -88,27 +128,37 @@ namespace haechi.face.unity.sdk.Runtime
         }
         
         /// <summary>
-        /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Auth</a>.
+        /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.WalletConnect.html">Wallet</a>.
         /// </summary>
-        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Auth.html">Module.Wallet</a></returns>
+        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.WalletConnect.html">Module.Wallet</a></returns>
         /// <exception cref="NotInitializedException">Throws if FaceSettings is not initialized.</exception>
-        public Auth Auth()
+        public WalletConnect WalletConnect()
         {
             if (!FaceSettings.IsInitialized())
             {
                 throw new NotInitializedException();
             }
 
-            return this._auth;
+            return this._walletConnect;
         }
 
         private void _registryFaceUnityScripts()
         {
-            if (gameObject.GetComponent<WalletConnect>() == null)
+            if (this.gameObject.GetComponent<NativeWebSocketTransport>() == null)
             {
-                gameObject.AddComponent<WalletConnect>();
+                this.gameObject.AddComponent<NativeWebSocketTransport>();
+            }
+            // For iOS AppDelegate plugin, need to add WalletConnectV1Client as a GameObject
+            if (GameObject.Find("WalletConnectV1Client") == null)
+            {
+                GameObject nativeWebSocketTransport = new GameObject();
+                nativeWebSocketTransport.name = "WalletConnectV1Client";
+                nativeWebSocketTransport.AddComponent<WalletConnectV1Client>();
+            }
+            if (this.gameObject.GetComponent<WalletConnectV2Client>() == null)
+            {
+                this.gameObject.AddComponent<WalletConnectV2Client>();
             }
         }
-
     }
 }
