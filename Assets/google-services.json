@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "965931844205-joeaogogpn0uvrbo8anfgim9gp1ujvff.apps.googleusercontent.com",
+          "client_id": "965931844205-7ioqn3tai0vdc1mlc6r5728ij3blbttj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.facewallet.dev.app",
+            "certificate_hash": "92ef6f23d56dd202c146fa9d4ed432c846d0f70c"
+          }
+        },
+        {
+          "client_id": "965931844205-ul5p6mhagn0pm9l9e5fmsm0lc7q1fl19.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "xyz.facewallet.dev.app",
@@ -39,10 +47,10 @@
               "client_type": 3
             },
             {
-              "client_id": "965931844205-tt978gju3l3fa97amqp431falebfrqu7.apps.googleusercontent.com",
+              "client_id": "965931844205-hdpefgeadompe0kmlgk7c5t7i082g2nk.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "xyz.facewallet.dev.app"
+                "bundle_id": "xyz.facewallet.unity.app"
               }
             }
           ]
@@ -57,6 +65,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "965931844205-fc7hs81t7fjqls3m9mtjrt14g9rn3vhn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xyz.facewallet.unity.app",
+            "certificate_hash": "92ef6f23d56dd202c146fa9d4ed432c846d0f70c"
+          }
+        },
         {
           "client_id": "965931844205-jofep8gd7g0q6su29fbv8ih4qhc206tj.apps.googleusercontent.com",
           "client_type": 1,
@@ -83,10 +99,10 @@
               "client_type": 3
             },
             {
-              "client_id": "965931844205-tt978gju3l3fa97amqp431falebfrqu7.apps.googleusercontent.com",
+              "client_id": "965931844205-hdpefgeadompe0kmlgk7c5t7i082g2nk.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "xyz.facewallet.dev.app"
+                "bundle_id": "xyz.facewallet.unity.app"
               }
             }
           ]

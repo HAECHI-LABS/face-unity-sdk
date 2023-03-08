@@ -27,7 +27,7 @@ public class SampleDappData : MonoBehaviour
         BlockchainNetwork network = this.inputDesignator.GetBlockchainDrd() != null && this.inputDesignator.GetProfileDrd() != null
             ? BlockchainNetworks.GetNetwork(this.inputDesignator.GetBlockchainDrd().captionText.text, this.inputDesignator.GetProfileDrd().captionText.text)
             : BlockchainNetworks.ValueOf(this.inputDesignator.GetNetworkDrd().captionText.text);
-        string scheme = Application.identifier == "xyz.facewallet.unity.dev" ? "faceunity" : "faceunitydev";
+        string scheme = Application.identifier == "xyz.facewallet.unity.app" ? "faceunity" : "faceunitydev";
             
         return new FaceSettings.Parameters
         {
