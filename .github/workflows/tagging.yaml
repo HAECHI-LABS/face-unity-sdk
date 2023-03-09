@@ -20,12 +20,12 @@ jobs:
           tmp=$(mktemp)
           jq '.version = "'${RELEASE_TAG}'"' Assets/haechi.face.unity.sdk/package.json > $tmp && mv $tmp Assets/haechi.face.unity.sdk/package.json
       - name: Set up Golang
-        uses: actions/setup-go@v2.1.3
+        uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 'stable'
       - name: Install
         run: |
-          go get -u github.com/git-chglog/git-chglog/cmd/git-chglog
+          go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
       - name: Generate Change Log & Release Note
         env:
           RELEASE_TAG: ${{ github.event.inputs.semver }}
