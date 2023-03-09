@@ -1,4 +1,15 @@
 
+<a name="1.3.2"></a>
+## Release: [1.3.2](https://github.com/HAECHI-LABS/core/releases/tag/1.3.2)
+### Features
+- Add WalletConnect module
+- Implement WalletConnectV1 and refactor WalletConnectV2
+- Add WalletConnectV1 library
+
+### Bug Fixes
+- Update google service settings to fix loginWithIdToken errors
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
