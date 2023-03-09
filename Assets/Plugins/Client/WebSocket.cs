@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 using System.Collections;
+using System.Runtime.InteropServices;
+using AOT;
 
 public class MainThreadUtil : MonoBehaviour
 {
