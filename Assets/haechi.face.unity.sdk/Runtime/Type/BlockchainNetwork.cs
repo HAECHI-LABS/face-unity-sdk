@@ -16,6 +16,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BAOBAB,
         MEVERSE,
         MEVERSE_TESTNET,
+        BORA,
+        BORA_TESTNET,
     }
 
     public static class BlockchainNetworks
@@ -60,6 +62,14 @@ namespace haechi.face.unity.sdk.Runtime.Type
                     return 8217;
                 case BlockchainNetwork.BAOBAB:
                     return 1001;
+                case BlockchainNetwork.MEVERSE:
+                    return 7518;
+                case BlockchainNetwork.MEVERSE_TESTNET:
+                    return 4759;
+                case BlockchainNetwork.BORA:
+                    return 77001;
+                case BlockchainNetwork.BORA_TESTNET:
+                    return 99001;
                 default:
                     return 1;
             }

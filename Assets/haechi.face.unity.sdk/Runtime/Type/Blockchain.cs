@@ -11,6 +11,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BNB_SMART_CHAIN,
         KLAYTN,
         MEVERSE,
+        BORA,
     }
 
     public static class Blockchains
@@ -20,25 +21,23 @@ namespace haechi.face.unity.sdk.Runtime.Type
             switch (network)
             {
                 case BlockchainNetwork.ETHEREUM:
-                    return Blockchain.ETHEREUM;
                 case BlockchainNetwork.GOERLI:
                     return Blockchain.ETHEREUM;
                 case BlockchainNetwork.POLYGON:
-                    return Blockchain.POLYGON;
                 case BlockchainNetwork.MUMBAI:
                     return Blockchain.POLYGON;
                 case BlockchainNetwork.BNB_SMART_CHAIN:
-                    return Blockchain.BNB_SMART_CHAIN;
                 case BlockchainNetwork.BNB_SMART_CHAIN_TESTNET:
                     return Blockchain.BNB_SMART_CHAIN;
                 case BlockchainNetwork.KLAYTN:
-                    return Blockchain.KLAYTN;
                 case BlockchainNetwork.BAOBAB:
                     return Blockchain.KLAYTN;
                 case BlockchainNetwork.MEVERSE:
-                    return Blockchain.MEVERSE;
                 case BlockchainNetwork.MEVERSE_TESTNET:
                     return Blockchain.MEVERSE;
+                case BlockchainNetwork.BORA:
+                case BlockchainNetwork.BORA_TESTNET:
+                    return Blockchain.BORA;
                 default:
                     throw new InvalidEnumArgumentException();
             }
@@ -56,6 +55,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 case Blockchain.POLYGON:
                 case Blockchain.BNB_SMART_CHAIN:
                 case Blockchain.KLAYTN:
+                case Blockchain.MEVERSE:
+                case Blockchain.BORA:
                 default:
                     return 18;
             }
@@ -117,6 +118,17 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageMainnet, BlockchainNetwork.MEVERSE },
                         { Profile.ProdTest, BlockchainNetwork.MEVERSE_TESTNET },
                         { Profile.ProdMainnet, BlockchainNetwork.MEVERSE }
+                    }
+                },
+                {
+                    Blockchain.BORA, new Dictionary<Profile, BlockchainNetwork>
+                    {
+                        { Profile.Local, BlockchainNetwork.BORA_TESTNET },
+                        { Profile.Dev, BlockchainNetwork.BORA_TESTNET },
+                        { Profile.StageTest, BlockchainNetwork.BORA_TESTNET },
+                        { Profile.StageMainnet, BlockchainNetwork.BORA },
+                        { Profile.ProdTest, BlockchainNetwork.BORA_TESTNET },
+                        { Profile.ProdMainnet, BlockchainNetwork.BORA }
                     }
                 }
             };
