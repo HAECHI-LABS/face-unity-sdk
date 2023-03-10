@@ -74,7 +74,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
         }
-        
 
         [JsonProperty("from", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
         public string From { get; private set; }

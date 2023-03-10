@@ -18,12 +18,12 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
     public class Wallet : IWallet
     {
-        internal readonly FaceRpcProvider Provider;
+        private readonly FaceRpcProvider _provider;
         private readonly FaceClient _client;
 
         internal Wallet(FaceRpcProvider provider)
         {
-            this.Provider = provider;
+            this._provider = provider;
             this._client = new FaceClient(new Uri(FaceSettings.Instance.ServerHostURL()), new HttpClient());
         }
 
@@ -34,7 +34,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns>Rpc call response. Result is hex string balance.</returns>
         public async Task<FaceRpcResponse> GetBalance(string account)
         {
-            return await this.Provider.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+            return await this._provider.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.eth_getBalance, 
                 account.ToLower(),
                 "latest"));
@@ -51,7 +51,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<object> rpcRequest =
                 new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_sendTransaction, request, requestId);
             
-            FaceRpcResponse response = await this.Provider.SendFaceRpcAsync(rpcRequest);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
             return await this._getTransactionRequestId(requestId, response);
         }
         
@@ -64,7 +64,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<object> rpcRequest = new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), 
                 FaceRpcMethod.eth_call, request, "latest");
-            return await this.Provider.SendFaceRpcAsync(rpcRequest);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.personal_sign,
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
-            return await this.Provider.SendFaceRpcAsync(rpcRequest);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<RawTransaction> rpcRequest =
                 new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
-            return await this.Provider.SendFaceRpcAsync(rpcRequest);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             Blockchain originalBlockchain = FaceSettings.Instance.Blockchain();
             Blockchain switchedBlockchain = Blockchains.OfBlockchainNetwork(network);
             FaceRpcRequest<SwitchNetworkRequest> rpcRequest = new FaceRpcRequest<SwitchNetworkRequest>(originalBlockchain, FaceRpcMethod.face_switchNetwork, new SwitchNetworkRequest(switchedBlockchain.ToString()));
-            FaceRpcResponse response = await this.Provider.SendFaceRpcAsync(rpcRequest);
+            FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
             if (!response.CastResult<string>().Equals(switchedBlockchain.ToString()))
             {
                 throw new SwitchNetworkFailedException();
@@ -113,8 +113,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private async Task<TransactionRequestId> _getTransactionRequestId(string requestId, FaceRpcResponse response)
         {
 #if UNITY_WEBGL
-            Task<TransactionRequestId> task = this.Provider._webRequest.SendHttpGetRequest<TransactionRequestId>(
-                $"{FaceSettings.Instance.ServerHostURL()}/v1/transactions/requests/{requestId}");
+            Task<TransactionRequestId> task = this._provider.WebRequest.SendHttpGetRequest<TransactionRequestId>(
+                $"/v1/transactions/requests/{requestId}");
 #else
             Task<TransactionRequestId> task = this._client.SendHttpGetRequest<TransactionRequestId>(
                 $"/v1/transactions/requests/{requestId}");

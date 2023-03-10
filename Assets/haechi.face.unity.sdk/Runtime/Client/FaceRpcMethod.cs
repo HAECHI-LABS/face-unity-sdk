@@ -22,6 +22,10 @@ namespace haechi.face.unity.sdk.Runtime.Client
         eth_sendTransaction,
         eth_call,
         eth_estimateGas,
+        
+        bora_connect,
+        bora_isConnected,
+        
         personal_sign
     }
     

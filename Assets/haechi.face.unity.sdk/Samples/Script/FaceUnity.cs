@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
+using haechi.face.unity.sdk.Runtime.Client.BoraPortal;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
@@ -245,13 +246,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             this._sendTransactionQueue(transactionTask);
         }
 
-        public async void ConnectWallet()
-        {
-            this._validateIsLoggedIn();
-            await this.face.WalletConnect().ConnectOpenSea(this.dataDesignator.loggedInAddress.text);
-             //this.face.Wallet().ConnectWallet( this.dataDesignator.loggedInAddress.text, this.inputDesignator.wcUrl.text);
-        }
-
         public void SignMessage()
         {
             this._validateIsLoggedIn();
@@ -264,6 +258,40 @@ namespace haechi.face.unity.sdk.Samples.Script
                 Debug.Log($"Result: {result}");
                 this.dataDesignator.SetResult(string.Format($"Signed Message - {response.CastResult<string>()}"));
             }, this._defaultExceptionHandler);
+        }
+        
+        public async void ConnectWallet()
+        {
+            this._validateIsLoggedIn();
+            await this.face.WalletConnect().ConnectOpenSea(this.dataDesignator.loggedInAddress.text);
+        }
+        
+        public void ConnectBora()
+        {
+            this._validateIsLoggedIn();
+            string bappUsn = this.dataDesignator.loggedInId.text;
+            string signatureMessage = $"{bappUsn}:{this.dataDesignator.loggedInAddress.text}";
+            string signature = BoraSignatureGenerator.CreateSignature(signatureMessage, this.sampleDappData.SamplePrivateKey);
+            BoraPortalConnectRequest request = new BoraPortalConnectRequest(
+                bappUsn,
+                signature);
+            Task<FaceRpcResponse> responseTask = this.face.Bora().Connect(request);
+
+            this.actionQueue.Enqueue(responseTask, response =>
+            {
+                string result = JsonConvert.SerializeObject(response);
+                Debug.Log($"Result: {result}");
+                BoraPortalConnectStatusResponse statusResponse = response.CastResult<BoraPortalConnectStatusResponse>();
+                this.dataDesignator.SetResult($"Bora Connect Status - {JsonConvert.SerializeObject(statusResponse)}");
+            }, this._defaultExceptionHandler);
+        }
+
+        public async void IsBoraConnected()
+        {
+            this._validateIsLoggedIn();
+            string bappUsn = this.dataDesignator.loggedInId.text;
+            BoraPortalConnectStatusResponse statusResponse = await this.face.Bora().IsConnected(bappUsn);
+            this.dataDesignator.SetResult($"Bora Connect Status - {JsonConvert.SerializeObject(statusResponse)}");
         }
         
         private async Task<TransactionResult> _sendErc20TransactionTask()

@@ -17,7 +17,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
     public class Auth : IAuth
     {
         private readonly FaceRpcProvider _provider;
-        private FaceLoginResponse _currentUser;
+        internal FaceLoginResponse CurrentUser;
         
         internal Auth(FaceRpcProvider provider)
         {
@@ -69,7 +69,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns>Boolean value. If logged in, returns true.</returns>
         public bool IsLoggedIn()
         {
-            return this._currentUser != null;
+            return this.CurrentUser != null;
         }
 
         private async Task<FaceLoginResponse> _login(FaceRpcMethod method, params string[] parameterList)
@@ -85,8 +85,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 throw new AddressVerificationFailedException();
             }
 
-            this._currentUser = faceLoginResponse;
-            return this._currentUser;
+            this.CurrentUser = faceLoginResponse;
+            return this.CurrentUser;
         }
         
         private async Task<FaceLoginResponse> _loginWithIdToken(FaceRpcMethod method, params FaceLoginIdTokenRequest[] parameterList)
@@ -102,8 +102,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 throw new AddressVerificationFailedException();
             }
             
-            this._currentUser = faceLoginResponse;
-            return this._currentUser;
+            this.CurrentUser = faceLoginResponse;
+            return this.CurrentUser;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_logOut);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
-            this._currentUser = null;
+            this.CurrentUser = null;
             return response;
         }
     }

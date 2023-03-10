@@ -31,7 +31,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private readonly FaceClient _client;
 
-        internal readonly FaceWebRequest _webRequest;
+        internal readonly FaceWebRequest WebRequest;
         
         private readonly MethodHandlers _methodHandlers;
 
@@ -41,7 +41,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             this._webview = safeWebviewController;
             this._client = new FaceClient(uri, new HttpClient());
-            this._webRequest = new FaceWebRequest(face);
+            this.WebRequest = new FaceWebRequest(face);
             this._methodHandlers = new MethodHandlers(this, wallet);
             this._defaultRequestSender = new WebviewRequestSender(this);
             this.JsonSerializerSettings = DefaultJsonSerializerSettingsFactory.BuildDefaultJsonSerializerSettings();
@@ -171,7 +171,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
 #if UNITY_WEBGL
-                FaceRpcResponse response = await this._provider._webRequest.SendRpcRequest($"{FaceSettings.Instance.ServerHostURL()}/v1/rpc", requestMessage);
+                FaceRpcResponse response = await this._provider.WebRequest.SendRpcRequest($"/v1/rpc", requestMessage);
 #else
                 FaceRpcResponse response = await this._provider._client.SendRpcRequest(requestMessage, "/v1/rpc");
 #endif
