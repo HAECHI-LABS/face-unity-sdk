@@ -27004,7 +27004,7 @@ MonoBehaviour:
   landscapeSendErc1155TransactionBtn: {fileID: 1224864482609579577}
   landscapeSignMessageBtn: {fileID: 4714612418505587264}
   landscapeConnectOpenSeaBtn: {fileID: 7640996448593103279}
-  landscapeConnectBoraBtn: {fileID: 1607349977672389189}
+  landscapeConnectBoraBtn: {fileID: 4312278023745246923}
   landscapeIsBoraConnectedBtn: {fileID: 7289960364125207394}
   webSendNativeCoinTransactionBtn: {fileID: 1879311847566140170}
   webSendErc20TransactionBtn: {fileID: 565499711090661458}
