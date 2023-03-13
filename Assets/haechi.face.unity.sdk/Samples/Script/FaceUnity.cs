@@ -98,7 +98,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             Debug.Log("Start Login");
 
             FaceLoginResponse response = await this.face.Auth().LoginWithIdToken(
-                new FaceLoginIdTokenRequest(idToken, RsaSigner.Sign(
+                new FaceLoginIdTokenRequest(idToken, RSASigner.Sign(
                     (this.inputDesignator.GetPrivateKey() == null
                         ? this.sampleDappData.SamplePrivateKey
                         : this.inputDesignator.GetPrivateKey().text), idToken))
@@ -274,7 +274,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string privateKey = this.inputDesignator.GetPrivateKey() == null
                 ? this.sampleDappData.SamplePrivateKey
                 : this.inputDesignator.GetPrivateKey().text;
-            string signature = RsaSigner.Sign(privateKey, signatureMessage);
+            string signature = RSASigner.Sign(privateKey, signatureMessage);
             BoraPortalConnectRequest request = new BoraPortalConnectRequest(
                 bappUsn,
                 signature);
