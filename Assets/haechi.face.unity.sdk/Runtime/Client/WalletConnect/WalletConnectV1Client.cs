@@ -286,7 +286,6 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                 await this._walletConnectUnitySession.SendRequest(signNetworkMessage[queuedTime]);
             }
             
-            Debug.Log("Pausing..\n");
             normalize_background_time();
             pause_unity();
         }

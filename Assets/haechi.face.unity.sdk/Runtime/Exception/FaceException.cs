@@ -21,6 +21,7 @@ namespace haechi.face.unity.sdk.Runtime.Exception
         public static readonly ErrorCode UNAUTHORIZED = new ErrorCode { Value = "U0009", Message = "Not logged in yet" };
         public static readonly ErrorCode WEBVIEW_CLOSED = new ErrorCode { Value = "U0010", Message = "Webview is closed" };
         public static readonly ErrorCode FAILED_TO_SWITCH_NETWORK = new ErrorCode { Value = "U0011", Message = "Failed to switch network." };
+        public static readonly ErrorCode BORA_CONNECT_BLOCKCHAIN_INVALID = new ErrorCode { Value = "U0012", Message = "Only BORA network can use this method." };
     }
     
     public class InvalidWebviewMessageException : FaceException
@@ -83,6 +84,11 @@ namespace haechi.face.unity.sdk.Runtime.Exception
     public class SwitchNetworkFailedException : FaceException
     {
         public SwitchNetworkFailedException() : base(ErrorCodes.FAILED_TO_SWITCH_NETWORK) {}
+    }
+    
+    public class BoraConnectInvalidBlockchainException : FaceException
+    {
+        public BoraConnectInvalidBlockchainException() : base(ErrorCodes.BORA_CONNECT_BLOCKCHAIN_INVALID) {}
     }
 
     /// <value>

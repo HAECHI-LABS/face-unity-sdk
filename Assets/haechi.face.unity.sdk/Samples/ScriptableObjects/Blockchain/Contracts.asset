@@ -55,11 +55,21 @@ MonoBehaviour:
     erc1155ContractAddress: 0x73b4c267cb84f8437d0cf89c2c98d687d2543a34
   - blockchainNetwork: 8
     erc20Decimal18ContractAddress: TODO
-    erc20Decimal6ContractAddress: TODO
-    erc721ContractAddress: TODO
-    erc1155ContractAddress: TODO
+    erc20Decimal6ContractAddress: 0xab3E0c68E867F1C81A6660960FdfcF53402b33BF
+    erc721ContractAddress: 0xB3484b204c96b366e1004e94bc50fe637322dA47
+    erc1155ContractAddress: 0xD978b144306Ef63A7243695CCaf51E68e9a950De
   - blockchainNetwork: 9
     erc20Decimal18ContractAddress: 0x63C1664c1Ee107D762C7ed7517Ca1cD25bc33C0b
     erc20Decimal6ContractAddress: 0x72c943436A9218C72836e7eC0E241b763869b417
     erc721ContractAddress: 0xF512373412168439B2e587dCfc13e839F0D8472f
     erc1155ContractAddress: 0x16B23A1EB0e216b803A8280041fF62f6aFd2B78e
+  - blockchainNetwork: 10
+    erc20Decimal18ContractAddress: 0x5de4eB478160972e6E5250Ee6EF74Eb7e73e8867
+    erc20Decimal6ContractAddress: 0x231234a72478F99c3D1eE0f322bcBA259CAC9412
+    erc721ContractAddress: 0x646ea0705805AE57C3500d6EC46BF982Fa88ed83
+    erc1155ContractAddress: 0xb6FCfC6c65Be58E2f59530CB357bfeA084C43201
+  - blockchainNetwork: 11
+    erc20Decimal18ContractAddress: 0xb6FCfC6c65Be58E2f59530CB357bfeA084C43201
+    erc20Decimal6ContractAddress: 0x231234a72478F99c3D1eE0f322bcBA259CAC9412
+    erc721ContractAddress: 0x0F2585C209Fc272ad29b9c945766A0F7C45db7a0
+    erc1155ContractAddress: 0xfe72540387e1F9aeFAC07D230dAE1865ad2E733c

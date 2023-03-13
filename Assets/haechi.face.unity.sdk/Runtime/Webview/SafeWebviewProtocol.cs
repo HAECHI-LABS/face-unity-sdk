@@ -10,7 +10,6 @@ using haechi.face.unity.sdk.Runtime.Type;
 using JetBrains.Annotations;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {

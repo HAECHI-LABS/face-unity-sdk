@@ -24,6 +24,7 @@ namespace haechi.face.unity.sdk.Runtime
         private Auth _auth;
         private Wallet _wallet;
         private WalletConnect _walletConnect;
+        private Bora _bora;
         internal FaceRpcProvider provider;
         internal ContractDataFactory dataFactory;
 
@@ -55,7 +56,8 @@ namespace haechi.face.unity.sdk.Runtime
             Web3 web3 = new Web3(this.provider);
             this._auth = new Auth(this.provider);
             this._wallet = new Wallet(this.provider);
-            this._walletConnect = new WalletConnect(this._wallet);
+            this._walletConnect = new WalletConnect(this.provider, this._wallet);
+            this._bora = new Bora(this.provider, this._auth);
 
             // Now register real wallet
             this._walletProxy.Register(this._wallet);
@@ -140,6 +142,21 @@ namespace haechi.face.unity.sdk.Runtime
             }
 
             return this._walletConnect;
+        }
+        
+        /// <summary>
+        /// Check Face initialization and returns <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Bora.html">Bora</a>.
+        /// </summary>
+        /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Module.Bora.html">Module.Bora</a></returns>
+        /// <exception cref="NotInitializedException">Throws if FaceSettings is not initialized.</exception>
+        public Bora Bora()
+        {
+            if (!FaceSettings.IsInitialized())
+            {
+                throw new NotInitializedException();
+            }
+
+            return this._bora;
         }
 
         private void _registryFaceUnityScripts()

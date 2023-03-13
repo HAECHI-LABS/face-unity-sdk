@@ -26,21 +26,27 @@ namespace haechi.face.unity.sdk.Samples.Script
             sendErc721TransactionBtn,
             sendErc1155TransactionBtn,
             signMessageBtn,
-            connectOpenSeaBtn;
+            connectOpenSeaBtn,
+            connectBoraBtn,
+            isBoraConnectedBtn;
         [SerializeField] internal Button landscapeSendNativeCoinTransactionBtn,
             landscapeSendErc20TransactionBtn,
             landscapeGetErc20BalanceBtn,
             landscapeSendErc721TransactionBtn,
             landscapeSendErc1155TransactionBtn,
             landscapeSignMessageBtn,
-            landscapeConnectOpenSeaBtn;
+            landscapeConnectOpenSeaBtn,
+            landscapeConnectBoraBtn,
+            landscapeIsBoraConnectedBtn;
         [SerializeField] internal Button webSendNativeCoinTransactionBtn,
             webSendErc20TransactionBtn,
             webGetErc20BalanceBtn,
             webSendErc721TransactionBtn,
             webSendErc1155TransactionBtn,
             webSignMessageBtn,
-            webConnectOpenSeaBtn;
+            webConnectOpenSeaBtn,
+            webConnectBoraBtn,
+            webIsBoraConnectedBtn;
 
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey, privateKey;
@@ -559,6 +565,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.webMessageToSign.interactable = enable;
             this.webSignMessageBtn.interactable = enable;
             this.webConnectOpenSeaBtn.interactable = enable;
+            this.webConnectBoraBtn.interactable = enable;
+            this.webIsBoraConnectedBtn.interactable = enable;
 #else
             this.to.interactable = enable;
             this.amount.interactable = enable;
@@ -607,7 +615,11 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.landscapeSignMessageBtn.interactable = enable;
 
             this.connectOpenSeaBtn.interactable = enable;
+            this.connectBoraBtn.interactable = enable;
+            this.isBoraConnectedBtn.interactable = enable;
             this.landscapeConnectOpenSeaBtn.interactable = enable;
+            this.landscapeConnectBoraBtn.interactable = enable;
+            this.landscapeIsBoraConnectedBtn.interactable = enable;
 #endif
         }
         

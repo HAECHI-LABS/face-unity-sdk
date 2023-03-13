@@ -20,6 +20,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 {
     public class WalletConnect
     {
+        private readonly FaceRpcProvider _provider;
         private readonly Wallet _wallet;
         private readonly WalletConnectClientSupplier _walletConnectClientSupplier;
         private readonly WalletConnectV1Client _walletConnectV1;
@@ -31,8 +32,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private static Regex WC_URI_V1_REGEX = new Regex(@"wc:([^@]+)@([^?]+)\?bridge=([^&])+&key=(\w+)");
         private static Regex WC_URI_V2_REGEX = new Regex(@"wc:([^@]+)@2\?relay-protocol=([^&])+&symKey=(\w+)");
         
-        public WalletConnect(Wallet wallet)
+        public WalletConnect(FaceRpcProvider provider, Wallet wallet)
         {
+            this._provider = provider;
             this._wallet = wallet;
             this._walletConnectClientSupplier = new WalletConnectClientSupplier();
             this._walletConnectV1 = (WalletConnectV1Client) this._walletConnectClientSupplier.Supply(WalletConnectVersion.V1);
@@ -162,7 +164,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_openWalletConnect, dappName, dappUrl, (invalid ? "invalid" : null));
             
-            return await this._wallet.Provider.SendFaceRpcAsync(faceRpcRequest);
+            return await this._provider.SendFaceRpcAsync(faceRpcRequest);
         }
 
         public async Task<FaceRpcResponse> _confirmWalletConnectDapp<T>(T dappMetadata)
@@ -170,7 +172,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<T> faceRpcRequest = new FaceRpcRequest<T>(FaceSettings.Instance.Blockchain(),
                 FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
 
-            return await this._wallet.Provider.SendFaceRpcAsync(faceRpcRequest);
+            return await this._provider.SendFaceRpcAsync(faceRpcRequest);
         }
 
         private void _registryWalletConnectV1Event()
@@ -255,7 +257,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                     FaceRpcMethod.personal_sign,
                     metadata,
                     message);
-            return await this._wallet.Provider.SendFaceRpcAsync(rpcRequest);
+            return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
 
         private WalletConnectVersion getWalletConnectVersionByUri(string wcUri)

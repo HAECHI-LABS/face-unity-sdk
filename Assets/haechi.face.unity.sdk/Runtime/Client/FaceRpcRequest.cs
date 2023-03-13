@@ -1,9 +1,7 @@
 using System;
-using System.Threading;
 using haechi.face.unity.sdk.Runtime.Type;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
-using Random = UnityEngine.Random;
 
 namespace haechi.face.unity.sdk.Runtime.Client
 {
@@ -25,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
         private static int _generateId()
         {
-            System.Random rand = new System.Random();
+            Random rand = new Random();
             return rand.Next(1, 100000);
         }
 
@@ -74,7 +72,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
         {
             this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
         }
-        
 
         [JsonProperty("from", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
         public string From { get; private set; }
