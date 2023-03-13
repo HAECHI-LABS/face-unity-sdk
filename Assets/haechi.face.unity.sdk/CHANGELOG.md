@@ -1,4 +1,11 @@
 
+<a name="1.3.3"></a>
+## Release: [1.3.3](https://github.com/HAECHI-LABS/core/releases/tag/1.3.3)
+### Features
+- Add connect Bora method
+- Add bora network
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
