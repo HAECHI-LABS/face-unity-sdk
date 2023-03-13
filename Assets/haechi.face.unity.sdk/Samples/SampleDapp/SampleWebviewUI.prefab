@@ -11607,7 +11607,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: IsBoraConnected
@@ -16387,7 +16387,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: ConnectBora
@@ -19028,7 +19028,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: ConnectBora
@@ -23232,7 +23232,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: ConnectBora
@@ -23503,7 +23503,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: IsBoraConnected
@@ -32773,7 +32773,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 9156270641783666903}
         m_TargetAssemblyTypeName: haechi.face.unity.sdk.Samples.Script.FaceUnity,
           FaceSDK-CSharp
         m_MethodName: IsBoraConnected

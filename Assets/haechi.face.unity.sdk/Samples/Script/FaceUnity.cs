@@ -271,7 +271,10 @@ namespace haechi.face.unity.sdk.Samples.Script
             this._validateIsLoggedIn();
             string bappUsn = this.dataDesignator.loggedInId.text;
             string signatureMessage = $"{bappUsn}:{this.dataDesignator.loggedInAddress.text}";
-            string signature = BoraSignatureGenerator.CreateSignature(signatureMessage, this.sampleDappData.SamplePrivateKey);
+            string privateKey = this.inputDesignator.GetPrivateKey() == null
+                ? this.sampleDappData.SamplePrivateKey
+                : this.inputDesignator.GetPrivateKey().text;
+            string signature = RsaSigner.Sign(privateKey, signatureMessage);
             BoraPortalConnectRequest request = new BoraPortalConnectRequest(
                 bappUsn,
                 signature);
