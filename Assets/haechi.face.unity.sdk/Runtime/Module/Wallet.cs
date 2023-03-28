@@ -91,6 +91,12 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
 
+        public async Task<FaceRpcResponse> OpenHome()
+        {
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openHome);
+            return await this._provider.SendFaceRpcAsync(request);
+        }
+
         /// <summary>
         /// Switch Face Wallet's network
         /// </summary>
