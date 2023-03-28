@@ -16,8 +16,26 @@ namespace haechi.face.unity.sdk.Samples.Script
         [Header("UI References")]
         [SerializeField] private SampleDappData sampleDappData;
         
-        [SerializeField] internal Button initializeBtn, switchNetworkBtn, loginBtn, googleLoginBtn, facebookLoginBtn, appleLoginBtn, loginWithGoogleIdTokenBtn , logoutBtn, getBalanceBtn;
-        [SerializeField] internal Button landscapeInitializeBtn, landscapeSwitchNetworkBtn, landscapeLoginBtn, landscapeGoogleLoginBtn, landscapeFacebookLoginBtn, landscapeAppleLoginBtn, landscapeLoginWithGoogleIdTokenBtn, landscapeLogoutBtn, landscapeGetBalanceBtn;
+        [SerializeField] internal Button initializeBtn, 
+            switchNetworkBtn, 
+            loginBtn, 
+            googleLoginBtn, 
+            facebookLoginBtn, 
+            appleLoginBtn, 
+            loginWithGoogleIdTokenBtn, 
+            logoutBtn, 
+            getBalanceBtn,
+            openHomeBtn;
+        [SerializeField] internal Button landscapeInitializeBtn, 
+            landscapeSwitchNetworkBtn, 
+            landscapeLoginBtn, 
+            landscapeGoogleLoginBtn, 
+            landscapeFacebookLoginBtn, 
+            landscapeAppleLoginBtn, 
+            landscapeLoginWithGoogleIdTokenBtn, 
+            landscapeLogoutBtn, 
+            landscapeGetBalanceBtn,
+            landscapeOpenHomeBtn;
         [SerializeField] internal Button webInitializeBtn, webSwitchNetworkBtn, webLoginBtn, webGoogleLoginBtn, webFacebookLoginBtn, webAppleLoginBtn, webLogoutBtn, webGetBalanceBtn, webGoogleIdTokenBtn;
 
         [SerializeField] internal Button sendNativeCoinTransactionBtn,
@@ -46,7 +64,8 @@ namespace haechi.face.unity.sdk.Samples.Script
             webSignMessageBtn,
             webConnectOpenSeaBtn,
             webConnectBoraBtn,
-            webIsBoraConnectedBtn;
+            webIsBoraConnectedBtn,
+            webOpenHomeBtn;
 
         public TMP_Dropdown profileDrd, blockchainDrd, networkDrd;
         public TMP_InputField apiKey, privateKey;
@@ -267,6 +286,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.EnableGetBalance(false);
             this.EnableLogout(false);
             this.EnableTestSection(false);
+            this.EnableOpenHome(false);
         }
 
         public void SetWalletConnectedInputStatus()
@@ -274,6 +294,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.EnableConnectWalletSection(false);
             this.EnableLogin(true);
             this.EnableLogout(true);
+            this.EnableOpenHome(true);
         }
         
         public void DisableLoginInputStatus()
@@ -523,6 +544,16 @@ namespace haechi.face.unity.sdk.Samples.Script
 #else
             this.logoutBtn.interactable = enable;
             this.landscapeLogoutBtn.interactable = enable;
+#endif
+        }
+            
+        private void EnableOpenHome(bool enable)
+        {
+#if UNITY_WEBGL
+            this.webOpenHomeBtn.interactable = enable;
+#else
+            this.openHomeBtn.interactable = enable;
+            this.landscapeOpenHomeBtn.interactable = enable;
 #endif
         }
         

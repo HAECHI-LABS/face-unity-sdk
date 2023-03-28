@@ -17,6 +17,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         face_confirmWalletConnectDapp,
         face_closeIframe,
         face_switchNetwork,
+        face_openHome,
 
         eth_getBalance,
         eth_sendTransaction,

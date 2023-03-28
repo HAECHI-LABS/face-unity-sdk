@@ -157,6 +157,17 @@ namespace haechi.face.unity.sdk.Samples.Script
             return new LoginResult(balance, response.faceUserId, address);
         }
 
+        public void OpenHome()
+        {
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().OpenHome();
+            
+            this.actionQueue.Enqueue(responseTask, response =>
+            {
+                string result = JsonConvert.SerializeObject(response);
+                Debug.Log($"Result: {result}");
+            }, this._defaultExceptionHandler);
+        }
+
         public void Logout()
         {
             Task<FaceRpcResponse> responseTask = this.face.Auth().Logout();
