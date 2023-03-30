@@ -24,5 +24,8 @@ namespace face_unity.haechi.face.unity.sdk.Runtime.Utils
 
             throw new InvalidEnumArgumentException($"Enum name with {value} does not exist");
         }
+        
+        public static List<TEnum> AllEnumAsList<TEnum>() where TEnum : Enum 
+            => ((TEnum[])Enum.GetValues(typeof(TEnum))).ToList();
     }
 }
