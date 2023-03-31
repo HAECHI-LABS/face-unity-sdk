@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -93,7 +94,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         public async Task<FaceRpcResponse> OpenHome()
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openHome);
+            return await this.OpenHome(null);
+        }
+
+        public async Task<FaceRpcResponse> OpenHome([AllowNull] OpenHomeOption option)
+        {
+            if (option == null)
+            {
+                option = OpenHomeOption.AllBlockchains();
+            }
+            FaceRpcRequest<OpenHomeOption> request = new FaceRpcRequest<OpenHomeOption>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openHome, option);
             return await this._provider.SendFaceRpcAsync(request);
         }
 

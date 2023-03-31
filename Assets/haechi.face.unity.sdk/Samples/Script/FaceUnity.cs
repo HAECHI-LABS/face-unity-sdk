@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.BoraPortal;
@@ -26,6 +28,13 @@ namespace haechi.face.unity.sdk.Samples.Script
         [Header("Broadcast to")] 
         [SerializeField] private VoidEventChannelSO ConnectToBlockchainNetwork = default;
 
+        [SerializeField] private VoidEventChannelSO _loginSuccess;
+        [SerializeField] private VoidEventChannelSO _logoutSuccess;
+
+        [Header("Listening on")] 
+        [SerializeField] private VoidEventChannelSO _onOpenAllBlockchainWalletHome;
+        [SerializeField] private BlockchainsEventChannelSO _onOpenSelectedBlockchainWalletHome;
+
         private void Start()
         {
             Application.targetFrameRate = 60;
@@ -34,6 +43,48 @@ namespace haechi.face.unity.sdk.Samples.Script
         public void Test()
         {
             // this.face._walletConnectV1.Test();
+        }
+
+        private void OnEnable()
+        {
+            this._onOpenAllBlockchainWalletHome.OnEventRaised += this.OpenWalletHome;
+            this._onOpenSelectedBlockchainWalletHome.OnEventRaised += this.OpenWalletHome;
+        }
+
+        private void OnDisable()
+        {
+            this._onOpenAllBlockchainWalletHome.OnEventRaised -= this.OpenWalletHome;
+            this._onOpenSelectedBlockchainWalletHome.OnEventRaised -= this.OpenWalletHome;
+        }
+
+        private void OpenWalletHome()
+        {
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().OpenHome();
+            
+            this.actionQueue.Enqueue(responseTask, response =>
+            {
+                string result = JsonConvert.SerializeObject(response);
+                Debug.Log($"Result: {result}");
+            }, this._defaultExceptionHandler);
+        }
+
+        private void OpenWalletHome(List<Blockchain> blockchains)
+        {
+            Profile profile = this.sampleDappData.Parameters()
+                .Environment.GetValueOrDefault(Profile.ProdTest);
+            
+            List<BlockchainNetwork> blockchainNetworks = blockchains.ConvertAll(blockchain =>
+            {
+                return BlockchainNetworks.GetNetwork(blockchain, profile);
+            });
+            
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().OpenHome(OpenHomeOption.Of(blockchainNetworks));
+            
+            this.actionQueue.Enqueue(responseTask, response =>
+            {
+                string result = JsonConvert.SerializeObject(response);
+                Debug.Log($"Result: {result}");
+            }, this._defaultExceptionHandler);
         }
 
         public void InitializeFace()
@@ -76,6 +127,8 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetCoinBalance(response.balance);
                 this.dataDesignator.SetLogoutInstruction();
                 this.inputDesignator.SetLoggedInInputStatus();
+                
+                this._loginSuccess.RaiseEvent();
             }, this._defaultExceptionHandler);
         }
         
@@ -115,7 +168,9 @@ namespace haechi.face.unity.sdk.Samples.Script
             this.dataDesignator.SetLoggedInAddress(loginResult.userAddress);
             this.dataDesignator.SetCoinBalance(loginResult.balance);
             this.dataDesignator.SetLogoutInstruction();
-            this.inputDesignator.SetLoggedInInputStatus();         
+            this.inputDesignator.SetLoggedInInputStatus();
+            
+            this._loginSuccess.RaiseEvent();
         }
         
         public void GoogleLoginAndGetBalance()
@@ -145,6 +200,8 @@ namespace haechi.face.unity.sdk.Samples.Script
                 
                 this.dataDesignator.SetLogoutInstruction();
                 this.inputDesignator.SetLoggedInInputStatus();
+                
+                _loginSuccess.RaiseEvent();
             }, this._defaultExceptionHandler);
         }
 
@@ -155,17 +212,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             string balance = await this._getBalance(address);
 
             return new LoginResult(balance, response.faceUserId, address);
-        }
-
-        public void OpenHome()
-        {
-            Task<FaceRpcResponse> responseTask = this.face.Wallet().OpenHome();
-            
-            this.actionQueue.Enqueue(responseTask, response =>
-            {
-                string result = JsonConvert.SerializeObject(response);
-                Debug.Log($"Result: {result}");
-            }, this._defaultExceptionHandler);
         }
 
         public void Logout()
@@ -179,6 +225,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.InitializeDataStatus();
                 this.inputDesignator.InitializeInputStatus();
                 this.face.Disconnect();
+                this._logoutSuccess.RaiseEvent();
             }, this._defaultExceptionHandler);
         }
 

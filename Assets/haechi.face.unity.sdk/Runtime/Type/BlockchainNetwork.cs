@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Type
@@ -27,6 +28,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
             return EnumUtils.FindEquals<BlockchainNetwork>(network);
         }
 
+        public static BlockchainNetwork GetNetwork(Blockchain blockchain, Profile profile)
+        {
+            return GetNetwork(blockchain.ToString(), profile.ToString());
+        }
+
         public static BlockchainNetwork GetNetwork(string blockchain, string profile)
         {
             if (!Blockchains.Map.TryGetValue(Blockchains.ValueOf(blockchain), out Dictionary<Profile, BlockchainNetwork> profileNetworkMap))
@@ -40,6 +46,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
             }
 
             return network;
+        }
+
+        public static string String(this BlockchainNetwork network)
+        {
+            return network.ToString().ToLower();
         }
 
         public static int GetChainId(this BlockchainNetwork blockchainNetwork)
