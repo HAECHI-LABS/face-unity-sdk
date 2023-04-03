@@ -4,14 +4,14 @@ namespace haechi.face.unity.sdk.Samples.Script
 {
     public class UiSelector : MonoBehaviour
     {
-        public GameObject portraitUI, landscapeUI, webGlUi;
+        public GameObject portraitUI, landscapeUI, webGlUI;
 
         private void Update()
         {
 #if UNITY_WEBGL
             this.portraitUI.SetActive(false);
             this.landscapeUI.SetActive(false);
-            this.webGlUi.SetActive(true);
+            this.webGlUI.SetActive(true);
 #else
             if (_isPortrait())
             {

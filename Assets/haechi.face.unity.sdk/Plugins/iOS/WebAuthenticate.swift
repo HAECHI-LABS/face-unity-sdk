@@ -30,7 +30,7 @@ import UIKit
     
     @objc public func add_observers(_ objectName: String) {
         self.backgroundNotificationObserver = NotificationCenter.default.addObserver(
-            forName: UIScene.didEnterBackgroundNotification,
+            forName: UIApplication.didEnterBackgroundNotification,
             object: nil,
             queue: OperationQueue.main
         ) { [weak self] _ in
@@ -38,7 +38,7 @@ import UIKit
         }
 
         self.foregroundNotificationObserver = NotificationCenter.default.addObserver(
-            forName: UIScene.didActivateNotification,
+            forName: UIApplication.didBecomeActiveNotification,
             object: nil,
             queue: OperationQueue.main
         ) { [weak self] _ in
