@@ -21,8 +21,43 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BORA_TESTNET,
     }
 
+    public class BlockchainNetworkProperty
+    {
+        public bool IsTestnet;
+        public int ChainId;
+        public Blockchain Blockchain;
+    }
+
     public static class BlockchainNetworks
     {
+        public static Dictionary<BlockchainNetwork, BlockchainNetworkProperty> Properties =
+            new Dictionary<BlockchainNetwork, BlockchainNetworkProperty>
+            {
+                // Ethereum
+                { BlockchainNetwork.ETHEREUM, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 1, Blockchain = Blockchain.ETHEREUM }},
+                { BlockchainNetwork.GOERLI, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 5, Blockchain = Blockchain.ETHEREUM }},
+                
+                // Polygon
+                { BlockchainNetwork.POLYGON, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 137, Blockchain = Blockchain.POLYGON }},
+                { BlockchainNetwork.MUMBAI, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 80001, Blockchain = Blockchain.POLYGON }},
+                
+                // BSC
+                { BlockchainNetwork.BNB_SMART_CHAIN, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 56, Blockchain = Blockchain.BNB_SMART_CHAIN }},
+                { BlockchainNetwork.BNB_SMART_CHAIN_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 97, Blockchain = Blockchain.BNB_SMART_CHAIN }},
+                
+                // Klaytn
+                { BlockchainNetwork.KLAYTN, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 8217, Blockchain = Blockchain.KLAYTN }},
+                { BlockchainNetwork.BAOBAB, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 1001, Blockchain = Blockchain.KLAYTN }},
+                
+                // MEVerse
+                { BlockchainNetwork.MEVERSE, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 7518, Blockchain = Blockchain.MEVERSE }},
+                { BlockchainNetwork.MEVERSE_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 4759, Blockchain = Blockchain.MEVERSE }},
+                
+                // BORA
+                { BlockchainNetwork.BORA, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 77001, Blockchain = Blockchain.BORA }},
+                { BlockchainNetwork.BORA_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 99001, Blockchain = Blockchain.BORA }},
+            };
+
         public static BlockchainNetwork ValueOf(string network)
         {
             return EnumUtils.FindEquals<BlockchainNetwork>(network);
@@ -48,6 +83,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
             return network;
         }
 
+        public static bool MatchWithProfile(this BlockchainNetwork blockchainNetwork, Profile profile)
+        {
+            return Properties[blockchainNetwork].IsTestnet == !profile.IsMainNet();
+        }
+
         public static string String(this BlockchainNetwork network)
         {
             return network.ToString().ToLower();
@@ -55,35 +95,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
         public static int GetChainId(this BlockchainNetwork blockchainNetwork)
         {
-            switch (blockchainNetwork)
-            {
-                case BlockchainNetwork.ETHEREUM:
-                    return 1;
-                case BlockchainNetwork.GOERLI:
-                    return 5;
-                case BlockchainNetwork.POLYGON:
-                    return 137;
-                case BlockchainNetwork.MUMBAI:
-                    return 80001;
-                case BlockchainNetwork.BNB_SMART_CHAIN:
-                    return 56;
-                case BlockchainNetwork.BNB_SMART_CHAIN_TESTNET:
-                    return 97;
-                case BlockchainNetwork.KLAYTN:
-                    return 8217;
-                case BlockchainNetwork.BAOBAB:
-                    return 1001;
-                case BlockchainNetwork.MEVERSE:
-                    return 7518;
-                case BlockchainNetwork.MEVERSE_TESTNET:
-                    return 4759;
-                case BlockchainNetwork.BORA:
-                    return 77001;
-                case BlockchainNetwork.BORA_TESTNET:
-                    return 99001;
-                default:
-                    return 1;
-            }
+            return Properties[blockchainNetwork].ChainId;
         }
 
         public static int GetChainId(string network)

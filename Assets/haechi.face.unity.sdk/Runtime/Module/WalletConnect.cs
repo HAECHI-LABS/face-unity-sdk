@@ -63,7 +63,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <param name="address">Wallet address.</param>
         public async Task<DappMetadata> ConnectOpenSea(string address)
         { 
-             string hostname = Profiles.IsMainNet(FaceSettings.Instance.Environment())
+             string hostname = FaceSettings.Instance.Environment().IsMainNet()
                 ? "https://opensea.io/"
                 : "https://testnets.opensea.io/";
              

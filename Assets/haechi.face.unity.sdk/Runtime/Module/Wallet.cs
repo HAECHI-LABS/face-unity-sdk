@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
@@ -96,13 +97,21 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             return await this.OpenHome(null);
         }
-
+        
+        /// <summary>
+        /// Open wallet home by the given option parameter.
+        /// </summary>
+        /// <param name="option">
+        /// Option specifies which blockchain network show at home page. If option is given as null value, then show all blockchain networks.
+        /// If option parameter is given, then at least one network should be specified in the option
+        /// </param>
         public async Task<FaceRpcResponse> OpenHome([AllowNull] OpenHomeOption option)
         {
             if (option == null)
             {
-                option = OpenHomeOption.AllBlockchains();
+                option = OpenHomeOption.AllBlockchains(FaceSettings.Instance.Environment());
             }
+            
             FaceRpcRequest<OpenHomeOption> request = new FaceRpcRequest<OpenHomeOption>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openHome, option);
             return await this._provider.SendFaceRpcAsync(request);
         }

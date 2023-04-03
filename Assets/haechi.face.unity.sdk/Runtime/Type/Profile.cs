@@ -15,7 +15,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
     public static class Profiles
     {
-        public static bool IsMainNet(Profile profile)
+        public static bool IsMainNet(this Profile profile)
         {
             return profile.Equals(Profile.ProdMainnet) || profile.Equals(Profile.StageMainnet);
         }
@@ -27,7 +27,10 @@ namespace haechi.face.unity.sdk.Runtime.Type
             {"StageTest", Profile.StageTest},
             {"StageMainnet", Profile.StageMainnet},
             {"Testnet", Profile.ProdTest},
-            {"Mainnet", Profile.ProdMainnet}
+            {"Mainnet", Profile.ProdMainnet},
+            // TODO: either remove 'Testnet' or 'ProdTest' so do mainnet
+            {"ProdTest", Profile.ProdTest},
+            {"ProdMainnet", Profile.ProdMainnet}
         };
 
         public static Profile ValueOf(string value)

@@ -78,7 +78,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 return BlockchainNetworks.GetNetwork(blockchain, profile);
             });
             
-            Task<FaceRpcResponse> responseTask = this.face.Wallet().OpenHome(OpenHomeOption.Of(blockchainNetworks));
+            Task<FaceRpcResponse> responseTask = this.face.Wallet().OpenHome(OpenHomeOption.Of(profile, blockchainNetworks));
             
             this.actionQueue.Enqueue(responseTask, response =>
             {

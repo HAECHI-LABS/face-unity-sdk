@@ -27,5 +27,18 @@ namespace face_unity.haechi.face.unity.sdk.Runtime.Utils
         
         public static List<TEnum> AllEnumAsList<TEnum>() where TEnum : Enum 
             => ((TEnum[])Enum.GetValues(typeof(TEnum))).ToList();
+        
+        public static TEnum StringToEnum<TEnum>(string value) where TEnum : struct
+        {
+            TEnum result;
+            if (Enum.TryParse<TEnum>(value, out result))
+            {
+                return result;
+            }
+            else
+            {
+                throw new ArgumentException($"The value '{value}' is not a valid member of the enum {typeof(TEnum).Name}");
+            }
+        }
     }
 }
