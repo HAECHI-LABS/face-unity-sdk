@@ -15,7 +15,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
     public static class Profiles
     {
-        public static bool IsMainNet(Profile profile)
+        public static bool IsMainNet(this Profile profile)
         {
             return profile.Equals(Profile.ProdMainnet) || profile.Equals(Profile.StageMainnet);
         }

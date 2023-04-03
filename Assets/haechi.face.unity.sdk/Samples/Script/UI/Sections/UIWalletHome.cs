@@ -116,11 +116,6 @@ public class UIWalletHome : MonoBehaviour
     
     private void OnOpenSelectedBlockchainWalletHome()
     {
-        if (this._selectedBlockchain.Count == 0)
-        {
-            return;
-        }
-        
         this._openSelectedBlockchainWalletHome.RaiseEvent(this._selectedBlockchain);
     }
 }
