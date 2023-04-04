@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
@@ -165,6 +166,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                     
                     this._connectRequestTimeQueue.Enqueue(DateTime.Now);
                     expand_background_time(this.gameObject.name);
+                    set_wc_v1_true(this.gameObject.name);
 #endif
 
                     this._walletConnectUnitySession.Events.ListenFor("personal_sign",
@@ -250,12 +252,39 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
         
         [DllImport("__Internal")]
         extern static void normalize_background_time();
-
+        
         [DllImport("__Internal")]
         extern static void pause_unity();
+        
+        [DllImport("__Internal")]
+        extern static void set_wc_v1_true(string objectName);
+        
+        [DllImport("__Internal")]
+        extern static void set_wc_v1_false();
+        
+        private CancellationTokenSource _cts;
 
         public async void OnAdditionalFrame()
         {
+            this._cts = new CancellationTokenSource();
+
+            try
+            {
+                await ProcessQueue(this._cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            finally
+            {
+                normalize_background_time();
+                set_wc_v1_false();
+            }
+        }
+
+        public async Task ProcessQueue(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             while (this._connectRequestTimeQueue.Count > 0)
             {
                 DateTime connectRequestTime = this._connectRequestTimeQueue.Dequeue();
@@ -267,7 +296,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                 
                 // Usually, browser app websocket disconnects after 1 to 6 seconds.
                 // So to avoid sending message to disconnected websocket, delay 10 seconds.
-                await Task.Delay(6500);
+                await Task.Delay(6500, cancellationToken);
                 await this._walletConnectUnitySession.SendConnectRequest();
             }
             
@@ -282,12 +311,37 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                 
                 // Usually, browser app websocket disconnects after 1 to 6 seconds.
                 // So to avoid sending message to disconnected websocket, delay 10 seconds.
-                await Task.Delay(6500);
+                await Task.Delay(6500, cancellationToken);
                 await this._walletConnectUnitySession.SendRequest(signNetworkMessage[queuedTime]);
             }
             
-            normalize_background_time();
             pause_unity();
+        }
+
+        private void OnApplicationPause(bool pause)
+        {
+            if (!pause)
+            {
+                if (this._cts != null)
+                {
+                    this._cts.Cancel();
+                    this._cts.Dispose();
+                    this._cts = null;
+                }
+            }
+        }
+        
+        private void OnApplicationFocus(bool focused)
+        {
+            if (focused)
+            {
+                if (this._cts != null)
+                {
+                    this._cts.Cancel();
+                    this._cts.Dispose();
+                    this._cts = null;
+                }
+            }
         }
 #endif
     }
