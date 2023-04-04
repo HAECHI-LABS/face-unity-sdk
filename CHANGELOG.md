@@ -1,4 +1,19 @@
 
+<a name="1.3.6"></a>
+## Release: [1.3.6](https://github.com/HAECHI-LABS/core/releases/tag/1.3.6)
+### Features
+- Add open home feature
+
+### Bug Fixes
+- Fix open home QA issues
+- Update dev, external sample-dapp scene
+- Update prod sample-dapp
+- Update wallet home interface and sample-dapp
+
+### Code Refactoring
+- Test, Connection section into prefabs
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
