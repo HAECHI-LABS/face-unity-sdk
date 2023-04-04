@@ -14,11 +14,13 @@ import UIKit
     @objc public func call(_ url: String,_ redirectUri: String,_ objectName: String) {
         WebAuthenticate.authSession = ASWebAuthenticationSession(
             url: URL(string: url)!, callbackURLScheme: redirectUri) { callbackURL, authError in
-                guard authError == nil, let callbackURL = callbackURL else {
+                if let authError = authError as? ASWebAuthenticationSessionError, authError.code == .canceledLogin, callbackURL == nil {
+                    self.unity?.sendMessageToGO(withName: objectName, functionName: "OnWebviewCanceled", message: "")
+                } else if let callbackURL = callbackURL, authError == nil {
+                    self.unity?.sendMessageToGO(withName: objectName, functionName: "OnDeepLinkActivated", message: callbackURL.absoluteString)
+                } else {
                     return
                 }
-
-                self.unity?.sendMessageToGO(withName: objectName, functionName: "onDeepLinkActivated", message: callbackURL.absoluteString);
         }
         
         if #available(iOS 13.0, *) {

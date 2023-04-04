@@ -126,6 +126,7 @@ namespace haechi.face.unity.sdk.Samples.Script
                 this.dataDesignator.SetLoggedInAddress(response.userAddress);
                 this.dataDesignator.SetCoinBalance(response.balance);
                 this.dataDesignator.SetLogoutInstruction();
+                this.dataDesignator.SetResult(String.Empty);
                 this.inputDesignator.SetLoggedInInputStatus();
                 
                 this._loginSuccess.RaiseEvent();
@@ -421,7 +422,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         private void _defaultExceptionHandler(Exception ex)
         {
-            this.dataDesignator.SetResult(ex.StackTrace);
+            this.dataDesignator.SetResult(ex.Message);
         }
     }
 

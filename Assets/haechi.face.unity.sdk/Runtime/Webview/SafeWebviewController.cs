@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
 using haechi.face.unity.sdk.Runtime.Client;
-using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -36,11 +35,11 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                     this._handlerDictionary.Remove(response.Key);
                 }
             };
-            Application.deepLinkActivated += this.onDeepLinkActivated;
+            Application.deepLinkActivated += this.OnDeepLinkActivated;
             Application.focusChanged += this.onFocusChanged;
             if (!string.IsNullOrEmpty(Application.absoluteURL))
             {
-                this.onDeepLinkActivated(Application.absoluteURL);
+                this.OnDeepLinkActivated(Application.absoluteURL);
             }
         }
 
@@ -48,26 +47,36 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         [DllImport("__Internal")]
         extern static void launch_face_webview(string url, string redirectUri, string objectName);
 #endif
+#if UNITY_IOS
+        public void OnWebviewCanceled()
+        {
+            this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
+            {
+                Response = FaceRpcResponse.WebviewClosed()
+            });
+        }
+#endif        
+
 
         private static void LaunchUrl(string url, string objectName = null)
         {
 #if UNITY_EDITOR || UNITY_STANDALONE
             Application.OpenURL(url);
 #elif UNITY_ANDROID
-        using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-        using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
-        using (var browserView = new AndroidJavaObject("xyz.facewallet.unity.android.BrowserView"))
-        {
-            browserView.CallStatic("launchUrl", activity, url);
-        }
+            using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+            using (var browserView = new AndroidJavaObject("xyz.facewallet.unity.android.BrowserView"))
+            {
+                browserView.CallStatic("launchUrl", activity, url);
+            }
 
 #elif UNITY_IOS
-    var uri = new Uri(url);
-    launch_face_webview(url, SafeWebviewProtocol.Scheme, objectName);
+            var uri = new Uri(url);
+            launch_face_webview(url, SafeWebviewProtocol.Scheme, objectName);
 #endif
         }
 
-        public void onDeepLinkActivated(string url)
+        public void OnDeepLinkActivated(string url)
         {
             this._handleDeepLink(new Uri(url));
         }
