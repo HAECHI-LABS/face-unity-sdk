@@ -1,4 +1,10 @@
 
+<a name="1.3.7"></a>
+## Release: [1.3.7](https://github.com/HAECHI-LABS/core/releases/tag/1.3.7)
+### Features
+- Add webview close handler for iOS
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
