@@ -8,6 +8,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
+using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
@@ -92,7 +93,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
-
+        
+        /// <summary>
+        /// Open wallet all blockchain home
+        /// </summary>
         public async Task<FaceRpcResponse> OpenHome()
         {
             return await this.OpenHome(null);
@@ -107,11 +111,30 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// </param>
         public async Task<FaceRpcResponse> OpenHome([AllowNull] OpenHomeOption option)
         {
+            Profile currentEnv = FaceSettings.Instance.Environment();
+            
             if (option == null)
             {
-                option = OpenHomeOption.AllBlockchains(FaceSettings.Instance.Environment());
+                option = OpenHomeOption.Of(EnumUtils.AllEnumAsList<BlockchainNetwork>()
+                    .FindAll(n => n.MatchWithProfile(currentEnv)));
             }
             
+            if (option.networks.Count == 0)
+            {
+                throw new InvalidOpenHomeArguments("The 'networks' should select at least one network.");
+            }
+            
+            string currentInitializedNetwork = currentEnv.IsMainNet() ? "Mainnet" : "Testnet";
+            foreach (string networkStr in option.networks)
+            {
+                BlockchainNetwork blockchainNetwork = BlockchainNetworks.ValueOf(networkStr);
+                if (!blockchainNetwork.MatchWithProfile(currentEnv))
+                {
+                    throw new InvalidOpenHomeArguments($"You initialized the Face SDK with {currentInitializedNetwork}." +
+                                                       $"Please open the wallet home in the same environment as the initialized network.");
+                }
+            }
+
             FaceRpcRequest<OpenHomeOption> request = new FaceRpcRequest<OpenHomeOption>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openHome, option);
             return await this._provider.SendFaceRpcAsync(request);
         }

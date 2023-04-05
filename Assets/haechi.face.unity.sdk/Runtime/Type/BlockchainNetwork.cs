@@ -60,7 +60,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
         public static BlockchainNetwork ValueOf(string network)
         {
-            return EnumUtils.FindEquals<BlockchainNetwork>(network);
+            return EnumUtils.FindEquals<BlockchainNetwork>(network.ToUpper());
         }
 
         public static BlockchainNetwork GetNetwork(Blockchain blockchain, Profile profile)
