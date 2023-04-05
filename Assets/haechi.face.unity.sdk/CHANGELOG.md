@@ -1,4 +1,10 @@
 
+<a name="1.3.8"></a>
+## Release: [1.3.8](https://github.com/HAECHI-LABS/core/releases/tag/1.3.8)
+### Bug Fixes
+- Update OpenHome interface
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
