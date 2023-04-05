@@ -48,7 +48,14 @@ public class ActionQueue : MonoBehaviour
         }
         else
         {
-            a.Invoke(task.Result);
+            try
+            {
+                a.Invoke(task.Result);
+            }
+            catch (Exception ex)
+            {
+                e.Invoke(ex);
+            }
         }
         yield return null;
     }
