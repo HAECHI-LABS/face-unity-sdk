@@ -18,17 +18,23 @@ public class SampleDappData : MonoBehaviour
     
     public FaceSettings.Parameters Parameters()
     {
-        string apiKey = this.inputDesignator.GetApiKey() != null
-            ? this.inputDesignator.GetApiKey().text
-            : sampleAPIKey;
         Profile environment = this.inputDesignator.GetProfileDrd() != null
             ? Profiles.ValueOf(this.inputDesignator.GetProfileDrd().captionText.text)
             : Profile.ProdTest;
+        string apiKey = this.inputDesignator.GetApiKey() != null
+            ? this.inputDesignator.GetApiKey().text
+            : this.sampleAPIKey;
+        if (environment == Profile.ProdMainnet || environment == Profile.StageMainnet)
+        {
+            string prodMainnetApiKey = "No default api key for mainnet";
+            this.inputDesignator.SetApiKey(prodMainnetApiKey);
+            apiKey = prodMainnetApiKey;
+        }
         BlockchainNetwork network = this.inputDesignator.GetBlockchainDrd() != null && this.inputDesignator.GetProfileDrd() != null
             ? BlockchainNetworks.GetNetwork(this.inputDesignator.GetBlockchainDrd().captionText.text, this.inputDesignator.GetProfileDrd().captionText.text)
             : BlockchainNetworks.ValueOf(this.inputDesignator.GetNetworkDrd().captionText.text);
         string scheme = Application.identifier == "xyz.facewallet.unity.app" ? "faceunity" : "faceunitydev";
-            
+        
         return new FaceSettings.Parameters
         {
             ApiKey = apiKey,

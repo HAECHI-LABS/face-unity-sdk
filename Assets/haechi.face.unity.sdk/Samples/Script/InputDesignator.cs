@@ -342,6 +342,16 @@ namespace haechi.face.unity.sdk.Samples.Script
 #endif
         }
         
+        public void SetApiKey(string key)
+        {
+#if UNITY_WEBGL
+            this.webApiKey.text = apiKey;
+#else
+            this.apiKey.text = key;
+            this.landscapeApiKey.text = key;
+#endif
+        }
+        
         public TMP_InputField GetPrivateKey()
         {
 #if UNITY_WEBGL
