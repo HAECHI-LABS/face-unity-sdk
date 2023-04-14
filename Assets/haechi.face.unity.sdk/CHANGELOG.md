@@ -1,4 +1,11 @@
 
+<a name="1.3.9"></a>
+## Release: [1.3.9](https://github.com/HAECHI-LABS/core/releases/tag/1.3.9)
+### Bug Fixes
+- Set default api key to warning message if prod mainnet
+- Not to sign rsa if signature is null or emptry
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
