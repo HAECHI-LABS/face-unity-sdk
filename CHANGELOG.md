@@ -1,4 +1,10 @@
 
+<a name="1.3.10"></a>
+## Release: [1.3.10](https://github.com/HAECHI-LABS/core/releases/tag/1.3.10)
+### Features
+- Signing with RSA PrivateKey
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
