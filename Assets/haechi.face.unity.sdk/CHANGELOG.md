@@ -1,4 +1,10 @@
 
+<a name="1.3.11"></a>
+## Release: [1.3.11](https://github.com/HAECHI-LABS/core/releases/tag/1.3.11)
+### Bug Fixes
+- Support old and new sign
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
