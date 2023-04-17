@@ -12,8 +12,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         {
             try
             {
-                string pem = RSAUtils.RSAPrivateKeyToPem(prvKey);
-                RSACryptoServiceProvider rsaPrivateKey = RSAUtils.ImportRSAPrivateKey(pem);
+                RSACryptoServiceProvider rsaPrivateKey = RSAUtils.ImportPrivateKey(prvKey);
                 byte[] bytesPlainTextData = Encoding.UTF8.GetBytes(plainTextData);
                 byte[] signedData = rsaPrivateKey.SignData(bytesPlainTextData, "SHA256");
 

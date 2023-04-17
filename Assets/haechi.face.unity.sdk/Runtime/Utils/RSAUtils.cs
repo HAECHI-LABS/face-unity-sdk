@@ -13,8 +13,10 @@ namespace haechi.face.unity.sdk.Runtime.Utils
 {
     public class RSAUtils
     {
-        private const string PUBLIC_KEY_HEADER = "PUBLIC KEY";
-        private const string PRIVATE_KEY_HEADER = "PRIVATE KEY";
+        private const string PUBLIC_KEY_HEADER = "-----BEGIN PUBLIC KEY-----";
+        private const string PRIVATE_KEY_HEADER = "-----BEGIN PRIVATE KEY-----";
+        private const string PUBLIC_KEY_FOOTER = "-----END PUBLIC KEY-----";
+        private const string PRIVATE_KEY_FOOTER = "-----END PRIVATE KEY-----";
         
         public static RSACryptoServiceProvider ImportPublicKey(string pem) {
             PemReader pr = new PemReader(new StringReader(pem));
@@ -27,19 +29,22 @@ namespace haechi.face.unity.sdk.Runtime.Utils
         }
         
         public static RSACryptoServiceProvider ImportPrivateKey(string pem) {
-            PemReader pr = new PemReader(new StringReader(pem));
-            RsaPrivateCrtKeyParameters key = (RsaPrivateCrtKeyParameters)pr.ReadObject();
-            RSAParameters rsaParams = DotNetUtilities.ToRSAParameters(key);
+            try
+            {
+                RSACryptoServiceProvider rsaPrivateKey = CreateRsaProviderFromPrivateKey(RSAPrivateKeyToPem(pem));
+                return rsaPrivateKey;
+            }
+            catch (System.Exception _)
+            { 
+                PemReader pr = new PemReader(new StringReader(PrivateKeyToPem(pem)));
+                RsaPrivateCrtKeyParameters key = (RsaPrivateCrtKeyParameters)pr.ReadObject();
+                RSAParameters rsaParams = DotNetUtilities.ToRSAParameters(key);
 
-            RSACryptoServiceProvider rsaPrivateKey = CreateRsaProviderFromPrivateKey(pem);
-            rsaPrivateKey.ImportParameters(rsaParams);
-            return rsaPrivateKey;
+                RSACryptoServiceProvider rsaPrivateKey = new RSACryptoServiceProvider();
+                rsaPrivateKey.ImportParameters(rsaParams);
+                return rsaPrivateKey;
+            }
         } 
-        
-        public static RSACryptoServiceProvider ImportRSAPrivateKey(string pem) {
-            RSACryptoServiceProvider rsaPrivateKey = CreateRsaProviderFromPrivateKey(pem);
-            return rsaPrivateKey;
-        }
         
         private static RSACryptoServiceProvider CreateRsaProviderFromPrivateKey(string privateKey)
         {
@@ -118,17 +123,17 @@ namespace haechi.face.unity.sdk.Runtime.Utils
 
         public static string PublicKeyToPem(string key)
         {
-            return KeyToPem(key, PUBLIC_KEY_HEADER);
+            return KeyToPem(key, PUBLIC_KEY_HEADER, PUBLIC_KEY_FOOTER);
         }
 
         public static string PrivateKeyToPem(string key)
         {
-            return KeyToPem(key, PRIVATE_KEY_HEADER);
+            return KeyToPem(key, PRIVATE_KEY_HEADER, PRIVATE_KEY_FOOTER);
         } 
         
         public static string RSAPrivateKeyToPem(string key)
         {
-            return RSAKeyToPem(key);
+            return KeyToPem(key, "", "");
         }
         
         public static string ToValidBase64(string str)
@@ -136,34 +141,19 @@ namespace haechi.face.unity.sdk.Runtime.Utils
             return str.Replace('-', '+').Replace('_', '/');
         }
 
-        private static string KeyToPem(string key, string pemHeader)
+        private static string KeyToPem(string key, string pemHeader, string pemFooter)
         {
             key = ToValidBase64(key);
             key = Regex.Replace(key, @"(\S{64}(?!$))", "$1\n");
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"-----BEGIN {pemHeader}-----");
+            sb.AppendLine(pemHeader);
             foreach (var line in key.Split("\n"))
             {
                 sb.AppendLine(line);
             }
-
-            sb.AppendLine($"-----END {pemHeader}-----");
+            sb.AppendLine(pemFooter);
             return sb.ToString();
         }
         
-        private static string RSAKeyToPem(string key)
-        {
-            key = ToValidBase64(key);
-            key = Regex.Replace(key, @"(\S{64}(?!$))", "$1\n");
-            StringBuilder sb = new StringBuilder();
-            // sb.AppendLine($"-----BEGIN {pemHeader}-----");
-            foreach (var line in key.Split("\n"))
-            {
-                sb.AppendLine(line);
-            }
-
-            // sb.AppendLine($"-----END {pemHeader}-----");
-            return sb.ToString();
-        }
     }
 }
