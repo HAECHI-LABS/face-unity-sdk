@@ -9,11 +9,6 @@ namespace haechi.face.unity.sdk.Runtime.Utils
     {
         public static bool Verify(string plain, string signature, string pubKey)
         {
-            // TODO: Remove this if statements after SecretKey issue fixed
-            if (String.IsNullOrEmpty(signature))
-            {
-                return true;
-            }
             try
             {
                 byte[] sig = Convert.FromBase64String(RSAUtils.ToValidBase64(signature));
