@@ -1,4 +1,10 @@
 
+<a name="1.3.12"></a>
+## Release: [1.3.12](https://github.com/HAECHI-LABS/core/releases/tag/1.3.12)
+### Bug Fixes
+- disable signature verification
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
