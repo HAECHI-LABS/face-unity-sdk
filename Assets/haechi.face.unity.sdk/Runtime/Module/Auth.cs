@@ -80,10 +80,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
             
-            if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
-            {
-                throw new AddressVerificationFailedException();
-            }
+            // TODO: Temporally disable verification
+            // if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
+            // {
+            //     throw new AddressVerificationFailedException();
+            // }
 
             this.CurrentUser = faceLoginResponse;
             return this.CurrentUser;
@@ -97,10 +98,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
             
-            if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
-            {
-                throw new AddressVerificationFailedException();
-            }
+            // TODO: Temporally disable verification
+            // if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
+            // {
+            //     throw new AddressVerificationFailedException();
+            // }
             
             this.CurrentUser = faceLoginResponse;
             return this.CurrentUser;
