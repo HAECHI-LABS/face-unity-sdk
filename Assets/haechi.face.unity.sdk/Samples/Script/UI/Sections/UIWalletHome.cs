@@ -52,7 +52,7 @@ public class UIWalletHome : MonoBehaviour
         
         this.InitializeUIBlockchainCheckbox(EnumUtils.AllEnumAsList<Blockchain>());
     }
-    
+
     private void MakeButtonsInteractable()
     {
         this._openWalletHomeAllBlockchainButton.interactable = true;
