@@ -18,6 +18,7 @@ public class UISectionData : MonoBehaviour
     [SerializeField] private LoginDataChannelSO _onLogined;
     [SerializeField] private StringEventChannelSO _onBalanceUpdated;
     [SerializeField] private StringEventChannelSO _onResultUpdated;
+    [SerializeField] private StringEventChannelSO _onExceptionOccurred;
 
     private void OnEnable()
     {
@@ -26,6 +27,7 @@ public class UISectionData : MonoBehaviour
         this._onLogined.OnEventRaised += this.UpdateUserData;
         this._onBalanceUpdated.OnEventRaised += this.UpdateUserData;
         this._onResultUpdated.OnEventRaised += this.UpdateUserData;
+        this._onExceptionOccurred.OnEventRaised += this.SetExceptionData;
     }
 
     private void OnDisable()
@@ -34,6 +36,7 @@ public class UISectionData : MonoBehaviour
         this._onLogined.OnEventRaised -= this.UpdateUserData;
         this._onBalanceUpdated.OnEventRaised -= this.UpdateUserData;
         this._onResultUpdated.OnEventRaised -= this.UpdateUserData;
+        this._onExceptionOccurred.OnEventRaised -= this.SetExceptionData;
     }
 
     private void UpdateUserData(LoginData value)
@@ -57,6 +60,19 @@ public class UISectionData : MonoBehaviour
         this._addressDataField.SetData($"{this._appState.GetLoginData().UserAddress}");
         this._balanceDataField.SetData($"{this._appState.GetLoginData().Balance}");
         this._resultDataField.SetData($"{this._appState.GetLoginData().Result}");
+    }
+
+    private void SetExceptionData(string exception)
+    {
+        if (this._appState.GetLoginData() == null)
+        {
+            this.ClearData();
+            return;
+        }
+        this._userIdDataField.SetData($"{this._appState.GetLoginData().UserId}");
+        this._addressDataField.SetData($"{this._appState.GetLoginData().UserAddress}");
+        this._balanceDataField.SetData($"{this._appState.GetLoginData().Balance}");
+        this._resultDataField.SetData($"{exception}");
     }
 
     private void ClearData()

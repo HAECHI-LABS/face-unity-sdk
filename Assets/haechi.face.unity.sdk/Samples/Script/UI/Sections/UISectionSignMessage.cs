@@ -10,7 +10,8 @@ public class UISectionSignMessage : MonoBehaviour
     [SerializeField] private TMP_InputField _messageInputField;
     [SerializeField] private UIButton _signMessageButton;
     
-    [Header("Listening on")] 
+    [Header("Listening on")]
+    [SerializeField] private VoidEventChannelSO _onPageLoaded;
     [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
     
@@ -19,7 +20,7 @@ public class UISectionSignMessage : MonoBehaviour
 
     private void OnEnable()
     {
-        this.Initialize();
+        this._onPageLoaded.OnEventRaised += this.Initialize;
         this._signMessageButton.OnClickEvent += this.SignMessage;
         this._onLoginSuccessEvent.OnEventRaised += this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised += this.Initialize;
@@ -27,6 +28,7 @@ public class UISectionSignMessage : MonoBehaviour
 
     private void OnDisable()
     {
+        this._onPageLoaded.OnEventRaised -= this.Initialize;
         this._signMessageButton.OnClickEvent -= this.SignMessage;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;

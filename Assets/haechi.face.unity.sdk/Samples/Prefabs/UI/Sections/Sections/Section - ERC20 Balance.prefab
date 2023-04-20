@@ -126,6 +126,7 @@ MonoBehaviour:
   _getBalanceButton: {fileID: 6938484954054735235}
   _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
+  _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
   _getERC20Balance: {fileID: 11400000, guid: dc66f4356c3244d6fa38bd92797b43b7, type: 2}
   _onERC20BalanceUpdated: {fileID: 11400000, guid: 7ea4656442dd7403aa0f93fa8a10c0be, type: 2}
 --- !u!1001 &455067633665814817

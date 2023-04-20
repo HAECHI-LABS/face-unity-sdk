@@ -13,6 +13,7 @@ public class UISectionERC20Balance : MonoBehaviour
     [Header("Listening on")] 
     [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
+    [SerializeField] private VoidEventChannelSO _onPageLoaded;
     
     [Header("Broadcast to")] 
     [SerializeField] private FTQueryDataChannelSO _getERC20Balance;
@@ -21,7 +22,7 @@ public class UISectionERC20Balance : MonoBehaviour
     
     private void OnEnable()
     {
-        this.Initialize();
+        this._onPageLoaded.OnEventRaised += this.Initialize;
         this._getBalanceButton.OnClickEvent += this.Send;
         this._onERC20BalanceUpdated.OnEventRaised += this.SetERC20Balance;
         this._onLoginSuccessEvent.OnEventRaised += this.Initialize;
@@ -30,6 +31,7 @@ public class UISectionERC20Balance : MonoBehaviour
 
     private void OnDisable()
     {
+        this._onPageLoaded.OnEventRaised -= this.Initialize;
         this._getBalanceButton.OnClickEvent -= this.Send;
         this._onERC20BalanceUpdated.OnEventRaised -= this.SetERC20Balance;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;

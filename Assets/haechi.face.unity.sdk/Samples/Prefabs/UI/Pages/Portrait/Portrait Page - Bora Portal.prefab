@@ -95,6 +95,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Portrait Page - Bora Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 956114414141447411, guid: 9d750db63829a43b4b3cb665f65db5bb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 956114414141447411, guid: 9d750db63829a43b4b3cb665f65db5bb, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8257080628039152905, guid: 9d750db63829a43b4b3cb665f65db5bb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

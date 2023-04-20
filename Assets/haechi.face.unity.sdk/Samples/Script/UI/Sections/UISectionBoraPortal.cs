@@ -9,7 +9,8 @@ public class UISectionBoraPortal : MonoBehaviour
     [SerializeField] private UIButton _connectBoraButton;
     [SerializeField] private UIButton _isConnectedButton;
     
-    [Header("Listening on")] 
+    [Header("Listening on")]
+    [SerializeField] private VoidEventChannelSO _onPageLoaded;
     [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onNetworkSwitched;
@@ -20,7 +21,7 @@ public class UISectionBoraPortal : MonoBehaviour
 
     private void OnEnable()
     {
-        this.Initialize();
+        this._onPageLoaded.OnEventRaised += this.Initialize;
         this._connectBoraButton.OnClickEvent += this.ConnectBora;
         this._isConnectedButton.OnClickEvent += this.CheckIsConnectedBora;
         this._onLoginSuccessEvent.OnEventRaised += this.Initialize;
@@ -30,6 +31,7 @@ public class UISectionBoraPortal : MonoBehaviour
 
     private void OnDisable()
     {
+        this._onPageLoaded.OnEventRaised -= this.Initialize;
         this._connectBoraButton.OnClickEvent -= this.ConnectBora;
         this._isConnectedButton.OnClickEvent -= this.CheckIsConnectedBora;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;

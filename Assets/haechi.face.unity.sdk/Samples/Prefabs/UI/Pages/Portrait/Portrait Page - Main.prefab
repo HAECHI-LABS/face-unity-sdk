@@ -95,6 +95,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Portrait Page - Main
       objectReference: {fileID: 0}
+    - target: {fileID: 956114414141447411, guid: 9d750db63829a43b4b3cb665f65db5bb, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 956114414141447411, guid: 9d750db63829a43b4b3cb665f65db5bb, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8257080628039152905, guid: 9d750db63829a43b4b3cb665f65db5bb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -277,7 +285,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4014599125738851302, guid: d445a4d568fec40959691c97eb9aec66, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 600
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 4014599125738851302, guid: d445a4d568fec40959691c97eb9aec66, type: 3}
       propertyPath: m_LocalPosition.x

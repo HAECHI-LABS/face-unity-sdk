@@ -21,6 +21,9 @@ public class UIPageManager : MonoBehaviour
     [Header("Listening on")] 
     [SerializeField] private PageEventChannelSO _onPageLoad;
 
+    [Header("Broadcast to")] 
+    [SerializeField] private VoidEventChannelSO _pageLoaded;
+
     private void OnEnable()
     {
         this._onPageLoad.OnEventRaised += this.LoadPage;
@@ -43,6 +46,7 @@ public class UIPageManager : MonoBehaviour
             if (page.Id.Equals(pageId))
             {
                 page.gameObject.SetActive(true);
+                this._pageLoaded.RaiseEvent();
                 return;
             }
             page.gameObject.SetActive(false);

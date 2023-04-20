@@ -128,6 +128,7 @@ MonoBehaviour:
   _quantityInputField: {fileID: 604647692494758524}
   _receiverAddressInputField: {fileID: 8546883953070244048}
   _sendButton: {fileID: 9018989165381989744}
+  _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
   _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _sendERC1155: {fileID: 11400000, guid: 55800e785678e4456a04edbef6fd19dc, type: 2}

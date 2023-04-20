@@ -17,6 +17,7 @@ public class UISectionWalletHome : MonoBehaviour
     [SerializeField] private UIButton _openWalletHomeSelectedBlockchainButton;
     
     [Header("Listening on")] 
+    [SerializeField] private VoidEventChannelSO _onPageLoaded;
     [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
 
@@ -27,24 +28,19 @@ public class UISectionWalletHome : MonoBehaviour
     private List<UIBlockchainCheckbox> _uiBlockchainCheckboxList = new List<UIBlockchainCheckbox>();
     private List<Blockchain> _selectedBlockchain = new List<Blockchain>();
 
-    private void Awake()
-    {
-        this._openWalletHomeAllBlockchainButton.UI.onClick.AddListener(this.OnOpenAllBlockchainWalletHome);
-        this._openWalletHomeSelectedBlockchainButton.UI.onClick.AddListener(this.OnOpenSelectedBlockchainWalletHome);
-
-        this._openWalletHomeAllBlockchainButton.UI.interactable = false;
-        this._openWalletHomeSelectedBlockchainButton.UI.interactable = false;
-    }
-
     private void OnEnable()
     {
-        this.Initialize();
+        this._onPageLoaded.OnEventRaised += this.Initialize;
         this._onLoginSuccessEvent.OnEventRaised += this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised += this.Initialize;
     }
 
     private void OnDisable()
     {
+        this._openWalletHomeAllBlockchainButton.UI.onClick.RemoveAllListeners();
+        this._openWalletHomeSelectedBlockchainButton.UI.onClick.RemoveAllListeners();
+        
+        this._onPageLoaded.OnEventRaised -= this.Initialize;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
     }
@@ -58,6 +54,8 @@ public class UISectionWalletHome : MonoBehaviour
         }
         
         this.MakeButtonsInteractable();
+        this._openWalletHomeAllBlockchainButton.UI.onClick.AddListener(this.OnOpenAllBlockchainWalletHome);
+        this._openWalletHomeSelectedBlockchainButton.UI.onClick.AddListener(this.OnOpenSelectedBlockchainWalletHome);
     }
 
     private void Start()

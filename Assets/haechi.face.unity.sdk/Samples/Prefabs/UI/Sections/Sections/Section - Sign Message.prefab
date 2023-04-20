@@ -122,6 +122,7 @@ MonoBehaviour:
   _appState: {fileID: 0}
   _messageInputField: {fileID: 806403528400357773}
   _signMessageButton: {fileID: 5385574878947012340}
+  _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
   _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _signMessage: {fileID: 11400000, guid: 008cc03b50da941848c94b69995350f7, type: 2}
@@ -246,7 +247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8335681215664746565, guid: 9da7c4f7dea534c01a96075632a845f0, type: 3}
       propertyPath: m_text
-      value: Amount
+      value: Message
       objectReference: {fileID: 0}
     - target: {fileID: 9059777354630112114, guid: 9da7c4f7dea534c01a96075632a845f0, type: 3}
       propertyPath: m_AnchorMax.y

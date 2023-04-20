@@ -95,7 +95,6 @@ public class UISectionLogin : MonoBehaviour
     
     private void Logout()
     {
-        Debug.Log("[UISectionLogin] Logout(..)");
         this._logout.RaiseEvent();
     }
     

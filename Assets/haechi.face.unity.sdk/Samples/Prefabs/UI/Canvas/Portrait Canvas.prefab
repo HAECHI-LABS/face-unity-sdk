@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 762110832254719440}
   - component: {fileID: 762110832254719441}
   - component: {fileID: 762110832254719442}
+  - component: {fileID: 8939104887266794523}
   m_Layer: 5
   m_Name: Portrait Canvas
   m_TagString: Untagged
@@ -101,6 +102,29 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8939104887266794523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762110832254719443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb491ebecfef4cef880d2fdc7ea9d143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pages:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _onPageLoad: {fileID: 11400000, guid: bf69588169a664f78859aa2d714caed2, type: 2}
+  _pageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
 --- !u!1 &762110832341451088
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,6 +422,18 @@ PrefabInstance:
     - target: {fileID: 6158450018041860962, guid: 3addd41302d484035a19fb3e436d7c0f, type: 3}
       propertyPath: m_text
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6158450018418833186, guid: 3addd41302d484035a19fb3e436d7c0f, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6158450018418833186, guid: 3addd41302d484035a19fb3e436d7c0f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e27f86425f728488dadcf6b5969ecbf7, type: 3}
+    - target: {fileID: 6158450018418833186, guid: 3addd41302d484035a19fb3e436d7c0f, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6158450018418833188, guid: 3addd41302d484035a19fb3e436d7c0f, type: 3}
       propertyPath: m_Pivot.x

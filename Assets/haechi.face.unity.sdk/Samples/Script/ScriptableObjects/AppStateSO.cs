@@ -6,6 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "App State", menuName = "App State")]
 public class AppStateSO : ReadOnlyAppState
 {
+    [Tooltip("A flag whether current dapp is for DevSampleDapp or not")]
+    public bool IsDev;
+    
     private const string SAMPLE_API_KEY =
         "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB";
     private const string SAMPLE_PRIVATE_KEY = 
@@ -22,16 +25,16 @@ public class AppStateSO : ReadOnlyAppState
      * Connect and Login
      */
     
-    [Tooltip("Connect 화면에서 선택할 수 있는 Environment 종류")]
+    [Tooltip("All environments that can be seen in the Connect page")]
     [SerializeField] private List<string> _profiles;
-
-    [Tooltip("현재 선택된 Environment")] 
+    
+    [Tooltip("Current selected environment")] 
     [SerializeField] private Profile _currentProfile;
     
-    [Tooltip("Connect 화면에서 선택할 수 있는 블록체인 종류")]
+    [Tooltip("All blockchains that can be seen in the Connect page")]
     [SerializeField] private List<Blockchain> _blockchains;
     
-    [Tooltip("현재 선택된 블록체인")] 
+    [Tooltip("Current selected blockchain")] 
     [SerializeField] private Blockchain _currentBlockchain;
 
     [SerializeField] private string _apiKey;
@@ -136,13 +139,14 @@ public class AppStateSO : ReadOnlyAppState
         Debug.Log("[AppStateSO] Initialize");
         this._loginData = null;
         this._erc20Balance = default;
+        this._currentProfile = this.IsDev ? Profile.Local : Profile.ProdTest;
     }
 
     public override List<string> GetAllEnvironments()
     {
         return this._profiles;
     }
-
+    
     public override List<Blockchain> GetAllBlockchains()
     {
         return this._blockchains;
