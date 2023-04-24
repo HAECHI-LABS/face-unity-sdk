@@ -176,7 +176,6 @@ public class FaceWalletManager : MonoBehaviour
     
     private void Logout()
     {
-        Debug.Log("[FaceWalletManager] Logout(..)");
         Task<FaceRpcResponse> responseTask = this._face.Auth().Logout();
 
         this._actionQueue.Enqueue(responseTask, response =>

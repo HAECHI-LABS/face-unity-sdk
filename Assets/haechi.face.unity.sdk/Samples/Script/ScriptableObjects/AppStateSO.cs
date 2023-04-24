@@ -139,7 +139,6 @@ public class AppStateSO : ReadOnlyAppState
         Debug.Log("[AppStateSO] Initialize");
         this._loginData = null;
         this._erc20Balance = default;
-        this._currentProfile = this.IsDev ? Profile.Local : Profile.ProdTest;
     }
 
     public override List<string> GetAllEnvironments()
