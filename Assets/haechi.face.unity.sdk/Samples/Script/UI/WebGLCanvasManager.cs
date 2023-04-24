@@ -6,13 +6,6 @@ using UnityEngine;
 public class WebGLCanvasManager : MonoBehaviour
 {
     [SerializeField] private Canvas _canvas;
-
-#if !UNITY_WEBGL
-    private void Start()
-    {
-        this._canvas.gameObject.SetActive(false);
-    }
-#endif
     
 #if UNITY_WEBGL
     private void Start()
