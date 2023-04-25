@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c8eef3cb5ec48ad82226291db3d9ece, type: 3}
   m_Name: AppState
   m_EditorClassIdentifier: 
+  IsDev: 0
   _contracts: {fileID: 11400000, guid: fe108dbea50be40f987413d06d6fde3e, type: 2}
   _loginData:
     UserId: d4bd3502-da0b-4f42-ad03-9559caee11bc
@@ -27,7 +28,7 @@ MonoBehaviour:
   - ProdMainnet
   _currentProfile: 1
   _blockchains: 000000000100000002000000030000000400000005000000
-  _currentBlockchain: 1
+  _currentBlockchain: 0
   _apiKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB
   _privateKey: 
   _erc20Balance: 
