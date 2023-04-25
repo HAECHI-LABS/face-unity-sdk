@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class UIWalletHome : MonoBehaviour
 {
+    [SerializeField] private ReadOnlyAppState _appState;
+    
     [Header("UI References")]
     [SerializeField] private Transform _checkboxContentTransform;
     [SerializeField] private GameObject _uiBlockchainCheckboxPrefab;
@@ -19,6 +21,7 @@ public class UIWalletHome : MonoBehaviour
     [SerializeField] private BlockchainsEventChannelSO _openSelectedBlockchainWalletHome;
 
     [Header("Listening on")] 
+    [SerializeField] private VoidEventChannelSO _onPageLoaded;
     [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
 
@@ -36,14 +39,27 @@ public class UIWalletHome : MonoBehaviour
 
     private void OnEnable()
     {
+        this._onPageLoaded.OnEventRaised += this.Initialize;
         this._onLoginSuccessEvent.OnEventRaised += this.MakeButtonsInteractable;
         this._onLogoutSuccessEvent.OnEventRaised += this.MakeButtonsDisable;
     }
 
     private void OnDisable()
     {
+        this._onPageLoaded.OnEventRaised -= this.Initialize;
         this._onLoginSuccessEvent.OnEventRaised -= this.MakeButtonsInteractable;
         this._onLogoutSuccessEvent.OnEventRaised -= this.MakeButtonsDisable;
+    }
+
+    private void Initialize()
+    {
+        if (!this._appState.LoggedIn())
+        {
+            this.MakeButtonsDisable();
+            return;
+        }
+
+        this.MakeButtonsInteractable();
     }
 
     private void Start()
@@ -52,7 +68,7 @@ public class UIWalletHome : MonoBehaviour
         
         this.InitializeUIBlockchainCheckbox(EnumUtils.AllEnumAsList<Blockchain>());
     }
-    
+
     private void MakeButtonsInteractable()
     {
         this._openWalletHomeAllBlockchainButton.interactable = true;

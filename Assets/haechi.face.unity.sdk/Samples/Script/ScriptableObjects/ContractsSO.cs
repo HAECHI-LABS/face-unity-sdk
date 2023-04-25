@@ -32,9 +32,14 @@ public class ContractsSO : ScriptableObject
 
     public ContractData ContractAddresses(FaceSettings.Parameters parameters)
     {
+        return this.ContractAddresses(parameters.Network);
+    }
+
+    public ContractData ContractAddresses(BlockchainNetwork network)
+    {
         foreach (ContractData contractData in this.contractDataList)
         {
-            if (parameters.Network.Equals(contractData.BlockchainNetworkNetwork))
+            if (network.Equals(contractData.BlockchainNetworkNetwork))
             {
                 return contractData;
             }

@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c8eef3cb5ec48ad82226291db3d9ece, type: 3}
+  m_Name: AppState_Dev
+  m_EditorClassIdentifier: 
+  IsDev: 1
+  _contracts: {fileID: 11400000, guid: fe108dbea50be40f987413d06d6fde3e, type: 2}
+  _loginData:
+    UserId: d4bd3502-da0b-4f42-ad03-9559caee11bc
+    UserAddress: 0xaeb3097c212a03798346b1ea834f151276699fbb
+    Balance: 0.009429283029474836
+    Result: TX Hash - 0xc9105042e6f4b52b198b48bd4cf2d39cb62551bc5e830fd8955df6bf4236df93
+  _profiles:
+  - Local
+  - Dev
+  - StageTest
+  - StageMainnet
+  - ProdTest
+  - ProdMainnet
+  _currentProfile: 1
+  _blockchains: 000000000100000002000000030000000400000005000000
+  _currentBlockchain: 0
+  _apiKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB
+  _privateKey: 
+  _erc20Balance: 
+  _onProfileChange: {fileID: 11400000, guid: 0985badaa4749434d96e1512b77a927f, type: 2}
+  _onBlockchainChange: {fileID: 11400000, guid: 211a2dc0a77074be7bbb1749a9b4e0fb, type: 2}
+  _onApiKeyChange: {fileID: 11400000, guid: b7a612418ad00416b82369dfcf8db4b9, type: 2}
+  _onPrivateKeyChange: {fileID: 11400000, guid: 2454854534ea54a4092188f8c25951bf, type: 2}
+  _onLoginEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
+  _onLogoutEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
+  _onBalanceUpdated: {fileID: 11400000, guid: 6d20b7ef509914bcfbd8d3c581e17bf2, type: 2}
+  _onResultUpdated: {fileID: 11400000, guid: 37f655636fec849c7b8646c589b0d185, type: 2}
+  _onERC20BalanceUpdated: {fileID: 11400000, guid: 7ea4656442dd7403aa0f93fa8a10c0be, type: 2}
+  _profileUpdated: {fileID: 11400000, guid: 1366be069f7254c9f80132e42a90d4ba, type: 2}
+  _blockchainUpdated: {fileID: 11400000, guid: 5ecf8d55362fb490c925b7f6b1985c99, type: 2}
+  _apiKeyUpdated: {fileID: 11400000, guid: 1eeca02f5b98a4b6ba87e08656e8d552, type: 2}
+  _privateKeyUpdated: {fileID: 11400000, guid: b34afcf155a7d4c48869cc4e463f7610, type: 2}

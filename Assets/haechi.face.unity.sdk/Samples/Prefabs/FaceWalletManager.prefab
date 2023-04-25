@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5825345064221503040
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5825345064221503068}
+  - component: {fileID: 5825345064221503043}
+  - component: {fileID: 5825345064221503042}
+  - component: {fileID: 5825345064221503041}
+  - component: {fileID: 5825345064221503069}
+  m_Layer: 0
+  m_Name: FaceWalletManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5825345064221503068
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825345064221503040}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5825345064221503043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825345064221503040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18dcc2121281484caa37226304f3f024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5825345064221503042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825345064221503040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 739618d557f747faa8b1a99b1429eb3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5825345064221503041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825345064221503040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fe6f2babb74902aa268d53268eb36c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _appState: {fileID: 0}
+  _onConnect: {fileID: 11400000, guid: 826bf1e20101c4d85b5c3baed398f84f, type: 2}
+  _onLogin: {fileID: 11400000, guid: fa262f3e9c5bb471897bc582c89b7085, type: 2}
+  _onSocialLogin: {fileID: 11400000, guid: 103bb2b2edfcc4e869dcad0cdc35fa59, type: 2}
+  _onGetBalance: {fileID: 11400000, guid: d0c64531d5d874699974298f3c8c6333, type: 2}
+  _onLogout: {fileID: 11400000, guid: b904ba7da383d47318caea4dd296d482, type: 2}
+  _onSwitchNetwork: {fileID: 11400000, guid: 2958cd5861edd45fabe41e2762944269, type: 2}
+  _onOpenAllBlockchainWalletHome: {fileID: 11400000, guid: 077f6529e13f6422ab8c2b66bb8bd972, type: 2}
+  _onOpenSelectedBlockchainWalletHome: {fileID: 11400000, guid: cae47eff6c75549f38b6e90c8362ebad, type: 2}
+  _onSendPlatformCoin: {fileID: 11400000, guid: 109d2f0744852410995910c0d6e87782, type: 2}
+  _onSendERC20: {fileID: 11400000, guid: caf0bab00951649ec9b8ef3c35b45bba, type: 2}
+  _onGetBalanceERC20: {fileID: 11400000, guid: dc66f4356c3244d6fa38bd92797b43b7, type: 2}
+  _onSendERC721: {fileID: 11400000, guid: 9bd3e8cb06b2142a9ab376f6a3a69f17, type: 2}
+  _onSendERC1155: {fileID: 11400000, guid: 55800e785678e4456a04edbef6fd19dc, type: 2}
+  _onConnectBora: {fileID: 11400000, guid: 19d49287b3c8342c183710fe832a3a1a, type: 2}
+  _onCheckIsConnectedBora: {fileID: 11400000, guid: f116ad2254f9944149b402321fb59ffc, type: 2}
+  _onSignMessage: {fileID: 11400000, guid: 008cc03b50da941848c94b69995350f7, type: 2}
+  _onWalletConnect: {fileID: 11400000, guid: 07a610d8601a845ae9a4c5694d09f3e6, type: 2}
+  _connected: {fileID: 11400000, guid: 08131f71d7e144975a1b797ca47a9c38, type: 2}
+  _exceptionOccurred: {fileID: 11400000, guid: c9792c4ebc8934c618758ed37f8ae5d8, type: 2}
+  _logined: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
+  _logouted: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
+  _balanceUpdated: {fileID: 11400000, guid: 6d20b7ef509914bcfbd8d3c581e17bf2, type: 2}
+  _networkSwitched: {fileID: 11400000, guid: e51a0a21076474367b8d7f812a516c0e, type: 2}
+  _resultUpdated: {fileID: 11400000, guid: 37f655636fec849c7b8646c589b0d185, type: 2}
+  _updateERC20Balance: {fileID: 11400000, guid: 7ea4656442dd7403aa0f93fa8a10c0be, type: 2}
+--- !u!114 &5825345064221503069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825345064221503040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec5954c2054a343d785ba79b10119585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
