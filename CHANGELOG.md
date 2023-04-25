@@ -1,4 +1,16 @@
 
+<a name="1.3.13"></a>
+## Release: [1.3.13](https://github.com/HAECHI-LABS/core/releases/tag/1.3.13)
+### Bug Fixes
+- Update initial blockchain on AppState
+- Fix the bugs that dropdown is initialized after logout
+- Fix dev sample-dapp issues
+- Implement features on improved sample-dapp
+
+### Code Refactoring
+- Refactor sample-dapp structure
+
+
 <a name="1.1.1"></a>
 ## Release: [1.1.1](https://github.com/HAECHI-LABS/core/releases/tag/1.1.1)
 
