@@ -192,7 +192,7 @@ public class FaceWalletManager : MonoBehaviour
         this._validateIsLoggedIn();
 
         LoginData loginData = this._appState.GetLoginData();
-        Task<string> responseTask = this._getBalance(loginData.UserId);
+        Task<string> responseTask = this._getBalance(loginData.UserAddress);
             
         this._actionQueue.Enqueue(responseTask, response =>
         {
