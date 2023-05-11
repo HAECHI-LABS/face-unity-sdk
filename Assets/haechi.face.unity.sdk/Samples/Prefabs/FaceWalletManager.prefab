@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90fe6f2babb74902aa268d53268eb36c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appState: {fileID: 0}
+  _appState: {fileID: 11400000, guid: 2ad610ee2ac424c5f9ad117206dd19ab, type: 2}
   _onConnect: {fileID: 11400000, guid: 826bf1e20101c4d85b5c3baed398f84f, type: 2}
   _onLogin: {fileID: 11400000, guid: fa262f3e9c5bb471897bc582c89b7085, type: 2}
   _onSocialLogin: {fileID: 11400000, guid: 103bb2b2edfcc4e869dcad0cdc35fa59, type: 2}
