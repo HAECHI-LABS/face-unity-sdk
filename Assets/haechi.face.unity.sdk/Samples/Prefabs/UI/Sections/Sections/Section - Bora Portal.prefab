@@ -123,7 +123,7 @@ MonoBehaviour:
   _connectBoraButton: {fileID: 1645308347244228389}
   _isConnectedButton: {fileID: 510025914115203452}
   _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
-  _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
+  _onLoginSuccessEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _onNetworkSwitched: {fileID: 11400000, guid: e51a0a21076474367b8d7f812a516c0e, type: 2}
   _connectBora: {fileID: 11400000, guid: 19d49287b3c8342c183710fe832a3a1a, type: 2}

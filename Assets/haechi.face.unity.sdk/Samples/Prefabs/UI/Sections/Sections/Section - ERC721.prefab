@@ -127,7 +127,7 @@ MonoBehaviour:
   _receiverAddressInputField: {fileID: 7709696204722118493}
   _sendButton: {fileID: 4422815173792957851}
   _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
-  _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
+  _onLoginSuccessEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _sendERC721: {fileID: 11400000, guid: 9bd3e8cb06b2142a9ab376f6a3a69f17, type: 2}
 --- !u!1001 &115092257578514919

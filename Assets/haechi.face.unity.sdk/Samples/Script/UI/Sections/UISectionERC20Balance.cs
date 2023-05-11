@@ -11,7 +11,7 @@ public class UISectionERC20Balance : MonoBehaviour
     [SerializeField] private UIButton _getBalanceButton;
     
     [Header("Listening on")] 
-    [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
+    [SerializeField] private LoginDataChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onPageLoaded;
     
@@ -36,6 +36,11 @@ public class UISectionERC20Balance : MonoBehaviour
         this._onERC20BalanceUpdated.OnEventRaised -= this.SetERC20Balance;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
+    }
+    
+    private void Initialize(LoginData loginData)
+    {
+        this.Initialize();
     }
 
     private void Initialize()

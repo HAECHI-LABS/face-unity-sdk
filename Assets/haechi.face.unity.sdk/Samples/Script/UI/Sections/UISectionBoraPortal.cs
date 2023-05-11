@@ -11,7 +11,7 @@ public class UISectionBoraPortal : MonoBehaviour
     
     [Header("Listening on")]
     [SerializeField] private VoidEventChannelSO _onPageLoaded;
-    [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
+    [SerializeField] private LoginDataChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onNetworkSwitched;
 
@@ -37,6 +37,11 @@ public class UISectionBoraPortal : MonoBehaviour
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
         this._onNetworkSwitched.OnEventRaised -= this.Initialize;
+    }
+    
+    private void Initialize(LoginData loginData)
+    {
+        this.Initialize();
     }
 
     private void Initialize()

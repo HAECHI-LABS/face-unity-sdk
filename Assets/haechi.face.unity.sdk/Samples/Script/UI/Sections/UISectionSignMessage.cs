@@ -12,7 +12,7 @@ public class UISectionSignMessage : MonoBehaviour
     
     [Header("Listening on")]
     [SerializeField] private VoidEventChannelSO _onPageLoaded;
-    [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
+    [SerializeField] private LoginDataChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
     
     [Header("Broadcast to")] 
@@ -32,6 +32,11 @@ public class UISectionSignMessage : MonoBehaviour
         this._signMessageButton.OnClickEvent -= this.SignMessage;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
+    }
+    
+    private void Initialize(LoginData loginData)
+    {
+        this.Initialize();
     }
     
     private void Initialize()

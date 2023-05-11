@@ -124,7 +124,7 @@ MonoBehaviour:
   _balanceInputField: {fileID: 7594119971191541379}
   _contractAddressInputField: {fileID: 8762517924530676849}
   _getBalanceButton: {fileID: 6938484954054735235}
-  _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
+  _onLoginSuccessEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
   _getERC20Balance: {fileID: 11400000, guid: dc66f4356c3244d6fa38bd92797b43b7, type: 2}
