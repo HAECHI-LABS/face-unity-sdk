@@ -13,6 +13,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Install jq
+        run: sudo apt-get install jq
       - name: Update package.json
         env:
           RELEASE_TAG: ${{ github.event.inputs.semver }}
@@ -26,18 +28,18 @@ jobs:
       - name: Install
         run: |
           go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
-      - name: Generate Change Log & Release Note
-        env:
-          RELEASE_TAG: ${{ github.event.inputs.semver }}
-        run: |
-          git tag ${RELEASE_TAG}
-          git-chglog ${RELEASE_TAG} > CHANGELOG.${RELEASE_TAG}.md
-          if [[ -f CHANGELOG.md ]]; then
-            cat CHANGELOG.md >> CHANGELOG.${RELEASE_TAG}.md
-          fi
-          mv CHANGELOG.${RELEASE_TAG}.md CHANGELOG.md
-          cp CHANGELOG.md Assets/haechi.face.unity.sdk/
-          git-chglog ${RELEASE_TAG} > RELEASE_NOTE.md
+#      - name: Generate Change Log & Release Note
+#        env:
+#          RELEASE_TAG: ${{ github.event.inputs.semver }}
+#        run: |
+#          git tag ${RELEASE_TAG}
+#          git-chglog ${RELEASE_TAG} > CHANGELOG.${RELEASE_TAG}.md
+#          if [[ -f CHANGELOG.md ]]; then
+#            cat CHANGELOG.md >> CHANGELOG.${RELEASE_TAG}.md
+#          fi
+#          mv CHANGELOG.${RELEASE_TAG}.md CHANGELOG.md
+#          cp CHANGELOG.md Assets/haechi.face.unity.sdk/
+#          git-chglog ${RELEASE_TAG} > RELEASE_NOTE.md
           
       - run: |
           echo "Assets/haechi.face.unity.sdk.meta" > metaList
@@ -48,18 +50,18 @@ jobs:
         with:
           package-path: 'build/FaceUnitySDK.unitypackage'
           include-files: metaList
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.HAECHI_GITHUB_PAT }}
-        with:
-          tag_name: ${{ github.event.inputs.semver }}
-          release_name: ${{ github.event.inputs.semver }}
-          draft: false
-          prerelease: false
-          body_path: ./RELEASE_NOTE.md
-          files: |
-            build/FaceUnitySDK.unitypackage
+#      - name: Release
+#        uses: softprops/action-gh-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.HAECHI_GITHUB_PAT }}
+#        with:
+#          tag_name: ${{ github.event.inputs.semver }}
+#          release_name: ${{ github.event.inputs.semver }}
+#          draft: false
+#          prerelease: false
+#          body_path: ./RELEASE_NOTE.md
+#          files: |
+#            build/FaceUnitySDK.unitypackage
       - name: Commit Change Log
         run: |
           git config --local user.email "haechi@github.com"
