@@ -30,8 +30,10 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                    $"env={parameters.Env}&" +
                    $"blockchain={parameters.Blockchain}&" +
                    $"hostname={parameters.Hostname}&" +
-                   (!string.IsNullOrEmpty(parameters.RedirectUrl) ? $"redirectUrl={parameters.RedirectUrl}&" : "")+
-                   $"webview_version={Face.WEBVIEW_VERSION}";
+                   (!string.IsNullOrEmpty(parameters.RedirectUrl) ? $"redirectUrl={parameters.RedirectUrl}&" : "") +
+                   $"webview_version={Face.WEBVIEW_VERSION}&" +
+                   (!string.IsNullOrEmpty(parameters.Version) ? $"version={parameters.Version}&" : "") +
+                   (!string.IsNullOrEmpty(parameters.Type) ? $"type={parameters.Type}" : "");
         }
 
         public static FaceRpcContext DecodeQueryParams(Uri uri)
@@ -78,6 +80,8 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             public Blockchain Blockchain;
             public string Hostname;
             [CanBeNull] public string RedirectUrl;
+            [CanBeNull] public string Version;
+            [CanBeNull] public string Type;
         }
     }
 }
