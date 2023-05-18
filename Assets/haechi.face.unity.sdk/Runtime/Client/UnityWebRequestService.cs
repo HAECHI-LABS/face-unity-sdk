@@ -2,7 +2,6 @@ using System.Collections;
 using System.Text;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Module;
-using haechi.face.unity.sdk.Runtime.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -41,8 +40,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
             www.SetRequestHeader("Content-Type", "application/json;charset=utf-8");
             www.SetRequestHeader("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey());
             www.SetRequestHeader("X-Face-Dapp-Api-Hostname", Application.absoluteURL);
-            www.SetRequestHeader("X-Face-Sdk-Type", SdkInfo.UNITY_SDK_TYPE);
-            www.SetRequestHeader("X-Face-Sdk-Version", SdkInfo.UNITY_SDK_VERSION);
             yield return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.ConnectionError ||
@@ -68,8 +65,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 www.SetRequestHeader("Content-Type", "application/json;charset=utf-8");
                 www.SetRequestHeader("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey());
                 www.SetRequestHeader("X-Face-Dapp-Api-Hostname", Application.absoluteURL);
-                www.SetRequestHeader("X-Face-Sdk-Type", SdkInfo.UNITY_SDK_TYPE);
-                www.SetRequestHeader("X-Face-Sdk-Version", SdkInfo.UNITY_SDK_VERSION);
                 yield return www.SendWebRequest();
 
                 if (www.result == UnityWebRequest.Result.ConnectionError ||

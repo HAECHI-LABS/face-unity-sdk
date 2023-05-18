@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
-using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime
 {
@@ -181,7 +180,7 @@ namespace haechi.face.unity.sdk.Runtime
         public string IframeURL()
         {
             return string.Format(
-                $"{this._iframeHostMap.GetValueOrDefault(this.Environment(), this._iframeHostMap[Profile.Dev])}/?api_key={this.ApiKey()}&blockchain={this.Blockchain()}&env={this.Environment()}&version={SdkInfo.UNITY_SDK_VERSION}&type={SdkInfo.UNITY_SDK_TYPE}");
+                $"{this._iframeHostMap.GetValueOrDefault(this.Environment(), this._iframeHostMap[Profile.Dev])}/?api_key={this.ApiKey()}&blockchain={this.Blockchain()}&env={this.Environment()}");
         }
     }
 }
