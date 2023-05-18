@@ -15,7 +15,7 @@ public class UISectionERC1155Transaction : MonoBehaviour
     
     [Header("Listening on")] 
     [SerializeField] private VoidEventChannelSO _onPageLoaded;
-    [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
+    [SerializeField] private LoginDataChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
     
     [Header("Broadcast to")] 
@@ -35,6 +35,11 @@ public class UISectionERC1155Transaction : MonoBehaviour
         this._sendButton.OnClickEvent -= this.Send;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
+    }
+    
+    private void Initialize(LoginData loginData)
+    {
+        this.Initialize();
     }
     
     private void Initialize()

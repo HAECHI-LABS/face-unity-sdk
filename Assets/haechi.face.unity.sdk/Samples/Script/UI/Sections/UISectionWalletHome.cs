@@ -18,7 +18,7 @@ public class UISectionWalletHome : MonoBehaviour
     
     [Header("Listening on")] 
     [SerializeField] private VoidEventChannelSO _onPageLoaded;
-    [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
+    [SerializeField] private LoginDataChannelSO _onLoginSuccessEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
 
     [Header("Broadcasting to")] 
@@ -43,6 +43,11 @@ public class UISectionWalletHome : MonoBehaviour
         this._onPageLoaded.OnEventRaised -= this.Initialize;
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
+    }
+    
+    private void Initialize(LoginData loginData)
+    {
+        this.Initialize();
     }
 
     private void Initialize()
