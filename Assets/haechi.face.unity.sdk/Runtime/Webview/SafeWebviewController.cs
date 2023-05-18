@@ -104,7 +104,9 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Env = FaceSettings.Instance.Environment(),
                 Blockchain = FaceSettings.Instance.Blockchain(),
                 RedirectUrl = redirectUri,
-                Hostname = this._hostname()
+                Hostname = this._hostname(),
+                Version = SdkInfo.UNITY_SDK_VERSION,
+                Type = SdkInfo.UNITY_SDK_TYPE
             });
             UriBuilder uriBuilder = new UriBuilder(FaceSettings.Instance.WebviewHostURL())
             {

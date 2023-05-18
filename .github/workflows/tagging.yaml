@@ -19,6 +19,24 @@ jobs:
         run: |
           tmp=$(mktemp)
           jq '.version = "'${RELEASE_TAG}'"' Assets/haechi.face.unity.sdk/package.json > $tmp && mv $tmp Assets/haechi.face.unity.sdk/package.json
+      - name: Update SdkInfo.cs file
+        env:
+          RELEASE_TAG: ${{ github.event.inputs.semver }}
+        run: |
+          FILE_PATH=Assets/haechi.face.unity.sdk/Runtime/Client/SdkInfo.cs
+          if [ -f "$FILE_PATH" ]; then
+            CONTENT="namespace haechi.face.unity.sdk.Runtime.Utils
+            {
+              public class SdkInfo
+              {
+                public static readonly string UNITY_SDK_TYPE = \"unity\";
+                public static readonly string UNITY_SDK_VERSION = \"${RELEASE_TAG}\";
+              }
+            }"
+            echo "$CONTENT" > $FILE_PATH
+          else
+            echo "Hello"
+          fi
       - name: Set up Golang
         uses: actions/setup-go@v3
         with:
