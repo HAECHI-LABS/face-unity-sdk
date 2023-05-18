@@ -1,4 +1,19 @@
 
+<a name="1.3.14"></a>
+## Release: [1.3.14](https://github.com/HAECHI-LABS/core/releases/tag/1.3.14)
+### Bug Fixes
+- Fix non interactable issue when re login
+- Fix WebGL sample UI and wallet home issue
+- Fix dev sample dapp
+
+### CI
+- Add Version.cs file updating script in github actions
+- Add Version.cs file updating script in github actions
+
+### Reverts
+- ci: Add Version.cs file updating script in github actions
+
+
 <a name="1.3.13"></a>
 ## Release: [1.3.13](https://github.com/HAECHI-LABS/core/releases/tag/1.3.13)
 ### Bug Fixes
