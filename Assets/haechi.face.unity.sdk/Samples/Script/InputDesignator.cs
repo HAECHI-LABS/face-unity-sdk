@@ -345,7 +345,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         public void SetApiKey(string key)
         {
 #if UNITY_WEBGL
-            this.webApiKey.text = key;
+            this.webApiKey.text = apiKey;
 #else
             this.apiKey.text = key;
             this.landscapeApiKey.text = key;

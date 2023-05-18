@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Exception;
-using haechi.face.unity.sdk.Runtime.Utils;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
 using Newtonsoft.Json;
@@ -15,6 +14,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
 {
     public class FaceClient : ClientBase
     {
+        
         private readonly JsonSerializerSettings _jsonSerializerSettings;
         
         public FaceClient(Uri baseUrl, HttpClient httpClient, JsonSerializerSettings jsonSerializerSettings = null)
@@ -26,8 +26,6 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this._httpClient.BaseAddress = baseUrl;
             this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Hostname", Application.identifier);
             this._httpClient.DefaultRequestHeaders.Add("X-Face-Dapp-Api-Key", FaceSettings.Instance.ApiKey());
-            this._httpClient.DefaultRequestHeaders.Add("X-Face-Sdk-Type", SdkInfo.UNITY_SDK_TYPE);
-            this._httpClient.DefaultRequestHeaders.Add("X-Face-Sdk-Version", SdkInfo.UNITY_SDK_VERSION);
         }
         
         protected override async Task<RpcResponseMessage> SendAsync(
