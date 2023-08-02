@@ -23,7 +23,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private readonly FaceRpcProvider _provider;
         private readonly Wallet _wallet;
         private readonly WalletConnectClientSupplier _walletConnectClientSupplier;
-        private readonly WalletConnectV1Client _walletConnectV1;
         private readonly WalletConnectV2Client _walletConnectV2;
         
         // Later, will add Aptos, Near, Solana in this array
@@ -37,17 +36,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
             this._provider = provider;
             this._wallet = wallet;
             this._walletConnectClientSupplier = new WalletConnectClientSupplier();
-            this._walletConnectV1 = (WalletConnectV1Client) this._walletConnectClientSupplier.Supply(WalletConnectVersion.V1);
             this._walletConnectV2 = (WalletConnectV2Client) this._walletConnectClientSupplier.Supply(WalletConnectVersion.V2);
 #if  !UNITY_WEBGL
-            this._initWalletConnectV1();
             this._initWalletConnectV2();
 #endif
-        }
-        
-        private void _initWalletConnectV1()
-        {
-            this._registryWalletConnectV1Event();
         }
         
         private async void _initWalletConnectV2()
@@ -115,11 +107,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
         }
 
-        public async Task DisconnectWalletConnectV1()
-        {
-            await this._walletConnectV1.DisconnectIfSessionExist();
-        }
-
         private async Task<DappMetadata> _connectDappWithWalletConnect(string address, string dappName,string dappUrl, bool invalid = false)
         {
             if (unsupportedBlockchains.Contains(FaceSettings.Instance.Blockchain()))
@@ -173,48 +160,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
 
             return await this._provider.SendFaceRpcAsync(faceRpcRequest);
-        }
-
-        private void _registryWalletConnectV1Event()
-        {
-            this._walletConnectV1.OnTermSignRequest += async (topic, @event) =>
-            {
-                ClientMeta dappMetadata = this._walletConnectV1.Session.DappMetadata;
-                FaceRpcResponse response = await this._signMessageWithMetadata(@event.Parameters[0], WcFaceMetadata.V1Converted(dappMetadata));
-                NetworkMessage networkMessage = await this._walletConnectV1.Session.CreateNetworkMessage(
-                    new WcConnectRequest<string>(@event.ID, response.Result.ToString()),
-                    this._walletConnectV1.Session.DappPeerId,
-                    "pub",
-                    false);
-                await this._walletConnectV1.Session.SendRequest(networkMessage);
-#if UNITY_IOS
-                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
-                await this._walletConnectV1.Session.SendRequest(networkMessage);
-                this._walletConnectV1.TermSignNetworkMessageQueue
-                    .Enqueue(new Dictionary<DateTime, NetworkMessage> {{DateTime.Now, networkMessage}});
-#endif
-            };
-            this._walletConnectV1.OnPersonalSignRequest += async (topic, @event) =>
-            {
-                ClientMeta dappMetadata = this._walletConnectV1.Session.DappMetadata;
-                FaceRpcResponse response = await this._signMessageWithMetadata(@event.Parameters[0], WcFaceMetadata.V1Converted(dappMetadata));
-                await this._walletConnectV1.Session.SendPersonalSignRequest(@event.ID, response.Result.ToString());
-#if UNITY_IOS
-                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
-                await this._walletConnectV1.Session.SendPersonalSignRequest(@event.ID, response.Result.ToString());
-#endif
-            };
-            this._walletConnectV1.OnSendTransactionEvent += async (topic, @event) =>
-            {
-                TransactionData transactionData = @event.Parameters[0];
-                TransactionRequestId response = await this._wallet.SendTransaction(new RawTransaction(transactionData.from, transactionData.to, transactionData.value, transactionData.data));
-                Debug.Log(response.transactionId);
-                await this._walletConnectV1.Session.SendTransactionRequest(@event.ID, response.transactionId);
-#if UNITY_IOS
-                await this._walletConnectV1.Session.Transport.Open(this._walletConnectV1.Session.Transport.URL, false);
-                await this._walletConnectV1.Session.SendTransactionRequest(@event.ID, response.transactionId);
-#endif
-            };
         }
 
         private void _registryWalletConnectV2Event()

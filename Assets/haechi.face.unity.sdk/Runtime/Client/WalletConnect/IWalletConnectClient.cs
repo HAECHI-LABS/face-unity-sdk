@@ -13,7 +13,6 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
     public class WalletConnectClientSupplier
     {
         private readonly Dictionary<WalletConnectVersion, IWalletConnectClient> _dictionary = new Dictionary<WalletConnectVersion, IWalletConnectClient>() {
-            { WalletConnectVersion.V1, WalletConnectV1Client.GetInstance() },
             { WalletConnectVersion.V2, WalletConnectV2Client.GetInstance() }
         };
 

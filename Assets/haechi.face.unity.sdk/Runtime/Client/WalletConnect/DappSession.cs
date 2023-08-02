@@ -1,6 +1,5 @@
 using System;
 using Newtonsoft.Json;
-using WalletConnectSharpV1.Core.Models;
 
 namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 {
@@ -14,16 +13,13 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
         [JsonProperty("dapp_url")]
         public string DappUrl { get; private set; }
         
-        [JsonProperty("saved_session")]
-        public SavedSession SavedSession { get; private set; }
 
         [JsonConstructor]
         public DappSession() {}
-        public DappSession(string dappName, string dappUrl, SavedSession savedSession)
+        public DappSession(string dappName, string dappUrl)
         {
             this.DappName = dappName;
             this.DappUrl = dappUrl;
-            this.SavedSession = savedSession;
         }
     }
 }
