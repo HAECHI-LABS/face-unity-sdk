@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19079a5d449942369d2b3f1e3d1bcdf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appState: {fileID: 0}
+  _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _loginButton: {fileID: 4680358919434882373}
   _loginGoogleButton: {fileID: 8182529408264796426}
   _loginFacebookButton: {fileID: 465796516782844440}

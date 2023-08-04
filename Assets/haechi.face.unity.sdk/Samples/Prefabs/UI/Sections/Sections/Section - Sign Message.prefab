@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53bfbfc355d426e93c1b8ba22b0e4e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appState: {fileID: 0}
+  _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _messageInputField: {fileID: 806403528400357773}
   _signMessageButton: {fileID: 5385574878947012340}
   _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
