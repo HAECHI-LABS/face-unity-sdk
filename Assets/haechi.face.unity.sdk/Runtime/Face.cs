@@ -63,6 +63,15 @@ namespace haechi.face.unity.sdk.Runtime
             this._authProxy.Register(this._auth);
             this.dataFactory = new ContractDataFactory(web3);
         }
+
+        public void InitializeWalletConnectClient()
+        {
+            if (this.gameObject.GetComponent<WalletConnectClient>() != null)
+            {
+                Destroy(this.gameObject.GetComponent<WalletConnectClient>());
+            }
+            this._registryFaceUnityScripts();
+        }
         
         /// <summary>
         /// Disconnect Face Wallet.&#10; If this method be called, need to initialize again to connect with Face Wallet.
@@ -76,9 +85,9 @@ namespace haechi.face.unity.sdk.Runtime
             this._wallet = null;
             this._walletConnect = null;
 #if !UNITY_WEBGL
-            if (this.gameObject.GetComponent<WalletConnectV2Client>() != null)
+            if (this.gameObject.GetComponent<WalletConnectClient>() != null)
             {
-                Destroy(this.gameObject.GetComponent<WalletConnectV2Client>());
+                Destroy(this.gameObject.GetComponent<WalletConnectClient>());
             }
 #endif
         }
@@ -145,9 +154,9 @@ namespace haechi.face.unity.sdk.Runtime
 
         private void _registryFaceUnityScripts()
         {
-            if (this.gameObject.GetComponent<WalletConnectV2Client>() == null)
+            if (this.gameObject.GetComponent<WalletConnectClient>() == null)
             {
-                this.gameObject.AddComponent<WalletConnectV2Client>();
+                this.gameObject.AddComponent<WalletConnectClient>();
             }
         }
     }

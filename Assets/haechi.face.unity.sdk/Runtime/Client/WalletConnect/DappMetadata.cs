@@ -1,5 +1,6 @@
 using System;
 using Newtonsoft.Json;
+using WalletConnectSharp.Core.Models.Pairing;
 using WalletConnectSharp.Sign.Models;
 
 namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect

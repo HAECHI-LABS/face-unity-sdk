@@ -39,11 +39,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             Application.targetFrameRate = 60;
         }
 
-        public void Test()
-        {
-            // this.face._walletConnectV1.Test();
-        }
-
         private void OnEnable()
         {
             this._onOpenAllBlockchainWalletHome.OnEventRaised += this.OpenWalletHome;
