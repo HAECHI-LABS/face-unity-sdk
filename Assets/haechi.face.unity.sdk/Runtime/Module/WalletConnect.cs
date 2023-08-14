@@ -35,11 +35,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
 #endif
         }
         
-        private async void _initWalletConnect()
+        private void _initWalletConnect()
         {
-#if UNITY_IOS
-            // await this._walletConnectClient.Connect();
-#endif
             this._registryWalletConnectEvent();
         }
 

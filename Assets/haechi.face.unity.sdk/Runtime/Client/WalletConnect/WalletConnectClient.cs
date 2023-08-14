@@ -94,9 +94,6 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
         private async Task<DappMetadata> _doPair(string address, string wcUri, 
             PairRequestEvent.ConfirmWalletConnectDapp confirmWalletConnectDapp)
         {
-#if UNITY_ANDROID
-            await this.Connect();      
-#endif
             await this.Connect();
             ProposalStruct @struct = new ProposalStruct();
             try
