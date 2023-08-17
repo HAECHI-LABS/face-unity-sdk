@@ -164,7 +164,7 @@ public class FaceWalletManager : MonoBehaviour
                 UserId = response.userId,
                 UserAddress = response.userAddress,
                 Balance = response.balance,
-                Result = String.Empty
+                Result = $"UserVerificationToken: {response.userVerificationToken}"
             });
         }, this._defaultExceptionHandler);
     }
@@ -345,10 +345,12 @@ public class FaceWalletManager : MonoBehaviour
     {
         FaceLoginResponse response = await this._face.Auth().Login();
         string address = response.wallet.Address;
+        string userVerificationToken = response.userVerificationToken;
+        Debug.Log($"User verification token: {userVerificationToken}");
 
         string balance = await this._getBalance(address);
 
-        return new LoginResult(balance, response.faceUserId, address);
+        return new LoginResult(balance, response);
     } 
     
     private void _directSocialLoginAndGetBalance(string provider)
@@ -362,7 +364,7 @@ public class FaceWalletManager : MonoBehaviour
                 UserId = response.userId,
                 UserAddress = response.userAddress,
                 Balance = response.balance,
-                Result = String.Empty
+                Result = $"UserVerificationToken: {response.userVerificationToken}"
             });
         }, this._defaultExceptionHandler);
     }
@@ -373,7 +375,7 @@ public class FaceWalletManager : MonoBehaviour
         string address = response.wallet.Address;
         string balance = await this._getBalance(address);
 
-        return new LoginResult(balance, response.faceUserId, address);
+        return new LoginResult(balance, response);
     }
     
     private async Task<string> _getBalance(string address)

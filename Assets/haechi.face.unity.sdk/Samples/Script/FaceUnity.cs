@@ -39,11 +39,6 @@ namespace haechi.face.unity.sdk.Samples.Script
             Application.targetFrameRate = 60;
         }
 
-        public void Test()
-        {
-            // this.face._walletConnectV1.Test();
-        }
-
         private void OnEnable()
         {
             this._onOpenAllBlockchainWalletHome.OnEventRaised += this.OpenWalletHome;
@@ -143,7 +138,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             Debug.Log($"balance: {balance}");
             Debug.Log("Login done");
 
-            return new LoginResult(balance, response.faceUserId, address);
+            return new LoginResult(balance, response);
         } 
         
         public async Task LoginWithIdTokenAndGetBalanceAsync(string idToken)
@@ -163,7 +158,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             
             Debug.Log("Login done");
 
-            LoginResult loginResult = new LoginResult(balance, response.faceUserId, address);
+            LoginResult loginResult = new LoginResult(balance, response);;
             this.dataDesignator.SetLoggedInId(loginResult.userId);
             this.dataDesignator.SetLoggedInAddress(loginResult.userAddress);
             this.dataDesignator.SetCoinBalance(loginResult.balance);
@@ -211,7 +206,7 @@ namespace haechi.face.unity.sdk.Samples.Script
             string address = response.wallet.Address;
             string balance = await this._getBalance(address);
 
-            return new LoginResult(balance, response.faceUserId, address);
+            return new LoginResult(balance, response);
         }
 
         public void Logout()
@@ -430,12 +425,14 @@ namespace haechi.face.unity.sdk.Samples.Script
         public string balance;
         public string userId;
         public string userAddress;
+        public string userVerificationToken;
 
-        public LoginResult(string balance, string userId, string userAddress)
+        public LoginResult(string balance, FaceLoginResponse response)
         {
             this.balance = balance;
-            this.userId = userId;
-            this.userAddress = userAddress;
+            this.userId = response.faceUserId;
+            this.userAddress = response.wallet.Address;
+            this.userVerificationToken = response.userVerificationToken;
         }
     }
 

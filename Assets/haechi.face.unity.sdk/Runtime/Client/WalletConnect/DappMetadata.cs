@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
+using WalletConnectSharp.Core.Models.Pairing;
 using WalletConnectSharp.Sign.Models;
-using WalletConnectSharpV1.Core.Models;
 
 namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 {
@@ -19,15 +19,6 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 
         [JsonProperty("icons")]
         public string[] Icons { get; set; }
-        
-        // TODO: Add 'deprecated' explicitly after 28th, June, 2023.
-        public DappMetadata(ClientMeta clientMeta)
-        {
-            this.Name = clientMeta.Name;
-            this.Description = clientMeta.Description;
-            this.Url = clientMeta.URL;
-            this.Icons = clientMeta.Icons;
-        }
         
         public DappMetadata(Metadata metadata)
         {

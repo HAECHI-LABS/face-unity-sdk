@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 318fae51730a4415baf421e43d641aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appState: {fileID: 0}
+  _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _checkboxContentTransform: {fileID: 3603823071834597206}
   _uiBlockchainCheckboxPrefab: {fileID: 1578453009838683647, guid: 9473e05671aaf42ccb96f1436b6bb51c, type: 3}
   _openWalletHomeAllBlockchainButton: {fileID: 7652404854413306370}

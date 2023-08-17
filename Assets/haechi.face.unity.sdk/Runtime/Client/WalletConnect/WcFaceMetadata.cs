@@ -1,7 +1,6 @@
 using System;
 using Newtonsoft.Json;
-using WalletConnectSharp.Sign.Models;
-using WalletConnectSharpV1.Core.Models;
+using WalletConnectSharp.Core.Models.Pairing;
 
 namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
 {
@@ -15,17 +14,8 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
             this.AppUrl = url;
             this.Thumbnail = thumbnail;
         }
-
-        // This method is for WalletConnect V1.
-        public static WcFaceMetadata V1Converted(ClientMeta metadata)
-        {
-            return new WcFaceMetadata(metadata.Name, 
-                metadata.URL,
-                metadata.Icons.Length > 0 ? metadata.Icons[0] : null);
-        }
         
-        // This method is for WalletConnect V2.
-        public static WcFaceMetadata V2Converted(Metadata metadata)
+        public static WcFaceMetadata Converted(Metadata metadata)
         {
             return new WcFaceMetadata(metadata.Name, 
                 metadata.Url,

@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931e4345cfec4eaa9b486394e79bed36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appState: {fileID: 0}
+  _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _contractAddressInputField: {fileID: 3095239228517039712}
   _tokenIdInputField: {fileID: 2576089845006063798}
   _quantityInputField: {fileID: 604647692494758524}

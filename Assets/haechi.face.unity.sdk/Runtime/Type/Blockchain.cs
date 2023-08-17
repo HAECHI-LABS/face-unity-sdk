@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using face_unity.haechi.face.unity.sdk.Runtime.Utils;
@@ -42,6 +43,21 @@ namespace haechi.face.unity.sdk.Runtime.Type
                     throw new InvalidEnumArgumentException();
             }
         }
+        
+        public static Blockchain OfChainId(int chainId)
+        {
+            foreach (var network in BlockchainNetworks.Properties)
+            {
+                if (network.Value.ChainId != chainId)
+                {
+                    continue;
+                }
+                return OfBlockchainNetwork(network.Key);
+            }
+    
+            throw new ArgumentException($"Unknown chainId {chainId}");
+        }
+
         public static Blockchain ValueOf(string value)
         {
             return EnumUtils.FindEquals<Blockchain>(value);

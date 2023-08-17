@@ -6,7 +6,6 @@ using haechi.face.unity.sdk.Runtime.Module;
 using haechi.face.unity.sdk.Runtime.Webview;
 using Nethereum.Web3;
 using UnityEngine;
-using WalletConnectSharpV1.Unity.Network;
 
 namespace haechi.face.unity.sdk.Runtime
 {
@@ -64,13 +63,21 @@ namespace haechi.face.unity.sdk.Runtime
             this._authProxy.Register(this._auth);
             this.dataFactory = new ContractDataFactory(web3);
         }
+
+        public void InitializeWalletConnectClient()
+        {
+            if (this.gameObject.GetComponent<WalletConnectClient>() != null)
+            {
+                Destroy(this.gameObject.GetComponent<WalletConnectClient>());
+            }
+            this._registryFaceUnityScripts();
+        }
         
         /// <summary>
         /// Disconnect Face Wallet.&#10; If this method be called, need to initialize again to connect with Face Wallet.
         /// </summary>
         public async void Disconnect()
         {
-            await this._walletConnect.DisconnectWalletConnectV1();
             FaceSettings.Destruct();
             this.provider = null;
             this.dataFactory = null;
@@ -78,23 +85,9 @@ namespace haechi.face.unity.sdk.Runtime
             this._wallet = null;
             this._walletConnect = null;
 #if !UNITY_WEBGL
-            if (this.gameObject.GetComponent<NativeWebSocketTransport>() != null)
+            if (this.gameObject.GetComponent<WalletConnectClient>() != null)
             {
-                Destroy(this.gameObject.GetComponent<NativeWebSocketTransport>());
-            }
-            if (this.gameObject.GetComponent<WalletConnectV1Client>() != null)
-            {
-                Destroy(this.gameObject.GetComponent<WalletConnectV1Client>());
-            }
-            // For iOS AppDelegate plugin, need to add WalletConnectV1Client as a GameObject
-            if (GameObject.Find("WalletConnectV1Client") != null)
-            {
-                Destroy(GameObject.Find("WalletConnectV1Client"));
-            }
-
-            if (this.gameObject.GetComponent<WalletConnectV2Client>() != null)
-            {
-                Destroy(this.gameObject.GetComponent<WalletConnectV2Client>());
+                Destroy(this.gameObject.GetComponent<WalletConnectClient>());
             }
 #endif
         }
@@ -161,20 +154,9 @@ namespace haechi.face.unity.sdk.Runtime
 
         private void _registryFaceUnityScripts()
         {
-            if (this.gameObject.GetComponent<NativeWebSocketTransport>() == null)
+            if (this.gameObject.GetComponent<WalletConnectClient>() == null)
             {
-                this.gameObject.AddComponent<NativeWebSocketTransport>();
-            }
-            // For iOS AppDelegate plugin, need to add WalletConnectV1Client as a GameObject
-            if (GameObject.Find("WalletConnectV1Client") == null)
-            {
-                GameObject nativeWebSocketTransport = new GameObject();
-                nativeWebSocketTransport.name = "WalletConnectV1Client";
-                nativeWebSocketTransport.AddComponent<WalletConnectV1Client>();
-            }
-            if (this.gameObject.GetComponent<WalletConnectV2Client>() == null)
-            {
-                this.gameObject.AddComponent<WalletConnectV2Client>();
+                this.gameObject.AddComponent<WalletConnectClient>();
             }
         }
     }

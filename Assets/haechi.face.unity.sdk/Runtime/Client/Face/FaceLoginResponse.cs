@@ -14,6 +14,12 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         public string faceUserId;
         
         /// <value>
+        /// User verification JWT Token.
+        /// </value>
+        [JsonProperty("userVerificationToken")]
+        public string userVerificationToken;
+        
+        /// <value>
         /// User's wallet info such as unique id, address etc.
         /// </value>
         [JsonProperty("wallet")]
