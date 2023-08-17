@@ -1,4 +1,7 @@
 
+<a name="1.3.15"></a>
+## Release: [1.3.15](https://github.com/HAECHI-LABS/core/releases/tag/1.3.15)
+
 <a name="1.3.14"></a>
 ## Release: [1.3.14](https://github.com/HAECHI-LABS/core/releases/tag/1.3.14)
 ### Bug Fixes
