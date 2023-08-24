@@ -294,6 +294,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "haechi.face.unity.sdk": {
+      "version": "file:../haechi.face.unity.sdk",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
