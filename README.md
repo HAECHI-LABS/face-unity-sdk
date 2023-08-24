@@ -9,3 +9,6 @@ Face Unity SDK documentation is [here](https://docs.facewallet.xyz/docs/overview
 
 ## API Reference
 API Reference documentation is [here](https://unity.api-reference.facewallet.xyz/).
+
+## For Haechi Labs Developer
+You can find internal engineering documents [here](https://www.notion.so/haechilabs/Unity-e2778f5418164a28a96ecd970daa30f8).
