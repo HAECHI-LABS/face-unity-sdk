@@ -1,10 +1,10 @@
 name: cd-dev-unity
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "version of rc"
-        required: true
+#    inputs:
+#      version:
+#        description: "version of rc"
+#        required: true
 jobs:
   build-android:
     name: 🚀 Build Face Unity Sample Android Dapp 🚀
@@ -43,8 +43,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          versioning: Custom
-          version: ${{ github.event.inputs.version }}
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Dev
+#          versioning: Custom
+#          version: ${{ github.event.inputs.version }}
       - uses: actions/setup-node@v1
       - uses: ruby/setup-ruby@v1
         with:
@@ -89,8 +92,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: iOS
-          versioning: Custom
-          version: ${{ github.event.inputs.version }}
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Dev
+#          versioning: Custom
+#          version: ${{ github.event.inputs.version }}
       # Output
       - uses: actions/upload-artifact@v2
         with:
@@ -160,8 +166,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
-          versioning: Custom
-          version: ${{ github.event.inputs.version }}
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Dev
+#          versioning: Custom
+#          version: ${{ github.event.inputs.version }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:

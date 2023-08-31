@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using UnityEngine;
 
 // copied from https://github.com/game-ci/documentation/blob/main/example/BuildScript.cs
 namespace UnityBuilderAction
@@ -13,12 +14,38 @@ namespace UnityBuilderAction
         private static readonly string Eol = Environment.NewLine;
 
         private static readonly string[] Secrets =
-            {"androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass"};
+            { "androidKeystorePass", "androidKeyaliasName", "androidKeyaliasPass" };
+
+        private const string FaceDeploymentEnvArgName = "faceDeployEnvironment";
+
+        public static void CustomizeForFace(FaceDeployEnvironment deployEnvironment,
+            VersionUpgrader.Version newVersion)
+        {
+            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(FaceDeployConstants.SecnePath, true) };
+
+            Debug.Log("Application identifier" + PlayerSettings.applicationIdentifier);
+            switch (deployEnvironment)
+            {
+                case FaceDeployEnvironment.Dev:
+                    PlayerSettings.applicationIdentifier = FaceDeployConstants.DevAppId;
+                    break;
+                case FaceDeployEnvironment.Stage:
+                    PlayerSettings.applicationIdentifier = FaceDeployConstants.StageAppId;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(deployEnvironment), deployEnvironment, null);
+            }
+
+            // PlayerSettings.bundleVersion = newVersion.ToString();
+        }
 
         public static void Build()
         {
             // Gather values from args
             Dictionary<string, string> options = GetValidatedOptions();
+            Enum.TryParse(options[FaceDeploymentEnvArgName], out FaceDeployEnvironment deployEnvironment);
+            var version = VersionUpgrader.Upgrade(deployEnvironment);
+            CustomizeForFace(deployEnvironment, version);
 
             // Set version for this build
             PlayerSettings.bundleVersion = options["buildVersion"];
@@ -26,18 +53,20 @@ namespace UnityBuilderAction
             PlayerSettings.Android.bundleVersionCode = int.Parse(options["androidVersionCode"]);
 
             // Apply build target
-            var buildTarget = (BuildTarget) Enum.Parse(typeof(BuildTarget), options["buildTarget"]);
+            var buildTarget = (BuildTarget)Enum.Parse(typeof(BuildTarget), options["buildTarget"]);
             switch (buildTarget)
             {
                 case BuildTarget.Android:
                 {
-                    EditorUserBuildSettings.buildAppBundle = options["customBuildPath"].EndsWith(".aab");
+                    EditorUserBuildSettings.buildAppBundle =
+                        options["customBuildPath"].EndsWith(".aab");
                     if (options.TryGetValue("androidKeystoreName", out string keystoreName) &&
                         !string.IsNullOrEmpty(keystoreName))
                     {
-                      PlayerSettings.Android.useCustomKeystore = true;
-                      PlayerSettings.Android.keystoreName = keystoreName;
+                        PlayerSettings.Android.useCustomKeystore = true;
+                        PlayerSettings.Android.keystoreName = keystoreName;
                     }
+
                     if (options.TryGetValue("androidKeystorePass", out string keystorePass) &&
                         !string.IsNullOrEmpty(keystorePass))
                         PlayerSettings.Android.keystorePass = keystorePass;
@@ -47,18 +76,21 @@ namespace UnityBuilderAction
                     if (options.TryGetValue("androidKeyaliasPass", out string keyaliasPass) &&
                         !string.IsNullOrEmpty(keyaliasPass))
                         PlayerSettings.Android.keyaliasPass = keyaliasPass;
-                    if (options.TryGetValue("androidTargetSdkVersion", out string androidTargetSdkVersion) &&
+                    if (options.TryGetValue("androidTargetSdkVersion",
+                            out string androidTargetSdkVersion) &&
                         !string.IsNullOrEmpty(androidTargetSdkVersion))
                     {
                         var targetSdkVersion = AndroidSdkVersions.AndroidApiLevelAuto;
                         try
                         {
                             targetSdkVersion =
-                                (AndroidSdkVersions) Enum.Parse(typeof(AndroidSdkVersions), androidTargetSdkVersion);
+                                (AndroidSdkVersions)Enum.Parse(typeof(AndroidSdkVersions),
+                                    androidTargetSdkVersion);
                         }
                         catch
                         {
-                            UnityEngine.Debug.Log("Failed to parse androidTargetSdkVersion! Fallback to AndroidApiLevelAuto");
+                            UnityEngine.Debug.Log(
+                                "Failed to parse androidTargetSdkVersion! Fallback to AndroidApiLevelAuto");
                         }
 
                         PlayerSettings.Android.targetSdkVersion = targetSdkVersion;
@@ -67,17 +99,21 @@ namespace UnityBuilderAction
                     break;
                 }
                 case BuildTarget.StandaloneOSX:
-                    PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone, ScriptingImplementation.Mono2x);
+                    PlayerSettings.SetScriptingBackend(BuildTargetGroup.Standalone,
+                        ScriptingImplementation.Mono2x);
                     break;
             }
 
             // Determine subtarget
             int buildSubtarget = 0;
 #if UNITY_2021_2_OR_NEWER
-            if (!options.TryGetValue("standaloneBuildSubtarget", out var subtargetValue) || !Enum.TryParse(subtargetValue, out StandaloneBuildSubtarget buildSubtargetValue)) {
+            if (!options.TryGetValue("standaloneBuildSubtarget", out var subtargetValue) ||
+                !Enum.TryParse(subtargetValue, out StandaloneBuildSubtarget buildSubtargetValue))
+            {
                 buildSubtargetValue = default;
             }
-            buildSubtarget = (int) buildSubtargetValue;
+
+            buildSubtarget = (int)buildSubtargetValue;
 #endif
 
             // Custom build
@@ -87,6 +123,12 @@ namespace UnityBuilderAction
         private static Dictionary<string, string> GetValidatedOptions()
         {
             ParseCommandLineArguments(out Dictionary<string, string> validatedOptions);
+
+            if (!validatedOptions.TryGetValue(FaceDeploymentEnvArgName, out string _))
+            {
+                Console.WriteLine("Missing argument -" + FaceDeploymentEnvArgName);
+                EditorApplication.Exit(100);
+            }
 
             if (!validatedOptions.TryGetValue("projectPath", out string _))
             {
@@ -115,19 +157,22 @@ namespace UnityBuilderAction
             const string defaultCustomBuildName = "TestBuild";
             if (!validatedOptions.TryGetValue("customBuildName", out string customBuildName))
             {
-                Console.WriteLine($"Missing argument -customBuildName, defaulting to {defaultCustomBuildName}.");
+                Console.WriteLine(
+                    $"Missing argument -customBuildName, defaulting to {defaultCustomBuildName}.");
                 validatedOptions.Add("customBuildName", defaultCustomBuildName);
             }
             else if (customBuildName == "")
             {
-                Console.WriteLine($"Invalid argument -customBuildName, defaulting to {defaultCustomBuildName}.");
+                Console.WriteLine(
+                    $"Invalid argument -customBuildName, defaulting to {defaultCustomBuildName}.");
                 validatedOptions.Add("customBuildName", defaultCustomBuildName);
             }
 
             return validatedOptions;
         }
 
-        private static void ParseCommandLineArguments(out Dictionary<string, string> providedArguments)
+        private static void ParseCommandLineArguments(
+            out Dictionary<string, string> providedArguments)
         {
             providedArguments = new Dictionary<string, string>();
             string[] args = Environment.GetCommandLineArgs();
@@ -162,7 +207,8 @@ namespace UnityBuilderAction
 
         private static void Build(BuildTarget buildTarget, int buildSubtarget, string filePath)
         {
-            string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(s => s.path).ToArray();
+            string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled)
+                .Select(s => s.path).ToArray();
             var buildPlayerOptions = new BuildPlayerOptions
             {
                 scenes = scenes,
