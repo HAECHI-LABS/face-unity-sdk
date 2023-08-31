@@ -19,9 +19,21 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**', 'haechi.face.unity.sdk/**') }}
           restore-keys: |
             Library-Android-
+      # See https://forum.unity.com/threads/linux-editor-stuck-on-loading-because-of-bee_backend-w-workaround.1166347/#post-9088690
+      # See https://davidmfinol.medium.com/ci-cd-with-unity-github-actions-and-fastlane-e7aaa337784
+      - name: Free Disk Space for Android Build
+        run: |
+          df -h
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
       # Build
       - name: Build Android project
         uses: game-ci/unity-builder@v2
@@ -66,7 +78,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-IOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-IOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**', 'haechi.face.unity.sdk/**') }}
           restore-keys: |
             Library-IOS-
       - name: Build iOS project
