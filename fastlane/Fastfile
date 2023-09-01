@@ -53,7 +53,7 @@ lane :ios do
   )
 end
 
-lane :android do
+lane :android_dev do
   firebase_app_distribution(
     app: "1:478075746592:android:45c8894424203ac7997f45",
     android_artifact_type: "APK",
@@ -63,4 +63,16 @@ lane :android do
     groups: "FaceDev",
     service_credentials_file: "service_account.json"
   )
-end 
+end
+
+lane :android_stage do
+  firebase_app_distribution(
+    app: "1:478075746592:android:ef3473920ec03b96997f45",
+    android_artifact_type: "APK",
+    android_artifact_path: "build/Android/Android.apk",
+# 추후에 토큰 대신 서비스계정 정보로 업데이트 할것
+    firebase_cli_token: ENV["FIREBASE_TOKEN"],
+    groups: "FaceDev",
+    service_credentials_file: "service_account.json"
+  )
+end

@@ -1,10 +1,12 @@
 name: cd-dev-unity
 on:
-  workflow_dispatch:
-#    inputs:
-#      version:
-#        description: "version of rc"
-#        required: true
+  workflow_dispatcpush:
+  push:
+    branches:
+      - main:
+    paths:
+      - 'Assets/**'
+      - 'haechi.face.unity.sdk/**'
 jobs:
   build-android:
     name: 🚀 Build Face Unity Sample Android Dapp 🚀
@@ -60,7 +62,7 @@ jobs:
           name: "service_account.json"
           json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
       - name: Distribute Android
-        run: sudo fastlane android
+        run: sudo fastlane android_dev
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       # Output
