@@ -61,8 +61,7 @@ jobs:
           git-chglog ${RELEASE_TAG} > RELEASE_NOTE.md
           
       - run: |
-          echo "haechi.face.unity.sdk.meta" > metaList
-          find haechi.face.unity.sdk/ -name \*.meta >> metaList
+          find haechi.face.unity.sdk/ -name \*.meta > metaList
       - run: mkdir build
       - name: Build Unitypackage
         uses: pCYSl5EDgo/create-unitypackage@master
