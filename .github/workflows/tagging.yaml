@@ -57,7 +57,7 @@ jobs:
             cat CHANGELOG.md >> CHANGELOG.${RELEASE_TAG}.md
           fi
           mv CHANGELOG.${RELEASE_TAG}.md CHANGELOG.md
-          cp CHANGELOG.md Assets/haechi.face.unity.sdk/
+          cp CHANGELOG.md haechi.face.unity.sdk/
           git-chglog ${RELEASE_TAG} > RELEASE_NOTE.md
           
       - run: |
@@ -85,7 +85,7 @@ jobs:
         run: |
           git config --local user.email "haechi@github.com"
           git config --local user.name "haechilabs"
-          git add CHANGELOG.md Assets/haechi.face.unity.sdk
+          git add CHANGELOG.md haechi.face.unity.sdk
           git commit -m "chore: update CHANGELOG.md"
       - name: Push Change Log
         uses: ad-m/github-push-action@master
