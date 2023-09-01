@@ -1,6 +1,6 @@
 name: cd-dev-unity
 on:
-  workflow_dispatcpush:
+  workflow_dispatch:
   push:
     branches:
       - main:
