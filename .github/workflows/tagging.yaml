@@ -37,7 +37,7 @@ jobs:
           else
             echo "No file exists"
           fi
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
       - name: Copy java library files
         run: "npx zx scripts/copyAndroidLibraries.mjs"
       - name: Set up Golang
