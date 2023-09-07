@@ -48,8 +48,6 @@ jobs:
           versioning: Semantic
           buildMethod: UnityBuilderAction.BuildScript.Build
           customParameters: -faceDeployEnvironment Dev
-#          versioning: Custom
-#          version: ${{ github.event.inputs.version }}
       - uses: actions/setup-node@v1
       - uses: ruby/setup-ruby@v1
         with:
@@ -97,8 +95,6 @@ jobs:
           versioning: Semantic
           buildMethod: UnityBuilderAction.BuildScript.Build
           customParameters: -faceDeployEnvironment Dev
-#          versioning: Custom
-#          version: ${{ github.event.inputs.version }}
       # Output
       - uses: actions/upload-artifact@v2
         with:
@@ -171,8 +167,6 @@ jobs:
           versioning: Semantic
           buildMethod: UnityBuilderAction.BuildScript.Build
           customParameters: -faceDeployEnvironment Dev
-#          versioning: Custom
-#          version: ${{ github.event.inputs.version }}
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
