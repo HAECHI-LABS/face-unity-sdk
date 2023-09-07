@@ -36,7 +36,6 @@ namespace UnityBuilderAction
                     throw new ArgumentOutOfRangeException(nameof(deployEnvironment), deployEnvironment, null);
             }
 
-            // PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Android, );
             #if UNITY_2022_1_OR_NEWER
                 PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Android, Il2CppCompilerConfiguration.Debug);
                 PlayerSettings.SetIl2CppCodeGeneration(UnityEditor.Build.NamedBuildTarget.Android, UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize);
@@ -44,7 +43,6 @@ namespace UnityBuilderAction
                 PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Android, Il2CppCompilerConfiguration.Debug);
                 EditorUserBuildSettings.il2CppCodeGeneration = UnityEditor.Build.Il2CppCodeGeneration.OptimizeSize;
             #endif
-            // PlayerSettings.bundleVersion = newVersion.ToString();
         }
 
         public static void Build()
