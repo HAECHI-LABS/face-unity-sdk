@@ -37,9 +37,6 @@ jobs:
           else
             echo "No file exists"
           fi
-      - uses: actions/setup-node@v3
-      - name: Copy java library files
-        run: "npx zx scripts/copyAndroidLibraries.mjs"
       - name: Set up Golang
         uses: actions/setup-go@v3
         with:
@@ -60,14 +57,6 @@ jobs:
           cp CHANGELOG.md haechi.face.unity.sdk/
           git-chglog ${RELEASE_TAG} > RELEASE_NOTE.md
           
-      - run: |
-          find haechi.face.unity.sdk/ -name \*.meta > metaList
-      - run: mkdir build
-      - name: Build Unitypackage
-        uses: pCYSl5EDgo/create-unitypackage@master
-        with:
-          package-path: 'build/FaceUnitySDK.unitypackage'
-          include-files: metaList
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
@@ -79,7 +68,8 @@ jobs:
           prerelease: false
           body_path: ./RELEASE_NOTE.md
           files: |
-            build/FaceUnitySDK.unitypackage
+            android-dependency-generator/Assets/Plugins/Android/*.jar
+            android-dependency-generator/Assets/Plugins/Android/*.aar
       - name: Commit Change Log
         run: |
           git config --local user.email "haechi@github.com"
