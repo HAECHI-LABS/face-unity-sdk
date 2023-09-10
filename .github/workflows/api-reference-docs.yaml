@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Assets/haechi.face.unity.sdk'
+      - 'haechi.face.unity.sdk/**'
       - 'Documentation'
 
 jobs:

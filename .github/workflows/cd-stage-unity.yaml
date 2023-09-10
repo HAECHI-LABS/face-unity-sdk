@@ -1,0 +1,65 @@
+name: cd-stage-unity
+on:
+  workflow_dispatch:
+jobs:
+  build-android:
+    name: 🚀 Build Face Unity Sample Android Dapp 🚀
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**', 'haechi.face.unity.sdk/**') }}
+          restore-keys: |
+            Library-Android-
+      # See https://forum.unity.com/threads/linux-editor-stuck-on-loading-because-of-bee_backend-w-workaround.1166347/#post-9088690
+      # See https://davidmfinol.medium.com/ci-cd-with-unity-github-actions-and-fastlane-e7aaa337784
+      - name: Free Disk Space for Android Build
+        run: |
+          df -h
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
+      # Build
+      - name: Build Android project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Stage
+      - uses: actions/setup-node@v1
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.0"
+          bundler-cache: true
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "service_account.json"
+          json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
+      - name: Distribute Android
+        run: sudo fastlane android_stage
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      # Output
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Build-Android
+          path: build
+

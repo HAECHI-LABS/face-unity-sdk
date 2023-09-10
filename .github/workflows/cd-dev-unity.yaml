@@ -1,10 +1,12 @@
 name: cd-dev-unity
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "version of rc"
-        required: true
+  push:
+    branches:
+      - main
+    paths:
+      - 'Assets/**'
+      - 'haechi.face.unity.sdk/**'
 jobs:
   build-android:
     name: 🚀 Build Face Unity Sample Android Dapp 🚀
@@ -19,9 +21,21 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**', 'haechi.face.unity.sdk/**') }}
           restore-keys: |
             Library-Android-
+      # See https://forum.unity.com/threads/linux-editor-stuck-on-loading-because-of-bee_backend-w-workaround.1166347/#post-9088690
+      # See https://davidmfinol.medium.com/ci-cd-with-unity-github-actions-and-fastlane-e7aaa337784
+      - name: Free Disk Space for Android Build
+        run: |
+          df -h
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
       # Build
       - name: Build Android project
         uses: game-ci/unity-builder@v2
@@ -31,8 +45,9 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          versioning: Custom
-          version: ${{ github.event.inputs.version }}
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Dev
       - uses: actions/setup-node@v1
       - uses: ruby/setup-ruby@v1
         with:
@@ -45,7 +60,7 @@ jobs:
           name: "service_account.json"
           json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
       - name: Distribute Android
-        run: sudo fastlane android
+        run: sudo fastlane android_dev
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       # Output
@@ -66,7 +81,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: Library
-          key: Library-IOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          key: Library-IOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**', 'haechi.face.unity.sdk/**') }}
           restore-keys: |
             Library-IOS-
       - name: Build iOS project
@@ -77,8 +92,9 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: iOS
-          versioning: Custom
-          version: ${{ github.event.inputs.version }}
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Dev
       # Output
       - uses: actions/upload-artifact@v2
         with:
@@ -148,8 +164,9 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
-          versioning: Custom
-          version: ${{ github.event.inputs.version }}
+          versioning: Semantic
+          buildMethod: UnityBuilderAction.BuildScript.Build
+          customParameters: -faceDeployEnvironment Dev
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
