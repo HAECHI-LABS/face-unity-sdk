@@ -1,4 +1,20 @@
 
+<a name="1.2.100"></a>
+## Release: [1.2.100](https://github.com/HAECHI-LABS/core/releases/tag/1.2.100)
+### Features
+- Add stage build
+- Add android dependency generator tool
+
+### Bug Fixes
+- Fix tagging
+- Fix publish cd
+- Change setup node version
+- Fix sdk deploy script
+- Fix typo in cd dev
+- Fix typo in github action
+- Try to remove files for ci
+
+
 <a name="1.3.14"></a>
 ## Release: [1.3.14](https://github.com/HAECHI-LABS/core/releases/tag/1.3.14)
 ### Bug Fixes
