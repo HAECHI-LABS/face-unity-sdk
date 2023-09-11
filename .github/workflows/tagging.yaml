@@ -56,6 +56,11 @@ jobs:
           mv CHANGELOG.${RELEASE_TAG}.md CHANGELOG.md
           cp CHANGELOG.md haechi.face.unity.sdk/
           git-chglog ${RELEASE_TAG} > RELEASE_NOTE.md
+      - name: Zip android files
+        run: |
+          cd android-dependency-generator/Assets/Plugins/Android
+          zip -r android-libraries.zip *.jar *.aar
+          cd ../../../../
           
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -68,8 +73,7 @@ jobs:
           prerelease: false
           body_path: ./RELEASE_NOTE.md
           files: |
-            android-dependency-generator/Assets/Plugins/Android/*.jar
-            android-dependency-generator/Assets/Plugins/Android/*.aar
+            android-dependency-generator/Assets/Plugins/Android/android-libraries.zip
       - name: Commit Change Log
         run: |
           git config --local user.email "haechi@github.com"
