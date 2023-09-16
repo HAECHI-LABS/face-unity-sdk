@@ -131,7 +131,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4767372821875092088}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 2.1823907}
   m_ConstrainProportionsScale: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79912f1cd4f5455199905ca2d92922ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
+  _appState: {fileID: 11400000, guid: 2ad610ee2ac424c5f9ad117206dd19ab, type: 2}
   _envDropdown: {fileID: 3068628570637682021}
   _blockchainDropdown: {fileID: 4143877699697646035}
   _apiKeyInputField: {fileID: 7363553756392611238}

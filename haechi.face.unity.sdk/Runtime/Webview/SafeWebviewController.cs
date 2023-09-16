@@ -13,6 +13,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 {
     public class SafeWebviewController : MonoBehaviour, IURLHandler
     {
+        private static bool _isUserClosedIframe = false;
         private readonly Dictionary<string, Func<FaceRpcResponse, bool>> _handlerDictionary
             = new Dictionary<string, Func<FaceRpcResponse, bool>>();
 
@@ -43,6 +44,20 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 this.OnDeepLinkActivated(Application.absoluteURL);
             }
         }
+
+#if UNITY_WEBGL
+        private void Update()
+        {
+            if (_isUserClosedIframe)
+            {
+                _isUserClosedIframe = false;
+                this.OnCloseWebview?.Invoke(this, new CloseWebviewArgs
+                {
+                    Response = FaceRpcResponse.WebviewClosed()
+                });
+            }
+        }
+#endif
 
 #if UNITY_IOS
         [DllImport("__Internal")]
@@ -121,7 +136,14 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         [MonoPInvokeCallback(typeof(Action<string, string>))]
         private static void ResponseCallback(string id, string res)
         {
-            IframeResponse.Add(id, res);
+            if (res.Equals("UserClosedIframe"))
+            {
+                _isUserClosedIframe = true;
+            }
+            else
+            {
+                IframeResponse.Add(id, res);
+            }
         }
 
         private string _hostname()
