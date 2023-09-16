@@ -109,6 +109,20 @@
             stringToUTF8(stringResponse, responseBuffer, responseBufferSize);
 
             Module['dynCall_vii'](responseCallback, requestIdBuffer, responseBuffer);
+        }).catch(error => {
+            if (error.message.includes('user rejected request')) {
+                var requestIdBufferSize = lengthBytesUTF8(requestId) + 1;
+                var requestIdBuffer = _malloc(requestIdBufferSize);
+                stringToUTF8(requestId, requestIdBuffer, requestIdBufferSize);
+                
+                var stringResponse = 'UserClosedIframe';
+                var responseBufferSize = lengthBytesUTF8(stringResponse) + 1;
+                var responseBuffer = _malloc(responseBufferSize);
+                stringToUTF8(stringResponse, responseBuffer, responseBufferSize);
+                
+                Module['dynCall_vii'](responseCallback, requestIdBuffer, responseBuffer);
+            }
+            throw error;
         });
     },
     

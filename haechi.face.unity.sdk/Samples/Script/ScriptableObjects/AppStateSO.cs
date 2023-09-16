@@ -92,7 +92,7 @@ public class AppStateSO : ReadOnlyAppState
 
     private void SetCurrentProfile(string env)
     {
-        this._currentProfile = Profiles.ValueOf(env);
+        this._currentProfile = this.IsDev ? Profiles.ValueOf(env) : Profile.Dev;
         this._profileUpdated.RaiseEvent();
     }
 
