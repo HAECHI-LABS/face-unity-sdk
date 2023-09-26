@@ -130,7 +130,7 @@ namespace haechi.face.unity.sdk.Samples.Script
         private async Task<LoginResult> _loginAndGetBalanceAsync()
         {
             Debug.Log("Start Login");
-            FaceLoginResponse response = await this.face.Auth().Login();
+            FaceLoginResponse response = await this.face.Auth().Login(null);
             string address = response.wallet.Address;
             Debug.Log("Login balance");
 
@@ -170,17 +170,17 @@ namespace haechi.face.unity.sdk.Samples.Script
         
         public void GoogleLoginAndGetBalance()
         {
-            this._directSocialLoginAndGetBalance(LoginProviderType.Google);
+            this._directSocialLoginAndGetBalance(LoginProviderType.Google.HostValue());
         }
         
         public void FacebookLoginAndGetBalance()
         {
-            this._directSocialLoginAndGetBalance(LoginProviderType.Facebook);
+            this._directSocialLoginAndGetBalance(LoginProviderType.Facebook.HostValue());
         }
         
         public void AppleLoginAndGetBalance()
         {
-            this._directSocialLoginAndGetBalance(LoginProviderType.Apple);
+            this._directSocialLoginAndGetBalance(LoginProviderType.Apple.HostValue());
         }
         
         private void _directSocialLoginAndGetBalance(string provider)

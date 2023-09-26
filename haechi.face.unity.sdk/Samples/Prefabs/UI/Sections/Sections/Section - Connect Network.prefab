@@ -201,7 +201,7 @@ MonoBehaviour:
   _changeBlockchain: {fileID: 11400000, guid: 211a2dc0a77074be7bbb1749a9b4e0fb, type: 2}
   _connect: {fileID: 11400000, guid: 826bf1e20101c4d85b5c3baed398f84f, type: 2}
   _switchNetwork: {fileID: 11400000, guid: 2958cd5861edd45fabe41e2762944269, type: 2}
-  _onLogoutEvent: {fileID: 11400000, guid: 877b80a03e8814866b13a622c79c3c25, type: 2}
+  _onLogoutEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
 --- !u!1 &5096395512850866453
 GameObject:
   m_ObjectHideFlags: 0

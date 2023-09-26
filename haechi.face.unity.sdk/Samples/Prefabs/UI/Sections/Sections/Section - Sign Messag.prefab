@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2835899604019631144}
   - component: {fileID: 8934584289683045404}
   m_Layer: 5
-  m_Name: Section - Sign Message
+  m_Name: Section - Sign Messag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

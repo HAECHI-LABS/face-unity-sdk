@@ -1,15 +1,20 @@
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
+using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
 {
     public interface IAuth
     {
-        Task<FaceLoginResponse> Login();
+        Task<FaceLoginResponse> Login([AllowNull] LoginOption option);
         Task<FaceLoginResponse> DirectSocialLogin(string provider);
         Task<FaceRpcResponse> Logout();
     }
@@ -26,15 +31,17 @@ namespace haechi.face.unity.sdk.Runtime.Module
         
         /// <summary>
         /// Sign-up(if new user) or login function. Need to initialize face with environment, blockchain and api key first.&#10;
-        /// You can choose three options, Google, Facebook, and Apple login.
+        /// You can pass all options contained in <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">LoginProviderType</a>.
+        /// Or you can just pass empty or null values.
         /// </summary>
         /// <returns>
         /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
         /// </returns>
         /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
-        public async Task<FaceLoginResponse> Login() 
+        public async Task<FaceLoginResponse> Login([AllowNull] LoginOption option)
         {
-            return await this._login(FaceRpcMethod.face_logInSignUp);
+            option ??= LoginOption.All();
+            return await this._login(FaceRpcMethod.face_logInSignUp, option.providers.ToArray());
         }
 
         /// <summary>
@@ -133,7 +140,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         
         public Task<FaceLoginResponse> Login()
         {
-            return this._auth.Login();
+            return this._auth.Login(null);
         }
         
         public Task<FaceLoginResponse> DirectSocialLogin(string provider)

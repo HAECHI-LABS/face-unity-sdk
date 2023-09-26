@@ -74,6 +74,7 @@ MonoBehaviour:
   _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _onConnect: {fileID: 11400000, guid: 826bf1e20101c4d85b5c3baed398f84f, type: 2}
   _onLogin: {fileID: 11400000, guid: fa262f3e9c5bb471897bc582c89b7085, type: 2}
+  _onLoginWithSelectedProviders: {fileID: 11400000, guid: f57effd5326904ea8b6daa571ac513e7, type: 2}
   _onSocialLogin: {fileID: 11400000, guid: 103bb2b2edfcc4e869dcad0cdc35fa59, type: 2}
   _onGetBalance: {fileID: 11400000, guid: d0c64531d5d874699974298f3c8c6333, type: 2}
   _onLogout: {fileID: 11400000, guid: b904ba7da383d47318caea4dd296d482, type: 2}
