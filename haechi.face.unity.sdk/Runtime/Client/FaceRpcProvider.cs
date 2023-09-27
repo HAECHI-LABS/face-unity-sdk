@@ -171,7 +171,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
 #if UNITY_WEBGL
-                FaceRpcResponse response = await this._provider.WebRequest.SendRpcRequest($"/v1/rpc", requestMessage);
+                FaceRpcResponse response = await this._provider.WebRequest.SendRpcRequest("/v1/rpc", requestMessage);
 #else
                 FaceRpcResponse response = await this._provider._client.SendRpcRequest(requestMessage, "/v1/rpc");
 #endif
@@ -282,7 +282,4 @@ namespace haechi.face.unity.sdk.Runtime.Client
             }
         }
     }
-    
-    
-
 }

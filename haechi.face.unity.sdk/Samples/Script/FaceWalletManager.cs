@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using haechi.face.unity.sdk.Runtime;
 using haechi.face.unity.sdk.Runtime.Client;
@@ -28,6 +29,7 @@ public class FaceWalletManager : MonoBehaviour
     /** Connect & Login */
     [SerializeField] private VoidEventChannelSO _onConnect;
     [SerializeField] private VoidEventChannelSO _onLogin;
+    [SerializeField] private ProvidersEventChannelSO _onLoginWithSelectedProviders;
     [SerializeField] private StringEventChannelSO _onSocialLogin;
     [SerializeField] private VoidEventChannelSO _onGetBalance;
     [SerializeField] private VoidEventChannelSO _onLogout;
@@ -81,6 +83,7 @@ public class FaceWalletManager : MonoBehaviour
     {
         this._onConnect.OnEventRaised += this.Connect;
         this._onLogin.OnEventRaised += this.Login;
+        this._onLoginWithSelectedProviders.OnEventRaised += this.Login;
         this._onSocialLogin.OnEventRaised += this.SocialLogin;
         this._onGetBalance.OnEventRaised += this.GetBalance;
         this._onLogout.OnEventRaised += this.Logout;
@@ -108,6 +111,7 @@ public class FaceWalletManager : MonoBehaviour
     {
         this._onConnect.OnEventRaised -= this.Connect;
         this._onLogin.OnEventRaised -= this.Login;
+        this._onLoginWithSelectedProviders.OnEventRaised -= this.Login;
         this._onSocialLogin.OnEventRaised -= this.SocialLogin;
         this._onGetBalance.OnEventRaised -= this.GetBalance;
         this._onLogout.OnEventRaised -= this.Logout;
@@ -155,7 +159,23 @@ public class FaceWalletManager : MonoBehaviour
 
     private void Login()
     {
-        Task<LoginResult> responseTask = this._loginAndGetBalanceAsync();
+        Task<LoginResult> responseTask = this._loginAndGetBalanceAsync(null);
+
+        this._actionQueue.Enqueue(responseTask, response =>
+        {
+            this._logined.RaiseEvent(new LoginData
+            {
+                UserId = response.userId,
+                UserAddress = response.userAddress,
+                Balance = response.balance,
+                Result = $"UserVerificationToken: {response.userVerificationToken}"
+            });
+        }, this._defaultExceptionHandler);
+    }
+    
+    private void Login(List<LoginProviderType> providers)
+    {
+        Task<LoginResult> responseTask = this._loginAndGetBalanceAsync(providers);
 
         this._actionQueue.Enqueue(responseTask, response =>
         {
@@ -341,9 +361,10 @@ public class FaceWalletManager : MonoBehaviour
         await this._face.WalletConnect().ConnectOpenSea(this._appState.GetLoginData().UserAddress);
     }
     
-    private async Task<LoginResult> _loginAndGetBalanceAsync()
+    private async Task<LoginResult> _loginAndGetBalanceAsync([AllowNull] List<LoginProviderType> providers)
     {
-        FaceLoginResponse response = await this._face.Auth().Login();
+        LoginOption option = providers == null ? null : LoginOption.of(providers);
+        FaceLoginResponse response = await this._face.Auth().Login(option);
         string address = response.wallet.Address;
         string userVerificationToken = response.userVerificationToken;
         Debug.Log($"User verification token: {userVerificationToken}");
