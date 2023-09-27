@@ -1,4 +1,10 @@
 
+<a name="1.3.18"></a>
+## Release: [1.3.18](https://github.com/HAECHI-LABS/core/releases/tag/1.3.18)
+### Features
+- Add LoginOption on Login method and fix UI
+
+
 <a name="1.3.16"></a>
 ## Release: [1.3.16](https://github.com/HAECHI-LABS/core/releases/tag/1.3.16)
 ### Features
