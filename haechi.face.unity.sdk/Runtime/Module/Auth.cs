@@ -14,7 +14,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 {
     public interface IAuth
     {
-        Task<FaceLoginResponse> Login([AllowNull] LoginOption option);
+        Task<FaceLoginResponse> Login([AllowNull] List<LoginProviderType> providers);
         Task<FaceLoginResponse> DirectSocialLogin(string provider);
         Task<FaceLoginResponse> DirectSocialLogin(LoginProviderType provider);
         Task<FaceRpcResponse> Logout();
@@ -39,10 +39,10 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
         /// </returns>
         /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
-        public async Task<FaceLoginResponse> Login([AllowNull] LoginOption option)
+        public async Task<FaceLoginResponse> Login([AllowNull] List<LoginProviderType> providers)
         {
-            option ??= LoginOption.All();
-            return await this._login(FaceRpcMethod.face_logInSignUp, option.providers.ToArray());
+            string[] providerHosts = providers?.ConvertAll(provider => provider.HostValue()).ToArray();
+            return await this._login(FaceRpcMethod.face_logInSignUp, providerHosts);
         }
 
         /// <summary>
