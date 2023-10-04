@@ -16,6 +16,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
     {
         Task<FaceLoginResponse> Login([AllowNull] LoginOption option);
         Task<FaceLoginResponse> DirectSocialLogin(string provider);
+        Task<FaceLoginResponse> DirectSocialLogin(LoginProviderType provider);
         Task<FaceRpcResponse> Logout();
     }
     
@@ -46,7 +47,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         /// <summary>
         /// Directly sign-up(if new user) or login using social login. Need to initialize face with environment, blockchain and api key first.&#10;
-        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> to parameter.
+        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> as host value to parameter.
         /// </summary>
         /// <returns>
         /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
@@ -55,6 +56,19 @@ namespace haechi.face.unity.sdk.Runtime.Module
         public async Task<FaceLoginResponse> DirectSocialLogin(string provider)
         {
             return await this._login(FaceRpcMethod.face_directSocialLogin, provider);
+        }
+        
+        /// <summary>
+        /// Directly sign-up(if new user) or login using social login. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> to parameter.
+        /// </summary>
+        /// <returns>
+        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
+        /// </returns>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
+        public async Task<FaceLoginResponse> DirectSocialLogin(LoginProviderType provider)
+        {
+            return await this._login(FaceRpcMethod.face_directSocialLogin, provider.HostValue());
         }
         
         /// <summary>
@@ -144,6 +158,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
         }
         
         public Task<FaceLoginResponse> DirectSocialLogin(string provider)
+        {
+            return this._auth.DirectSocialLogin(provider);
+        }
+        
+        public Task<FaceLoginResponse> DirectSocialLogin(LoginProviderType provider)
         {
             return this._auth.DirectSocialLogin(provider);
         }
