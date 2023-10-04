@@ -5,7 +5,7 @@
         {
           "src": "..",
           "files": [
-            "Assets/**/*.cs"
+            "haechi.face.unity.sdk/**/*.cs"
           ],
           "exclude": [
             "Assets/Plugins/**"
@@ -42,7 +42,7 @@
       {
         "src": "..",
         "files": [
-          "Assets/Scripts/**/*.md"
+          "haechi.face.unity.sdk/Scripts/**/*.md"
         ]
       }
     ],
