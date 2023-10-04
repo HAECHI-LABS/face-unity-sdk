@@ -24,7 +24,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
                 .ConvertAll(n => n.HostValue()));
         }
         
-        public static LoginOption of(List<LoginProviderType> providers)
+        public static LoginOption Of(List<LoginProviderType> providers)
         {
             return new LoginOption(new List<LoginProviderType>(providers)
                 .ConvertAll(n => n.HostValue()));

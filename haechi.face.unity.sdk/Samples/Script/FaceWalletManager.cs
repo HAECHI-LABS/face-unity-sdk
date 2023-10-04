@@ -363,7 +363,7 @@ public class FaceWalletManager : MonoBehaviour
     
     private async Task<LoginResult> _loginAndGetBalanceAsync([AllowNull] List<LoginProviderType> providers)
     {
-        LoginOption option = providers == null ? null : LoginOption.of(providers);
+        LoginOption option = providers == null ? null : LoginOption.Of(providers);
         FaceLoginResponse response = await this._face.Auth().Login(option);
         string address = response.wallet.Address;
         string userVerificationToken = response.userVerificationToken;
