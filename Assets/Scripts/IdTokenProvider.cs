@@ -9,16 +9,27 @@ using UnityEngine;
 
 public class IdTokenProvider : MonoBehaviour
 {
-    [SerializeField] internal FaceUnity _faceUnity;
+    [SerializeField] private FaceWalletManager faceWalletManager;
+    [SerializeField] private StringEventChannelSO _onBoraLoginWithIdtoken;
 
     private GoogleSignInConfiguration _configuration;
 #if UNITY_IPHONE
     private const string WebClientId = "965931844205-tt978gju3l3fa97amqp431falebfrqu7.apps.googleusercontent.com";
 #else
-    private const string WebClientId = "965931844205-q64ebkmn6atutksvi6b0rv2hkdm9gor5.apps.googleusercontent.com";
+    private const string WebClientId = "478075746592-2eph96cegqojcd29r1bg62ur64d9bbql.apps.googleusercontent.com";
 #endif
-    
-    
+
+    private void OnEnable()
+    {
+        this._onBoraLoginWithIdtoken.OnEventRaised += this.LoginGoogle;
+    }
+
+    private void OnDisable()
+    {
+        this._onBoraLoginWithIdtoken.OnEventRaised -= this.LoginGoogle;
+    }
+
+
     private void Awake()
     {
         _configuration = new GoogleSignInConfiguration { WebClientId = WebClientId, RequestEmail = true, RequestIdToken = true, UseGameSignIn = false};
@@ -34,8 +45,10 @@ public class IdTokenProvider : MonoBehaviour
         
     }
     
-    public async void LoginGoogle()
+    public async void LoginGoogle(string bappUsn)
     {
+        try
+        {
 #if UNITY_IPHONE
         GoogleSignIn.Configuration = _configuration;
         GoogleSignIn.Configuration.RequestIdToken = true;
@@ -46,26 +59,35 @@ public class IdTokenProvider : MonoBehaviour
             "https://www.googleapis.com/auth/userinfo.profile",
             "openid"
         };
-        GoogleSignIn.DefaultInstance.SignIn().ContinueWith(_loginProcess, TaskScheduler.FromCurrentSynchronizationContext());
-#elif UNITY_ANDROID
-        GoogleSignIn.Configuration = _configuration;
-        GoogleSignIn.Configuration.RequestIdToken = true;
-        GoogleSignIn.Configuration.UseGameSignIn = false;
-        GoogleSignIn.Configuration.AdditionalScopes = new[]
+        GoogleSignIn.DefaultInstance.SignIn().ContinueWith((Task<GoogleSignInUser> task) =>
         {
-            "email", "profile", "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "openid"
-        };
-        var user = await GoogleSignIn.DefaultInstance.SignIn();
-        await _faceUnity.LoginWithIdTokenAndGetBalanceAsync(user.IdToken);
+            _loginProcess(task, bappUsn);
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+#elif UNITY_ANDROID
+            GoogleSignIn.Configuration = _configuration;
+            GoogleSignIn.Configuration.RequestIdToken = true;
+            GoogleSignIn.Configuration.UseGameSignIn = false;
+            GoogleSignIn.Configuration.AdditionalScopes = new[]
+            {
+                "email", "profile", "https://www.googleapis.com/auth/userinfo.email",
+                "https://www.googleapis.com/auth/userinfo.profile",
+                "openid"
+            };
+            var user = await GoogleSignIn.DefaultInstance.SignIn();
+            faceWalletManager.BoraLoginWithIdtoken(user.IdToken, bappUsn);
 #elif UNITY_WEBGL
         GoogleSignInForWebGL.GoogleSignIn(gameObject, "LoginProcessForWebGL");
 #endif
+        }
+        catch (GoogleSignIn.SignInException e)
+        {
+            Debug.Log("GoogleSigninException: " + e.Status + " " + e.Message + " " + e.InnerException);
+            throw e;
+        }
     }
 
 #if UNITY_IPHONE
-    private void _loginProcess(Task<GoogleSignInUser> task){
+    private void _loginProcess(Task<GoogleSignInUser> task, String bappUsn){
         if (task.IsFaulted) {
             using (IEnumerator<System.Exception> enumerator = task.Exception.InnerExceptions.GetEnumerator ()) {
                 if (enumerator.MoveNext ()) {
@@ -82,7 +104,7 @@ public class IdTokenProvider : MonoBehaviour
             if (Debug.isDebugBuild) Debug.Log ("Google Calling Signed in DisplayName : " + task.Result.DisplayName);
             if (Debug.isDebugBuild) Debug.Log ("Google Calling Signed in UserId      : " + task.Result.UserId);
             if (Debug.isDebugBuild) Debug.Log ("Google Calling Signed in IdToken     : " + task.Result.IdToken);
-            _faceUnity.LoginWithIdTokenAndGetBalanceAsync(task.Result.IdToken);
+            faceWalletManager.BoraLoginWithIdtoken(task.Result.IdToken, bappUsn);
         }
     }
 #elif UNITY_ANDROID
