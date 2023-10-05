@@ -52,6 +52,9 @@ public class FaceWalletManager : MonoBehaviour
     /** BORA */
     [SerializeField] private VoidEventChannelSO _onConnectBora;
     [SerializeField] private VoidEventChannelSO _onCheckIsConnectedBora;
+    [SerializeField] private StringEventChannelSO _onBoraLogin;
+    [SerializeField] private StringEventChannelSO _onBoraDirectSocialLogin;
+    [SerializeField] private StringEventChannelSO _onBoraLoginWithIdtoken;
 
     /** Sign Message */
     [SerializeField] private StringEventChannelSO _onSignMessage;
@@ -97,6 +100,9 @@ public class FaceWalletManager : MonoBehaviour
         this._onSendERC1155.OnEventRaised += this.SendERC1155Transaction;
         this._onConnectBora.OnEventRaised += this.ConnectBora;
         this._onCheckIsConnectedBora.OnEventRaised += this.IsBoraConnected;
+        this._onBoraLogin.OnEventRaised += this.BoraLogin;
+        this._onBoraDirectSocialLogin.OnEventRaised += this.BoraDirectSocialLogin;
+        this._onBoraLoginWithIdtoken.OnEventRaised += this.BoraLoginWithIdtoken;
         this._onSignMessage.OnEventRaised += this.SignMessage;
         this._onWalletConnect.OnEventRaised += this.WalletConnect;
     }
@@ -125,6 +131,9 @@ public class FaceWalletManager : MonoBehaviour
         this._onSendERC1155.OnEventRaised -= this.SendERC1155Transaction;
         this._onConnectBora.OnEventRaised -= this.ConnectBora;
         this._onCheckIsConnectedBora.OnEventRaised -= this.IsBoraConnected;
+        this._onBoraLogin.OnEventRaised -= this.BoraLogin;
+        this._onBoraDirectSocialLogin.OnEventRaised -= this.BoraDirectSocialLogin;
+        this._onBoraLoginWithIdtoken.OnEventRaised -= this.BoraLoginWithIdtoken;
         this._onSignMessage.OnEventRaised -= this.SignMessage;
         this._onWalletConnect.OnEventRaised -= this.WalletConnect;
     }
@@ -206,7 +215,35 @@ public class FaceWalletManager : MonoBehaviour
             this._logouted.RaiseEvent();
         }, this._defaultExceptionHandler);
     }
-    
+
+    private void BoraLoginWithIdtoken(string arg0)
+    {
+        Task<LoginResult> responseTask = this._loginAndGetBalanceAsync(null);
+
+        this._actionQueue.Enqueue(responseTask, response =>
+        {
+            this._logined.RaiseEvent(new LoginData
+            {
+                UserId = response.userId,
+                UserAddress = response.userAddress,
+                Balance = response.balance,
+                Result = $"UserVerificationToken: {response.userVerificationToken}"
+            });
+        }, this._defaultExceptionHandler);
+        throw new NotImplementedException();
+    }
+
+    private void BoraDirectSocialLogin(string arg0)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void BoraLogin(string arg0)
+    {
+        throw new NotImplementedException();
+    }
+
+
     private void GetBalance()
     {
         this._validateIsLoggedIn();
@@ -372,8 +409,21 @@ public class FaceWalletManager : MonoBehaviour
         string balance = await this._getBalance(address);
 
         return new LoginResult(balance, response);
-    } 
-    
+    }
+
+    private async Task<LoginResult> _boraLoginAndGetBalanceAsync([AllowNull] List<LoginProviderType> providers, BoraPortalConnectRequest request)
+    {
+        List<LoginProviderType> providerTypes = new List<LoginProviderType>() { LoginProviderType.Google, LoginProviderType.Apple };
+        FaceLoginResponse response = await this._face.Auth().BoraLogin(providers, request);
+        string address = response.wallet.Address;
+        string userVerificationToken = response.userVerificationToken;
+        Debug.Log($"User verification token: {userVerificationToken}");
+
+        string balance = await this._getBalance(address);
+
+        return new LoginResult(balance, response);
+    }
+
     private void _directSocialLoginAndGetBalance(string provider)
     {
         Task<LoginResult> responseTask = this._directSocialLoginAndGetBalanceAsync(provider);
@@ -389,7 +439,7 @@ public class FaceWalletManager : MonoBehaviour
             });
         }, this._defaultExceptionHandler);
     }
-    
+
     private async Task<LoginResult> _directSocialLoginAndGetBalanceAsync(string provider)
     {
         FaceLoginResponse response = await this._face.Auth().DirectSocialLogin(provider);
@@ -398,7 +448,16 @@ public class FaceWalletManager : MonoBehaviour
 
         return new LoginResult(balance, response);
     }
-    
+
+    private async Task<LoginResult> _boraDirectSocialLoginAndGetBalanceAsync(LoginProviderType provider, BoraPortalConnectRequest boraPortalConnectRequest)
+    {
+        FaceLoginResponse response = await this._face.Auth().BoraDirectSocialLogin(provider, boraPortalConnectRequest);
+        string address = response.wallet.Address;
+        string balance = await this._getBalance(address);
+
+        return new LoginResult(balance, response);
+    }
+
     private async Task<string> _getBalance(string address)
     {
         FaceRpcResponse response = await this._face.Wallet().GetBalance(address);
