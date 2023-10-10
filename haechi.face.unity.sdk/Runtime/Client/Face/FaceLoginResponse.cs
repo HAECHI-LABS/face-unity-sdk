@@ -1,4 +1,5 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Client.BoraPortal;
 using Newtonsoft.Json;
 
 namespace haechi.face.unity.sdk.Runtime.Client.Face
@@ -24,6 +25,12 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         /// </value>
         [JsonProperty("wallet")]
         public Wallet wallet;
+
+        /// <summary>
+        /// This field is used when you use `BoraLogin`, `BoraDirectSocialLogin`, or `BoraLoginWithIdToken`
+        /// </summary>
+        [JsonProperty("boraConnectResponse", NullValueHandling = NullValueHandling.Include)]
+        public BoraPortalConnectStatusResponse boraConnectStatusResponse;
         
         [JsonConstructor]
         public FaceLoginResponse()
