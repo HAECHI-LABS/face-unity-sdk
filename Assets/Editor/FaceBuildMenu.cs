@@ -23,7 +23,6 @@ public class FaceBuildMenu : MonoBehaviour
     {
         BuildScript.CustomizeForFace(FaceDeployEnvironment.Dev);
         SetupAndroidKeystore.Setup();
-        // below: the code that opens scene in unity editor
         EditorSceneManager.OpenScene(FaceDeployConstants.DevSecnePath);
     }
 

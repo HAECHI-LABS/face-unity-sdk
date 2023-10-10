@@ -17,10 +17,8 @@ namespace Editor
             if (File.Exists("./env.json"))
             {
                 Debug.Log("env.json exists. use unity-dev.keystore");
-                // below: read file and parse json
                 var envFile = File.ReadAllText("./env.json");
                 var env = JsonUtility.FromJson<EnvFile>(envFile);
-                Debug.Log(env);
 
                 PlayerSettings.Android.useCustomKeystore = true;
                 PlayerSettings.Android.keystoreName = "./unity-dev.keystore";
