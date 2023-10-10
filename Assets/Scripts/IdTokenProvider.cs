@@ -59,7 +59,10 @@ public class IdTokenProvider : MonoBehaviour
             "https://www.googleapis.com/auth/userinfo.profile",
             "openid"
         };
-        GoogleSignIn.DefaultInstance.SignIn().ContinueWith(_loginProcess, TaskScheduler.FromCurrentSynchronizationContext());
+        GoogleSignIn.DefaultInstance.SignIn().ContinueWith((Task<GoogleSignInUser> task) =>
+        {
+            _loginProcess(task, bappUsn);
+        }, TaskScheduler.FromCurrentSynchronizationContext());
 #elif UNITY_ANDROID
             GoogleSignIn.Configuration = _configuration;
             GoogleSignIn.Configuration.RequestIdToken = true;
@@ -78,13 +81,13 @@ public class IdTokenProvider : MonoBehaviour
         }
         catch (GoogleSignIn.SignInException e)
         {
-            Debug.Log("GoogleSigninException: ", e.Status + " " + e.Message + " " + e.InnerException);
+            Debug.Log("GoogleSigninException: " + e.Status + " " + e.Message + " " + e.InnerException);
             throw e;
         }
     }
 
 #if UNITY_IPHONE
-    private void _loginProcess(Task<GoogleSignInUser> task){
+    private void _loginProcess(Task<GoogleSignInUser> task, String bappUsn){
         if (task.IsFaulted) {
             using (IEnumerator<System.Exception> enumerator = task.Exception.InnerExceptions.GetEnumerator ()) {
                 if (enumerator.MoveNext ()) {
@@ -101,7 +104,7 @@ public class IdTokenProvider : MonoBehaviour
             if (Debug.isDebugBuild) Debug.Log ("Google Calling Signed in DisplayName : " + task.Result.DisplayName);
             if (Debug.isDebugBuild) Debug.Log ("Google Calling Signed in UserId      : " + task.Result.UserId);
             if (Debug.isDebugBuild) Debug.Log ("Google Calling Signed in IdToken     : " + task.Result.IdToken);
-            _faceUnity.LoginWithIdTokenAndGetBalanceAsync(task.Result.IdToken);
+            faceWalletManager.BoraLoginWithIdtoken(task.Result.IdToken, bappUsn);
         }
     }
 #elif UNITY_ANDROID
