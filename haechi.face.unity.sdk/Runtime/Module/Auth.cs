@@ -86,6 +86,16 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, loginIdTokenRequest, null);
         }
 
+        /// <summary>
+        /// Sign-up(if new user) or login function and connect to bora portal if possible. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// You can pass all options contained in <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">LoginProviderType</a>.
+        /// Or you can just pass empty or null values.
+        /// For `BoraPortalConnectRequest` parameter, please see <a href="https://docs.facewallet.xyz/docs/bora-connect">This document</a>.
+        /// </summary>
+        /// <returns>
+        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
+        /// </returns>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
         public async Task<FaceLoginResponse> BoraLogin([AllowNull] List<LoginProviderType> providers, BoraPortalConnectRequest boraPortalConnectRequest)
         {
             object[] providerHosts = providers?.ConvertAll(provider => provider.HostValue() as object).ToArray();
@@ -93,11 +103,29 @@ namespace haechi.face.unity.sdk.Runtime.Module
             return await this._login(FaceRpcMethod.face_logInSignUp, parameters);
         }
 
+        /// <summary>
+        /// Directly sign-up(if new user) or login using social login and connect to bora portal if possible. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> to parameter.
+        /// For `BoraPortalConnectRequest` parameter, please see <a href="https://docs.facewallet.xyz/docs/bora-connect">This document</a>.
+        /// </summary>
+        /// <returns>
+        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
+        /// </returns>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
         public async Task<FaceLoginResponse> BoraDirectSocialLogin(LoginProviderType provider, BoraPortalConnectRequest boraPortalConnectRequest)
         {
             return await this._login(FaceRpcMethod.face_directSocialLogin, new object[] {provider.HostValue(), boraPortalConnectRequest});
         }
 
+        /// <summary>
+        /// login with id token and connect bora portal if possible. Need to initialize face with environment, blockchain and api key first.&#10;
+        /// Pass the desired <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Type.LoginProviderType.html">login provider</a> to parameter.
+        /// For `BoraPortalConnectRequest` parameter, please see <a href="https://docs.facewallet.xyz/docs/bora-connect">This document</a>.
+        /// </summary>
+        /// <returns>
+        /// <a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.Face.FaceLoginResponse.html">FaceLoginResponse</a>. Unique user ID using on Face server and wallet address.
+        /// </returns>
+        /// <exception cref="AddressVerificationFailedException">Throws AddressVerificationFailedException when address verification fails.</exception>
         public async Task<FaceLoginResponse> BoraLoginWithIdToken(FaceLoginIdTokenRequest loginIdTokenRequest, BoraPortalConnectRequest boraPortalConnectRequest)
         {
             return await this._loginWithIdToken(FaceRpcMethod.face_loginWithIdToken, loginIdTokenRequest, boraPortalConnectRequest);
