@@ -29,8 +29,8 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
         /// <summary>
         /// This field is used when you use `BoraLogin`, `BoraDirectSocialLogin`, or `BoraLoginWithIdToken`
         /// </summary>
-        [JsonProperty("boraConnectResponse", NullValueHandling = NullValueHandling.Include)]
-        public BoraPortalConnectStatusResponse boraConnectStatusResponse;
+        [JsonProperty("boraPortalConnectStatus", NullValueHandling = NullValueHandling.Include)]
+        public BoraPortalConnectStatusResponse boraPortalConnectStatusResponse;
         
         [JsonConstructor]
         public FaceLoginResponse()

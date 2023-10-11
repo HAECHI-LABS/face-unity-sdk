@@ -487,6 +487,19 @@ public class FaceWalletManager : MonoBehaviour
         string address = response.wallet.Address;
         string userVerificationToken = response.userVerificationToken;
         Debug.Log($"User verification token: {userVerificationToken}");
+        Debug.Log("Boraportal connect status not null: " + response.boraPortalConnectStatusResponse != null);
+        Debug.Log("Boraportal connect status: " + response.boraPortalConnectStatusResponse);
+        if (response.boraPortalConnectStatusResponse != null)
+        {
+            var status = response.boraPortalConnectStatusResponse.Status;
+            var boraPortalUsn = response.boraPortalConnectStatusResponse.BoraPortalUsn;
+            var bappUsn = response.boraPortalConnectStatusResponse.BappUsn;
+            var walletAddressHash = response.boraPortalConnectStatusResponse.WalletAddressHash;
+            Debug.Log("Boraportal connect status: " + status);
+            Debug.Log("Boraportal connect bappUsn: " + bappUsn);
+            Debug.Log("Boraportal connect boraPortalUsn: " + boraPortalUsn);
+            Debug.Log("Boraportal connect walletAddressHash: " + walletAddressHash);
+        }
 
         string balance = await this._getBalance(address);
 
@@ -523,6 +536,19 @@ public class FaceWalletManager : MonoBehaviour
         FaceLoginResponse response = await this._face.Auth().BoraDirectSocialLogin(provider, boraPortalConnectRequest);
         string address = response.wallet.Address;
         string balance = await this._getBalance(address);
+        Debug.Log("Boraportal connect status not null: " + response.boraPortalConnectStatusResponse != null);
+        Debug.Log("Boraportal connect status: " + response.boraPortalConnectStatusResponse);
+        if (response.boraPortalConnectStatusResponse != null)
+        {
+            var status = response.boraPortalConnectStatusResponse.Status;
+            var boraPortalUsn = response.boraPortalConnectStatusResponse.BoraPortalUsn;
+            var bappUsn = response.boraPortalConnectStatusResponse.BappUsn;
+            var walletAddressHash = response.boraPortalConnectStatusResponse.WalletAddressHash;
+            Debug.Log("Boraportal connect status: " + status);
+            Debug.Log("Boraportal connect bappUsn: " + bappUsn);
+            Debug.Log("Boraportal connect boraPortalUsn: " + boraPortalUsn);
+            Debug.Log("Boraportal connect walletAddressHash: " + walletAddressHash);
+        }
 
         return new LoginResult(balance, response);
     }
@@ -535,6 +561,19 @@ public class FaceWalletManager : MonoBehaviour
             faceLoginIdTokenRequest, boraPortalConnectRequest);
         string address = response.wallet.Address;
         string balance = await this._getBalance(address);
+        Debug.Log("Boraportal connect status not null: " + response.boraPortalConnectStatusResponse != null);
+        Debug.Log("Boraportal connect status: " + response.boraPortalConnectStatusResponse);
+        if (response.boraPortalConnectStatusResponse != null)
+        {
+            var status = response.boraPortalConnectStatusResponse.Status;
+            var boraPortalUsn = response.boraPortalConnectStatusResponse.BoraPortalUsn;
+            var bappUsn = response.boraPortalConnectStatusResponse.BappUsn;
+            var walletAddressHash = response.boraPortalConnectStatusResponse.WalletAddressHash;
+            Debug.Log("Boraportal connect status: " + status);
+            Debug.Log("Boraportal connect bappUsn: " + bappUsn);
+            Debug.Log("Boraportal connect boraPortalUsn: " + boraPortalUsn);
+            Debug.Log("Boraportal connect walletAddressHash: " + walletAddressHash);
+        }
 
         return new LoginResult(balance, response);
     }
