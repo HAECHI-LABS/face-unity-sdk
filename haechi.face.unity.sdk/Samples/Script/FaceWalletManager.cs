@@ -200,6 +200,27 @@ public class FaceWalletManager : MonoBehaviour
         this._directSocialLoginAndGetBalance(loginProviderType);
     }
 
+    /**
+     * Since we need a idtoken, this is called from the code that external to the SDK.
+     */
+    public void LoginWithIdtoken(string idToken)
+    {
+        Task<LoginResult> responseTask = this._LoginWithIdtokenAndGetBalanceAsync(idToken);
+
+        this._actionQueue.Enqueue(responseTask, response =>
+        {
+            this._logined.RaiseEvent(new LoginData
+            {
+                UserId = response.userId,
+                UserAddress = response.userAddress,
+                Balance = response.balance,
+                Result = $"UserVerificationToken: {response.userVerificationToken}"
+            });
+        }, this._defaultExceptionHandler);
+    }
+
+
+
     private void BoraLogin(string bappUsn)
     {
         var bappUsnSignature = RSASigner.Sign(
@@ -442,6 +463,18 @@ public class FaceWalletManager : MonoBehaviour
         string userVerificationToken = response.userVerificationToken;
         Debug.Log($"User verification token: {userVerificationToken}");
 
+        string balance = await this._getBalance(address);
+
+        return new LoginResult(balance, response);
+    }
+
+    private async Task<LoginResult> _LoginWithIdtokenAndGetBalanceAsync(string idToken)
+    {
+        FaceLoginIdTokenRequest faceLoginIdTokenRequest = new FaceLoginIdTokenRequest(idToken, RSASigner.Sign(
+            this._appState.GetPrivateKey(), idToken));
+        FaceLoginResponse response = await this._face.Auth().LoginWithIdToken(
+            faceLoginIdTokenRequest);
+        string address = response.wallet.Address;
         string balance = await this._getBalance(address);
 
         return new LoginResult(balance, response);

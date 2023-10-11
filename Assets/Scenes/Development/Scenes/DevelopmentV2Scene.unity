@@ -7221,6 +7221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   faceWalletManager: {fileID: 596141124}
   _onBoraLoginWithIdtoken: {fileID: 11400000, guid: eb08a68119e44c68f9ce1cb8216d5c1d, type: 2}
+  _onLoginWithIdtoken: {fileID: 11400000, guid: 782a0a21d7b46f14f8fa072aaff44377, type: 2}
 --- !u!4 &1408864523
 Transform:
   m_ObjectHideFlags: 0
