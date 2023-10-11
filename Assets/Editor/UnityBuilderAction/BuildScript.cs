@@ -18,23 +18,25 @@ namespace UnityBuilderAction
 
         private const string FaceDeploymentEnvArgName = "faceDeployEnvironment";
 
-        public static void CustomizeForFace(FaceDeployEnvironment deployEnvironment,
-            VersionUpgrader.Version newVersion)
+        public static void CustomizeForFace(FaceDeployEnvironment deployEnvironment)
         {
-            EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(FaceDeployConstants.SecnePath, true) };
-
-            Debug.Log("Application identifier" + PlayerSettings.applicationIdentifier);
+            EditorBuildSettingsScene[] scenes;
             switch (deployEnvironment)
             {
                 case FaceDeployEnvironment.Dev:
                     PlayerSettings.applicationIdentifier = FaceDeployConstants.DevAppId;
+                    scenes = new[] { new EditorBuildSettingsScene(FaceDeployConstants.DevSecnePath, true) };
                     break;
                 case FaceDeployEnvironment.Stage:
                     PlayerSettings.applicationIdentifier = FaceDeployConstants.StageAppId;
+                    scenes = new[] { new EditorBuildSettingsScene(FaceDeployConstants.StageSecnePath, true) };
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(deployEnvironment), deployEnvironment, null);
             }
+            EditorBuildSettings.scenes = scenes;
+            Debug.Log("Application identifier" + PlayerSettings.applicationIdentifier);
+            Debug.Log("Scenes" + EditorBuildSettings.scenes);
 
             #if UNITY_2022_1_OR_NEWER
                 PlayerSettings.SetIl2CppCompilerConfiguration(BuildTargetGroup.Android, Il2CppCompilerConfiguration.Debug);
@@ -45,13 +47,13 @@ namespace UnityBuilderAction
             #endif
         }
 
+        // called from CI
         public static void Build()
         {
             // Gather values from args
             Dictionary<string, string> options = GetValidatedOptions();
             Enum.TryParse(options[FaceDeploymentEnvArgName], out FaceDeployEnvironment deployEnvironment);
-            var version = VersionUpgrader.Upgrade(deployEnvironment);
-            CustomizeForFace(deployEnvironment, version);
+            CustomizeForFace(deployEnvironment);
 
             // Set version for this build
             PlayerSettings.bundleVersion = options["buildVersion"];

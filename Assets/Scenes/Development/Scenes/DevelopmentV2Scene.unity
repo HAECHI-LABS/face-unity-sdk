@@ -265,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 762110832254719455, guid: b4f509ba829564b63b1e780556412ed4, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 762110832254719455, guid: b4f509ba829564b63b1e780556412ed4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1019,7 +1019,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &562709906
 PrefabInstance:
@@ -1306,7 +1306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 762110832254719455, guid: 4383978d9d2514527845f64e19579558, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 762110832254719455, guid: 4383978d9d2514527845f64e19579558, type: 3}
       propertyPath: m_AnchorMax.x
@@ -5322,6 +5322,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4383978d9d2514527845f64e19579558, type: 3}
+--- !u!114 &596141124 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5825345064221503041, guid: 3344b0dd11da544de917fc910b2fcafd, type: 3}
+  m_PrefabInstance: {fileID: 920572828}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90fe6f2babb74902aa268d53268eb36c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!223 &753978725 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 762110832254719440, guid: b4f509ba829564b63b1e780556412ed4, type: 3}
@@ -5677,7 +5688,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1023929881
 PrefabInstance:
@@ -7179,6 +7190,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b0a5081b08b49b582b14b13d54f4297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1408864521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1408864523}
+  - component: {fileID: 1408864522}
+  m_Layer: 0
+  m_Name: LoginWithIdtoken
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1408864522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408864521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3af8bfb0f25b4feba4279d68dce0ebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faceWalletManager: {fileID: 596141124}
+  _onBoraLoginWithIdtoken: {fileID: 11400000, guid: eb08a68119e44c68f9ce1cb8216d5c1d, type: 2}
+  _onLoginWithIdtoken: {fileID: 11400000, guid: 782a0a21d7b46f14f8fa072aaff44377, type: 2}
+--- !u!4 &1408864523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408864521}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 909.8727, y: 50.765743, z: -2.4574459}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1410677108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10036,7 +10094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 762110832254719455, guid: f57f6f6317f9a4b8a9be487eee6dd5e5, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 762110832254719455, guid: f57f6f6317f9a4b8a9be487eee6dd5e5, type: 3}
       propertyPath: m_AnchorMax.x

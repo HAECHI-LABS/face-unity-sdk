@@ -88,6 +88,9 @@ MonoBehaviour:
   _onSendERC1155: {fileID: 11400000, guid: 55800e785678e4456a04edbef6fd19dc, type: 2}
   _onConnectBora: {fileID: 11400000, guid: 19d49287b3c8342c183710fe832a3a1a, type: 2}
   _onCheckIsConnectedBora: {fileID: 11400000, guid: f116ad2254f9944149b402321fb59ffc, type: 2}
+  _onBoraLogin: {fileID: 11400000, guid: 28a2d540a275676539e9fdbbd4ad26c4, type: 2}
+  _onBoraDirectSocialLogin: {fileID: 11400000, guid: d4c374124c6247ae7862de6de82eabe6, type: 2}
+  _onBoraLoginWithIdtoken: {fileID: 11400000, guid: eb08a68119e44c68f9ce1cb8216d5c1d, type: 2}
   _onSignMessage: {fileID: 11400000, guid: 008cc03b50da941848c94b69995350f7, type: 2}
   _onWalletConnect: {fileID: 11400000, guid: 07a610d8601a845ae9a4c5694d09f3e6, type: 2}
   _connected: {fileID: 11400000, guid: 08131f71d7e144975a1b797ca47a9c38, type: 2}

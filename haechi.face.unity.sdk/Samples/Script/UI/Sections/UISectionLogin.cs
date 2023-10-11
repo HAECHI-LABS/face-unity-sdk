@@ -16,6 +16,8 @@ public class UISectionLogin : MonoBehaviour
     [SerializeField] private UIButton _loginFacebookButton;
     
     [SerializeField] private UIButton _loginAppleButton;
+
+    [SerializeField] private UIButton _loginWithIdTokenButton;
     
     [SerializeField] private UIButton _getBalanceButton;
     
@@ -36,6 +38,7 @@ public class UISectionLogin : MonoBehaviour
     [SerializeField] private StringEventChannelSO _socialLogin;
     [SerializeField] private VoidEventChannelSO _getBalance;
     [SerializeField] private VoidEventChannelSO _logout;
+    [SerializeField] private VoidEventChannelSO _loginWithIdToken;
 
     private List<UIProviderCheckbox> _uiProviderCheckboxList = new List<UIProviderCheckbox>();
     private List<LoginProviderType> _selectedProviders = new List<LoginProviderType>();
@@ -47,6 +50,7 @@ public class UISectionLogin : MonoBehaviour
         this._loginGoogleButton.UI.interactable = false;
         this._loginFacebookButton.UI.interactable = false;
         this._loginAppleButton.UI.interactable = false;
+        this._loginWithIdTokenButton.UI.interactable = false;
         this._getBalanceButton.UI.interactable = false;
         this._logoutButton.UI.interactable = false;
         this.ClearAllUIProviderCheckbox();
@@ -60,6 +64,7 @@ public class UISectionLogin : MonoBehaviour
         this._loginGoogleButton.OnClickEvent += this.GoogleLogin;
         this._loginFacebookButton.OnClickEvent += this.FacebookLogin;
         this._loginAppleButton.OnClickEvent += this.AppleLogin;
+        this._loginWithIdTokenButton.OnClickEvent += this.LoginWithIdToken;
         this._getBalanceButton.OnClickEvent += this.GetBalance;
         this._logoutButton.OnClickEvent += this.Logout;
         
@@ -75,6 +80,7 @@ public class UISectionLogin : MonoBehaviour
         this._loginGoogleButton.OnClickEvent -= this.GoogleLogin;
         this._loginFacebookButton.OnClickEvent -= this.FacebookLogin;
         this._loginAppleButton.OnClickEvent -= this.AppleLogin;
+        this._loginWithIdTokenButton.OnClickEvent -= this.LoginWithIdToken;
         this._getBalanceButton.OnClickEvent -= this.GetBalance;
         this._logoutButton.OnClickEvent -= this.Logout;
         
@@ -91,6 +97,11 @@ public class UISectionLogin : MonoBehaviour
     private void LoginWithSelectedProviders()
     {
         this._loginWithSelectedProviders.RaiseEvent(this._selectedProviders);
+    }
+
+    private void LoginWithIdToken()
+    {
+        this._loginWithIdToken.RaiseEvent();
     }
     
     private void ClearAllUIProviderCheckbox()
@@ -166,6 +177,7 @@ public class UISectionLogin : MonoBehaviour
         this._loginGoogleButton.UI.interactable = true;
         this._loginFacebookButton.UI.interactable = true;
         this._loginAppleButton.UI.interactable = true;
+        this._loginWithIdTokenButton.UI.interactable = true;
         this._getBalanceButton.UI.interactable = false;
         this._logoutButton.UI.interactable = true;
     }
@@ -177,6 +189,7 @@ public class UISectionLogin : MonoBehaviour
         this._loginGoogleButton.UI.interactable = false;
         this._loginFacebookButton.UI.interactable = false;
         this._loginAppleButton.UI.interactable = false;
+        this._loginWithIdTokenButton.UI.interactable = false;
         this._getBalanceButton.UI.interactable = true;
         this._logoutButton.UI.interactable = true;
     }
@@ -188,6 +201,7 @@ public class UISectionLogin : MonoBehaviour
         this._loginGoogleButton.UI.interactable = false;
         this._loginFacebookButton.UI.interactable = false;
         this._loginAppleButton.UI.interactable = false;
+        this._loginWithIdTokenButton.UI.interactable = false;
         this._getBalanceButton.UI.interactable = false;
         this._logoutButton.UI.interactable = false;
     }
