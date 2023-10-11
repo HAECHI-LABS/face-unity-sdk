@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>965931844205-hdpefgeadompe0kmlgk7c5t7i082g2nk.apps.googleusercontent.com</string>
+	<string>478075746592-a340dq6qurvkm9ovhv2n4k1hjvb0ttdm.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.965931844205-hdpefgeadompe0kmlgk7c5t7i082g2nk</string>
+	<string>com.googleusercontent.apps.478075746592-a340dq6qurvkm9ovhv2n4k1hjvb0ttdm</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>965931844205-7ioqn3tai0vdc1mlc6r5728ij3blbttj.apps.googleusercontent.com</string>
+	<string>478075746592-98ta7a9j4c1tdlneh6aavquum61fvo9f.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAvBatVlo9V73euhDqY6-9rhSidGacttz0</string>
+	<string>AIzaSyD07NPr8EtV-uA5RTKkQbH0eJ2NW8bbjd0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>965931844205</string>
+	<string>478075746592</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>xyz.facewallet.unity.app</string>
 	<key>PROJECT_ID</key>
-	<string>sample-unity-9312c</string>
+	<string>prj-d-face</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sample-unity-9312c.appspot.com</string>
+	<string>prj-d-face.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:965931844205:ios:66b6e4cff25a145acd7564</string>
+	<string>1:478075746592:ios:e914f70491de9971997f45</string>
 </dict>
 </plist>

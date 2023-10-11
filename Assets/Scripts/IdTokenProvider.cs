@@ -13,8 +13,8 @@ public class IdTokenProvider : MonoBehaviour
     [SerializeField] private StringEventChannelSO _onBoraLoginWithIdtoken;
 
     private GoogleSignInConfiguration _configuration;
-#if UNITY_IPHONE
-    private const string WebClientId = "965931844205-tt978gju3l3fa97amqp431falebfrqu7.apps.googleusercontent.com";
+#if UNITY_IOS
+    private const string WebClientId = "478075746592-mkvlpvmo7hgo5bj9qjpbsgetcc6ae377.apps.googleusercontent.com";
 #else
     private const string WebClientId = "478075746592-2eph96cegqojcd29r1bg62ur64d9bbql.apps.googleusercontent.com";
 #endif
@@ -49,7 +49,7 @@ public class IdTokenProvider : MonoBehaviour
     {
         try
         {
-#if UNITY_IPHONE
+#if UNITY_IOS
         GoogleSignIn.Configuration = _configuration;
         GoogleSignIn.Configuration.RequestIdToken = true;
         GoogleSignIn.Configuration.UseGameSignIn = false;
@@ -86,7 +86,7 @@ public class IdTokenProvider : MonoBehaviour
         }
     }
 
-#if UNITY_IPHONE
+#if UNITY_IOS
     private void _loginProcess(Task<GoogleSignInUser> task, String bappUsn){
         if (task.IsFaulted) {
             using (IEnumerator<System.Exception> enumerator = task.Exception.InnerExceptions.GetEnumerator ()) {
@@ -111,7 +111,8 @@ public class IdTokenProvider : MonoBehaviour
 #elif UNITY_WEBGL
     public void LoginProcessForWebGL(string idToken)
     {
-        _faceUnity.LoginWithIdTokenAndGetBalanceAsync(idToken);
+        throw new NotImplementedException();
+        // faceWalletManager.BoraLoginWithIdtoken(user.IdToken, bappUsn);
     }
 #endif
 }
