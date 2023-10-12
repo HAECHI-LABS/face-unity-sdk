@@ -1,4 +1,19 @@
 
+<a name="1.3.22"></a>
+## Release: [1.3.22](https://github.com/HAECHI-LABS/core/releases/tag/1.3.22)
+### Features
+- Add login with idtoken in Sample Dapp
+- Add bora response field
+- Add LoginWithBoraIdToken
+
+### Bug Fixes
+- Remove bora login event handler on disable
+- Fix bora connect logging
+
+### Document Updates
+- Add doc for Bora login functions
+
+
 <a name="1.3.16"></a>
 ## Release: [1.3.16](https://github.com/HAECHI-LABS/core/releases/tag/1.3.16)
 ### Features
