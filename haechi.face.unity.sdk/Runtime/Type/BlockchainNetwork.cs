@@ -17,6 +17,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BAOBAB,
         MEVERSE,
         MEVERSE_TESTNET,
+        DEFI_VERSE,
+        DEFI_VERSE_TESTNET,
         BORA,
         BORA_TESTNET,
     }
@@ -52,6 +54,10 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 // MEVerse
                 { BlockchainNetwork.MEVERSE, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 7518, Blockchain = Blockchain.MEVERSE }},
                 { BlockchainNetwork.MEVERSE_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 4759, Blockchain = Blockchain.MEVERSE }},
+                
+                // DeFiVerse
+                { BlockchainNetwork.DEFI_VERSE, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 16116, Blockchain = Blockchain.DEFI_VERSE }},
+                { BlockchainNetwork.DEFI_VERSE_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 17117, Blockchain = Blockchain.DEFI_VERSE }},
                 
                 // BORA
                 { BlockchainNetwork.BORA, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 77001, Blockchain = Blockchain.BORA }},
