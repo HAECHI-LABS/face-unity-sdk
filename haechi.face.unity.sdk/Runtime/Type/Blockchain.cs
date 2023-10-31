@@ -12,6 +12,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
         BNB_SMART_CHAIN,
         KLAYTN,
         MEVERSE,
+        DEFI_VERSE,
         BORA,
     }
 
@@ -36,6 +37,9 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 case BlockchainNetwork.MEVERSE:
                 case BlockchainNetwork.MEVERSE_TESTNET:
                     return Blockchain.MEVERSE;
+                case BlockchainNetwork.DEFI_VERSE:
+                case BlockchainNetwork.DEFI_VERSE_TESTNET:
+                    return Blockchain.DEFI_VERSE;
                 case BlockchainNetwork.BORA:
                 case BlockchainNetwork.BORA_TESTNET:
                     return Blockchain.BORA;
@@ -72,6 +76,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 case Blockchain.BNB_SMART_CHAIN:
                 case Blockchain.KLAYTN:
                 case Blockchain.MEVERSE:
+                case Blockchain.DEFI_VERSE:
                 case Blockchain.BORA:
                 default:
                     return 18;
@@ -134,6 +139,17 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageMainnet, BlockchainNetwork.MEVERSE },
                         { Profile.ProdTest, BlockchainNetwork.MEVERSE_TESTNET },
                         { Profile.ProdMainnet, BlockchainNetwork.MEVERSE }
+                    }
+                },
+                {
+                    Blockchain.DEFI_VERSE, new Dictionary<Profile, BlockchainNetwork>
+                    {
+                        { Profile.Local, BlockchainNetwork.DEFI_VERSE_TESTNET },
+                        { Profile.Dev, BlockchainNetwork.DEFI_VERSE_TESTNET },
+                        { Profile.StageTest, BlockchainNetwork.DEFI_VERSE_TESTNET },
+                        { Profile.StageMainnet, BlockchainNetwork.DEFI_VERSE },
+                        { Profile.ProdTest, BlockchainNetwork.DEFI_VERSE_TESTNET },
+                        { Profile.ProdMainnet, BlockchainNetwork.DEFI_VERSE }
                     }
                 },
                 {
