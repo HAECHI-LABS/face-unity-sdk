@@ -1,4 +1,10 @@
 
+<a name="1.4.0"></a>
+## Release: [1.4.0](https://github.com/HAECHI-LABS/core/releases/tag/1.4.0)
+### Features
+- Make DeFiVerse available on Unity SDK
+
+
 <a name="1.3.16"></a>
 ## Release: [1.3.16](https://github.com/HAECHI-LABS/core/releases/tag/1.3.16)
 ### Features
