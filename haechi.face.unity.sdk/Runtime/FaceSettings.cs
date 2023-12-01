@@ -20,7 +20,7 @@ namespace haechi.face.unity.sdk.Runtime
             public Profile? Environment;
             
             /// <value>
-            /// Blockchain Network such as Goerli, Mumbai, Ethereum etc.
+            /// Blockchain Network such as Sepolia, Mumbai, Ethereum etc.
             /// </value>
             public BlockchainNetwork Network;
 
@@ -120,7 +120,7 @@ namespace haechi.face.unity.sdk.Runtime
             return Blockchains.OfBlockchainNetwork(this._parameters._network);
         }
 
-        /// <returns> Return Blockchain Network such as Goerli, Mumbai, Ethereum etc.</returns>
+        /// <returns> Return Blockchain Network such as Sepolia, Mumbai, Ethereum etc.</returns>
         public BlockchainNetwork Network()
         {
             return this._parameters._network;
