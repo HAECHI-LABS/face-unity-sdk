@@ -19,10 +19,10 @@ MonoBehaviour:
     erc721ContractAddress: TODO
     erc1155ContractAddress: TODO
   - blockchainNetwork: 1
-    erc20Decimal18ContractAddress: 0xB112d79fc314E1F6901984F0b4fA7680057BFB63
-    erc20Decimal6ContractAddress: 0xE54b3408C4c8C034e700A8af0Cbc8c9622037eC6
-    erc721ContractAddress: 0xdb8f0880a8516A42d4b5F6463CB7EBe969102d6e
-    erc1155ContractAddress: 0x21af2e7801eCb07C377f6104e139FDcE5CDf1C35
+    erc20Decimal18ContractAddress: 0xfCe04dd232006d0da001F6D54Bb5a7fC969dBc08
+    erc20Decimal6ContractAddress: 0xb5567463c35dE682072A669425d6776B178Be3E4
+    erc721ContractAddress: 0x63C1664c1Ee107D762C7ed7517Ca1cD25bc33C0b
+    erc1155ContractAddress: 0xF512373412168439B2e587dCfc13e839F0D8472f
   - blockchainNetwork: 2
     erc20Decimal18ContractAddress: 0xfce04dd232006d0da001f6d54bb5a7fc969dbc08
     erc20Decimal6ContractAddress: TODO
