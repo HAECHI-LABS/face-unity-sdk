@@ -8,9 +8,9 @@ namespace haechi.face.unity.sdk.Tests.Runtime.Type
         [Test]
         public void GetNetworkTest()
         {
-            Assert.AreEqual(BlockchainNetwork.GOERLI, BlockchainNetworks.GetNetwork("ETHEREUM", "StageTest"));
+            Assert.AreEqual(BlockchainNetwork.SEPOLIA, BlockchainNetworks.GetNetwork("ETHEREUM", "StageTest"));
             Assert.AreEqual(BlockchainNetwork.ETHEREUM, BlockchainNetworks.GetNetwork("ETHEREUM", "StageMainnet"));
-            Assert.AreEqual(BlockchainNetwork.GOERLI, BlockchainNetworks.GetNetwork("ETHEREUM", "Testnet"));
+            Assert.AreEqual(BlockchainNetwork.SEPOLIA, BlockchainNetworks.GetNetwork("ETHEREUM", "Testnet"));
             Assert.AreEqual(BlockchainNetwork.ETHEREUM, BlockchainNetworks.GetNetwork("ETHEREUM", "Mainnet"));
             
             Assert.AreEqual(BlockchainNetwork.MUMBAI, BlockchainNetworks.GetNetwork("POLYGON", "StageTest"));

@@ -8,7 +8,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
     public enum BlockchainNetwork
     {
         ETHEREUM,
-        GOERLI,
+        SEPOLIA,
         POLYGON,
         MUMBAI,
         BNB_SMART_CHAIN,
@@ -37,7 +37,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
             {
                 // Ethereum
                 { BlockchainNetwork.ETHEREUM, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 1, Blockchain = Blockchain.ETHEREUM }},
-                { BlockchainNetwork.GOERLI, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 5, Blockchain = Blockchain.ETHEREUM }},
+                { BlockchainNetwork.SEPOLIA, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 5, Blockchain = Blockchain.ETHEREUM }},
                 
                 // Polygon
                 { BlockchainNetwork.POLYGON, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 137, Blockchain = Blockchain.POLYGON }},
