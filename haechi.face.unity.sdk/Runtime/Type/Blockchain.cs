@@ -23,7 +23,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
             switch (network)
             {
                 case BlockchainNetwork.ETHEREUM:
-                case BlockchainNetwork.GOERLI:
+                case BlockchainNetwork.SEPOLIA:
                     return Blockchain.ETHEREUM;
                 case BlockchainNetwork.POLYGON:
                 case BlockchainNetwork.MUMBAI:
@@ -89,11 +89,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.ETHEREUM, new Dictionary<Profile, BlockchainNetwork>
                     {
-                        { Profile.Local, BlockchainNetwork.GOERLI },
-                        { Profile.Dev, BlockchainNetwork.GOERLI },
-                        { Profile.StageTest, BlockchainNetwork.GOERLI },
+                        { Profile.Local, BlockchainNetwork.SEPOLIA },
+                        { Profile.Dev, BlockchainNetwork.SEPOLIA },
+                        { Profile.StageTest, BlockchainNetwork.SEPOLIA },
                         { Profile.StageMainnet, BlockchainNetwork.ETHEREUM },
-                        { Profile.ProdTest, BlockchainNetwork.GOERLI },
+                        { Profile.ProdTest, BlockchainNetwork.SEPOLIA },
                         { Profile.ProdMainnet, BlockchainNetwork.ETHEREUM }
                     }
                 },

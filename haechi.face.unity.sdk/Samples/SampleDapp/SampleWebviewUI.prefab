@@ -3881,7 +3881,7 @@ MonoBehaviour:
     m_Options:
     - m_Text: MUMBAI
       m_Image: {fileID: 0}
-    - m_Text: GOERLI
+    - m_Text: SEPOLIA
       m_Image: {fileID: 0}
     - m_Text: BNB_SMART_CHAIN_TESTNET
       m_Image: {fileID: 0}
@@ -8341,7 +8341,7 @@ MonoBehaviour:
     m_Options:
     - m_Text: MUMBAI
       m_Image: {fileID: 0}
-    - m_Text: GOERLI
+    - m_Text: SEPOLIA
       m_Image: {fileID: 0}
     - m_Text: BNB_SMART_CHAIN_TESTNET
       m_Image: {fileID: 0}
@@ -10020,7 +10020,7 @@ MonoBehaviour:
     m_Options:
     - m_Text: MUMBAI
       m_Image: {fileID: 0}
-    - m_Text: GOERLI
+    - m_Text: SEPOLIA
       m_Image: {fileID: 0}
     - m_Text: BNB_SMART_CHAIN_TESTNET
       m_Image: {fileID: 0}
