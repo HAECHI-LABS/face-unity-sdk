@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
 using haechi.face.unity.sdk.Runtime.Utils;
+using JetBrains.Annotations;
 
 namespace haechi.face.unity.sdk.Runtime
 {
@@ -28,6 +29,12 @@ namespace haechi.face.unity.sdk.Runtime
             /// Deeplink scheme used on webview (only used android)
             /// </value>
             public string Scheme;
+            
+            public struct InternalParameters
+            {
+                public string IframeUrl;
+            }
+            public InternalParameters? Internal;
         }
 
         private struct parameters
@@ -36,6 +43,7 @@ namespace haechi.face.unity.sdk.Runtime
             public Profile _environment;
             public BlockchainNetwork _network;
             public string _scheme;
+            [CanBeNull] public string _iframeUrl;
         }
         
         private static FaceSettings instance;
@@ -61,7 +69,8 @@ namespace haechi.face.unity.sdk.Runtime
                 _apiKey = parameters.ApiKey,
                 _environment = parameters.Environment ?? _getDefaultProfile(parameters.Network),
                 _network = parameters.Network,
-                _scheme = parameters.Scheme
+                _scheme = parameters.Scheme,
+                _iframeUrl = parameters.Internal?.IframeUrl
             });
         }
 
@@ -170,6 +179,10 @@ namespace haechi.face.unity.sdk.Runtime
         /// <returns>Returns webview client url.</returns>
         public string WebviewHostURL()
         {
+            if (this._parameters._iframeUrl != null)
+            {
+                return this._parameters._iframeUrl;
+            }
             return this._webviewHostMap.GetValueOrDefault(this.Environment(), this._webviewHostMap[Profile.Dev]);
         }
         
@@ -182,6 +195,10 @@ namespace haechi.face.unity.sdk.Runtime
         /// <returns>Returns iframe host url.</returns>
         public string IframeURL()
         {
+            if (this._parameters._iframeUrl != null)
+            {
+                return this._parameters._iframeUrl;
+            }
             return string.Format(
                 $"{this._iframeHostMap.GetValueOrDefault(this.Environment(), this._iframeHostMap[Profile.Dev])}/?api_key={this.ApiKey()}&blockchain={this.Blockchain()}&env={this.Environment()}&version={SdkInfo.UNITY_SDK_VERSION}&type={SdkInfo.UNITY_SDK_TYPE}");
         }

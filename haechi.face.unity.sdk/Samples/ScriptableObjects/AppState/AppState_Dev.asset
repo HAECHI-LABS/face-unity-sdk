@@ -31,11 +31,13 @@ MonoBehaviour:
   _currentBlockchain: 0
   _apiKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB
   _privateKey: 
+  _multiStageId: 
   _erc20Balance: 
   _onProfileChange: {fileID: 11400000, guid: 0985badaa4749434d96e1512b77a927f, type: 2}
   _onBlockchainChange: {fileID: 11400000, guid: 211a2dc0a77074be7bbb1749a9b4e0fb, type: 2}
   _onApiKeyChange: {fileID: 11400000, guid: b7a612418ad00416b82369dfcf8db4b9, type: 2}
   _onPrivateKeyChange: {fileID: 11400000, guid: 2454854534ea54a4092188f8c25951bf, type: 2}
+  _onMultiStageIdChange: {fileID: 11400000, guid: 3e53cf0a30d6419bc980bb1a161feb86, type: 2}
   _onLoginEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
   _onLogoutEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _onBalanceUpdated: {fileID: 11400000, guid: 6d20b7ef509914bcfbd8d3c581e17bf2, type: 2}
@@ -45,3 +47,4 @@ MonoBehaviour:
   _blockchainUpdated: {fileID: 11400000, guid: 5ecf8d55362fb490c925b7f6b1985c99, type: 2}
   _apiKeyUpdated: {fileID: 11400000, guid: 1eeca02f5b98a4b6ba87e08656e8d552, type: 2}
   _privateKeyUpdated: {fileID: 11400000, guid: b34afcf155a7d4c48869cc4e463f7610, type: 2}
+  _multiStageIdUpdated: {fileID: 11400000, guid: 262c597b35f5e59c3b729bb02e566e2d, type: 2}

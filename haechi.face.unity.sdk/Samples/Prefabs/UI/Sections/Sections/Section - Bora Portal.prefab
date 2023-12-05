@@ -122,12 +122,19 @@ MonoBehaviour:
   _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _connectBoraButton: {fileID: 1645308347244228389}
   _isConnectedButton: {fileID: 510025914115203452}
+  _bappUSNInputField: {fileID: 0}
+  _boraLoginButton: {fileID: 0}
+  _boraDirecSocialLoginButton: {fileID: 0}
+  _boraLoginWithIdtokenButton: {fileID: 0}
   _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
   _onLoginSuccessEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
   _onNetworkSwitched: {fileID: 11400000, guid: e51a0a21076474367b8d7f812a516c0e, type: 2}
   _connectBora: {fileID: 11400000, guid: 19d49287b3c8342c183710fe832a3a1a, type: 2}
   _checkIsConnectedBora: {fileID: 11400000, guid: f116ad2254f9944149b402321fb59ffc, type: 2}
+  _boraLogin: {fileID: 11400000, guid: 28a2d540a275676539e9fdbbd4ad26c4, type: 2}
+  _boraDirectSocialLogin: {fileID: 11400000, guid: d4c374124c6247ae7862de6de82eabe6, type: 2}
+  _boraLoginWithIdtoken: {fileID: 11400000, guid: eb08a68119e44c68f9ce1cb8216d5c1d, type: 2}
 --- !u!1001 &6992176014607132126
 PrefabInstance:
   m_ObjectHideFlags: 0
