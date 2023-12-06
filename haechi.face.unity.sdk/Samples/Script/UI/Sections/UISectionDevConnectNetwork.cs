@@ -12,6 +12,7 @@ public class UISectionDevConnectNetwork : MonoBehaviour
     [SerializeField] private TMP_Dropdown _blockchainDropdown;
     [SerializeField] private TMP_InputField _apiKeyInputField;
     [SerializeField] private TMP_InputField _privateKeyInputField;
+    [SerializeField] private TMP_InputField _multiStageIdInputField;
     [SerializeField] private UIButton _connectButton;
     
     [Header("Broadcast to")]
@@ -19,6 +20,7 @@ public class UISectionDevConnectNetwork : MonoBehaviour
     [SerializeField] private StringEventChannelSO _changeBlockchain;
     [SerializeField] private StringEventChannelSO _changeApiKey;
     [SerializeField] private StringEventChannelSO _changePrivateKey;
+    [SerializeField] private StringEventChannelSO _changeMultiStageId;
     [SerializeField] private VoidEventChannelSO _connect;
     [SerializeField] private VoidEventChannelSO _switchNetwork;
     
@@ -43,6 +45,7 @@ public class UISectionDevConnectNetwork : MonoBehaviour
         this._blockchainDropdown.onValueChanged.AddListener(this.OnBlockchainChanges);
         this._apiKeyInputField.onValueChanged.AddListener(this.OnApiKeyChanges);
         this._privateKeyInputField.onValueChanged.AddListener(this.OnPrivateKeyChanges);
+        this._multiStageIdInputField.onValueChanged.AddListener(this.OnMultiStageIdChanges);
         this._connectButton.OnClickEvent += this.ConnectOrSwitchNetwork;
         
         this.Initialize();
@@ -79,6 +82,11 @@ public class UISectionDevConnectNetwork : MonoBehaviour
     private void OnPrivateKeyChanges(string value)
     {
         this._changePrivateKey.RaiseEvent(value);
+    }
+    
+    private void OnMultiStageIdChanges(string value)
+    {
+        this._changeMultiStageId.RaiseEvent(value);
     }
     
     private void ConnectOrSwitchNetwork()

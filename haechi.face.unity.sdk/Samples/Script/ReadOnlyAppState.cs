@@ -14,6 +14,7 @@ public abstract class ReadOnlyAppState : ScriptableObject
     
     public abstract string GetApiKey();
     public abstract string GetPrivateKey();
+    public abstract string GetMultiStageId();
     public abstract Profile GetEnv();
     
     public abstract Blockchain GetBlockchain();

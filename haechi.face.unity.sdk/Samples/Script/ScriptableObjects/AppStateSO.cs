@@ -39,6 +39,7 @@ public class AppStateSO : ReadOnlyAppState
 
     [SerializeField] private string _apiKey;
     [SerializeField] private string _privateKey;
+    [SerializeField] private string _multiStageId;
 
     /**
      * FT
@@ -50,6 +51,7 @@ public class AppStateSO : ReadOnlyAppState
     [SerializeField] private StringEventChannelSO _onBlockchainChange;
     [SerializeField] private StringEventChannelSO _onApiKeyChange;
     [SerializeField] private StringEventChannelSO _onPrivateKeyChange;
+    [SerializeField] private StringEventChannelSO _onMultiStageIdChange;
     [SerializeField] private LoginDataChannelSO _onLoginEvent;
     [SerializeField] private VoidEventChannelSO _onLogoutEvent;
     [SerializeField] private StringEventChannelSO _onBalanceUpdated;
@@ -61,6 +63,7 @@ public class AppStateSO : ReadOnlyAppState
     [SerializeField] private VoidEventChannelSO _blockchainUpdated;
     [SerializeField] private VoidEventChannelSO _apiKeyUpdated;
     [SerializeField] private VoidEventChannelSO _privateKeyUpdated;
+    [SerializeField] private VoidEventChannelSO _multiStageIdUpdated;
     
     private void OnEnable()
     {
@@ -68,6 +71,7 @@ public class AppStateSO : ReadOnlyAppState
         this._onBlockchainChange.OnEventRaised += this.SetCurrentBlockchain;
         this._onApiKeyChange.OnEventRaised += this.SetCurrentApiKey;
         this._onPrivateKeyChange.OnEventRaised += this.SetCurrentPrivateKey;
+        this._onMultiStageIdChange.OnEventRaised += this.SetCurrentMultiStageId;
         
         this._onLoginEvent.OnEventRaised += this.OnLogin;
         this._onLogoutEvent.OnEventRaised += this.Initialize;
@@ -82,6 +86,7 @@ public class AppStateSO : ReadOnlyAppState
         this._onBlockchainChange.OnEventRaised -= this.SetCurrentBlockchain;
         this._onApiKeyChange.OnEventRaised -= this.SetCurrentApiKey;
         this._onPrivateKeyChange.OnEventRaised -= this.SetCurrentPrivateKey;
+        this._onMultiStageIdChange.OnEventRaised -= this.SetCurrentMultiStageId;
         
         this._onLoginEvent.OnEventRaised -= this.OnLogin;
         this._onLogoutEvent.OnEventRaised -= this.Initialize;
@@ -112,6 +117,12 @@ public class AppStateSO : ReadOnlyAppState
     {
         this._privateKey = value;
         this._privateKeyUpdated.RaiseEvent();
+    }
+    
+    private void SetCurrentMultiStageId(string value)
+    {
+        this._multiStageId = value;
+        this._multiStageIdUpdated.RaiseEvent();
     }
     
     private void OnLogin(LoginData loginData)
@@ -159,6 +170,11 @@ public class AppStateSO : ReadOnlyAppState
     public override string GetPrivateKey()
     {
         return string.IsNullOrEmpty(this._privateKey) ? SAMPLE_PRIVATE_KEY : this._privateKey;
+    }
+    
+    public override string GetMultiStageId()
+    {
+        return this._multiStageId;
     }
 
     public override Profile GetEnv()

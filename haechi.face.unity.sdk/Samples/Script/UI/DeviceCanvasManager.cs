@@ -85,11 +85,20 @@ public class DeviceCanvasManager : MonoBehaviour
     private bool IsPortrait()
     {
         DeviceOrientation deviceOrientation = Input.deviceOrientation;
-        return DeviceOrientation.Portrait == deviceOrientation
+        bool isPortraitFromDevice  = DeviceOrientation.Portrait == deviceOrientation
                || Screen.orientation == ScreenOrientation.Portrait
                || Screen.orientation == ScreenOrientation.PortraitUpsideDown;
+        bool isPortraitFromEditor = Screen.height > Screen.width;
+        if (Application.isEditor)
+        {
+            return isPortraitFromEditor;
+        }
+        else
+        {
+            return isPortraitFromDevice;
+        }
     }
-    
+
     private DeviceScreenType GetCurrentScreenType()
     {
         return this.IsPortrait() ? DeviceScreenType.Portrait : DeviceScreenType.Landscape;

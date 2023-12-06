@@ -36,9 +36,22 @@ public class UISectionBoraPortal : MonoBehaviour
         this._onLoginSuccessEvent.OnEventRaised += this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised += this.Initialize;
         this._onNetworkSwitched.OnEventRaised += this.Initialize;
-        this._boraLoginButton.OnClickEvent += this.LoginBora;
-        this._boraDirecSocialLoginButton.OnClickEvent += this.LoginDirectSocialBora;
-        this._boraLoginWithIdtokenButton.OnClickEvent += this.LoginWithIdTokenBora;
+        
+        // Bora login feature is only possible in dev environment since it needs 
+        if (this._boraLoginButton != null)
+        {
+            this._boraLoginButton.OnClickEvent += this.LoginBora;
+        }
+
+        if (this._boraDirecSocialLoginButton != null)
+        {
+            this._boraDirecSocialLoginButton.OnClickEvent += this.LoginDirectSocialBora;
+        }
+
+        if (this._boraLoginWithIdtokenButton != null)
+        {
+            this._boraLoginWithIdtokenButton.OnClickEvent += this.LoginWithIdTokenBora;
+        }
     }
 
     private void OnDisable()
@@ -49,9 +62,22 @@ public class UISectionBoraPortal : MonoBehaviour
         this._onLoginSuccessEvent.OnEventRaised -= this.Initialize;
         this._onLogoutSuccessEvent.OnEventRaised -= this.Initialize;
         this._onNetworkSwitched.OnEventRaised -= this.Initialize;
-        this._boraLoginButton.OnClickEvent -= this.LoginBora;
-        this._boraDirecSocialLoginButton.OnClickEvent -= this.LoginDirectSocialBora;
-        this._boraLoginWithIdtokenButton.OnClickEvent -= this.LoginWithIdTokenBora;
+
+        // Bora login feature is only possible in dev environment since it needs 
+        if (this._boraLoginButton != null)
+        {
+            this._boraLoginButton.OnClickEvent -= this.LoginBora;
+        }
+
+        if (this._boraDirecSocialLoginButton != null)
+        {
+            this._boraDirecSocialLoginButton.OnClickEvent -= this.LoginDirectSocialBora;
+        }
+
+        if (this._boraLoginWithIdtokenButton != null)
+        {
+            this._boraLoginWithIdtokenButton.OnClickEvent -= this.LoginWithIdTokenBora;
+        }
     }
     
     private void Initialize(LoginData loginData)

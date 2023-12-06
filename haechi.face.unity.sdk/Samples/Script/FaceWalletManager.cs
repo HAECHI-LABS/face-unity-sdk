@@ -137,12 +137,20 @@ public class FaceWalletManager : MonoBehaviour
     
     private void Connect()
     {
+        FaceSettings.Parameters.InternalParameters? internalParameters = null;
+        if (!String.IsNullOrWhiteSpace(this._appState.GetMultiStageId()))
+        {
+            internalParameters = new FaceSettings.Parameters.InternalParameters{
+                IframeUrl = $"https://face-iframe-{this._appState.GetMultiStageId()}.facewallet-test.xyz/"
+            };
+        }
         this._face.Initialize(new FaceSettings.Parameters
         {
             ApiKey = this._appState.GetApiKey(),
             Environment = this._appState.GetEnv(),
             Network = this._appState.GetBlockchainNetwork(),
             Scheme = this._appState.GetScheme(),
+            Internal = internalParameters
         });
         this._connected.RaiseEvent();
     }
