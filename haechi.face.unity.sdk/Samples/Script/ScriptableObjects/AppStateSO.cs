@@ -11,9 +11,16 @@ public class AppStateSO : ReadOnlyAppState
     
     private const string SAMPLE_API_KEY =
         "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCS23ncDS7x8nmTuK1FFN0EfYo0vo6xhTBMBNWVbQsufv60X8hv3-TbAQ3JIyMEhLo-c-31oYrvrQ0G2e9j8yvJYEUnLuE-PaABo0y3V5m9g_qdTB5p9eEfqZlDrcUl1zUr4W7rJwFwkTlAFSKOqVCPnm8ozmcMyyrEHgl2AbehrQIDAQAB";
+
+    private const string PM_SAMPLE_API_KEY =
+        "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFhGcETETTZVrysoeadS_HGjY3p_jxFkZMR3aE2Sy-d7kjn_WJLYd5f3voEK9mbmLvglt3SGLw08xh_mVFD3rP8QoCNmjkyCbMIeszpCtudAAq1Ar37ZWCKQArWlhXB9EtTU9e3E4FBcBW9vqaPxiT8sk2MBFkCeinNSDHTdQ2uwIDAQAB";
+
     private const string SAMPLE_PRIVATE_KEY = 
         "MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJLbedwNLvHyeZO4rUUU3QR9ijS+jrGFMEwE1ZVtCy5+/rRfyG/f5NsBDckjIwSEuj5z7fWhiu+tDQbZ72PzK8lgRScu4T49oAGjTLdXmb2D+p1MHmn14R+pmUOtxSXXNSvhbusnAXCROUAVIo6pUI+ebyjOZwzLKsQeCXYBt6GtAgMBAAECgYAEfQa9bf24UVPb6vIIwXl70KZvtD9CN7LhL+ijN4D2+9SnCKJkoPAqrV6Rfixsz+2tSPfF4RkQ+DYEtpZ1dJIq+kNxqRjb7TEHcduYYQwgkJZe2LPd1LS5bnvLGSbGMHHy7+MYNm6M/ghdHoDU+tkYLNFT19BX7MKbBWQPpoH/gQJBAJllv/CZQBhofxLZO0xsM8xcxTo3MFQoos89+Kdym+a8i/WqD49IgIsiK3adn/GCtjSeKJhPlrd5iNUqTBywUk0CQQD1Fdv9q++RmpuhD6LQtGzeeoNzld7xRjWjHVwHvp7/6xeSCyO8sHKydUF/NmV+Jy8vFpJn6b1AvagtgqALanzhAkBaP1eeWLsx4QCp+S3+90W+PPI4HtILIWEv5jjNYws/w7vgC25eEPy3XqINhgzcjNdfu5EMkv6L8S/Eob7nvgCdAkALF4ArTNq8xjiA44pE08WRlA3a7091r+3BghSmLRRZFLSuYV6urXWjafca4MVbHj7ebLEXjtaH1Y2E8cJ4gctBAkBPXs2bRZpI5ULwyYknWaq77gfuappmShgiCv7TUKixt5KqZy8DUU13x/WTUCWjthF/lmgkVq+FvsnG49dF8TM7";
-    
+
+    private const string PM_SAMPLE_PRIVATE_KEY =
+        "MIICXAIBAAKBgQDFhGcETETTZVrysoeadS_HGjY3p_jxFkZMR3aE2Sy-d7kjn_WJLYd5f3voEK9mbmLvglt3SGLw08xh_mVFD3rP8QoCNmjkyCbMIeszpCtudAAq1Ar37ZWCKQArWlhXB9EtTU9e3E4FBcBW9vqaPxiT8sk2MBFkCeinNSDHTdQ2uwIDAQABAoGALd1K1pKnQLc-YTDXkCQ6De-mO1JD2iej9z545OxRGYFPelhAebQayzmxGfgV4qErVBZfCtnCL83enbqm5Vxs1ccJi7sbsT8WANf3r2Vs1Ddg-PExdlvPjEwgvItksGh8dcaKAlC2N8vav4psJFHKLM8zfXX5lKZd6FaMscHI_RECQQD_ZR4c6R1PT9Wpnt8SfIwKIkv_4Ez4Z2zA-NN0FxLLO4BxhhhIJwD7OfNyvcupaOg1iM4sCtxVgRBAYpJTDGwNAkEAxfwvaxiv1zDt0uTAArDXgl-ZA5CVidsl_5zhmojMPbbG4enDBGGMZoh8H-G4HIZHOGsoPCkShbJnI8KtLtDT5wJANnHE-J7Na8H2J4HBxjwc0nA7SWH0pqPNsFmbIk1k6URW_lx6wq7l66iP-G7zgrrlfbwbT5JFJEkuQLuCvAeS5QJBAJZWohc73sKUN_NtmlQwvuUT_JgVYUgWLiuEkFeNSzINqcYAgQLBpCBzwXVgLDMUz94KmLneIl99kg44lNM45b8CQEIxv-OnXq0u6tCdp_rhRxVH0ywlA3lXYsXQ8HxbA8dqRiSQKR8AIaOtG8_iCk4ymtYAcFhM9HjR1mtdBkXLflU=";
+
     [SerializeField] private ContractsSO _contracts;
     
     /**
@@ -164,12 +171,40 @@ public class AppStateSO : ReadOnlyAppState
 
     public override string GetApiKey()
     {
-        return string.IsNullOrEmpty(this._apiKey) ? SAMPLE_API_KEY : this._apiKey;
+        if (!string.IsNullOrEmpty(this._apiKey))
+        {
+            return this._apiKey;
+        }
+
+        return GetSampleApiKey();
+    }
+
+    public string GetSampleApiKey()
+    {
+        if (this.GetEnv() == Profile.ProdMainnet)
+        {
+            return PM_SAMPLE_API_KEY;
+        }
+        return SAMPLE_API_KEY;
     }
 
     public override string GetPrivateKey()
     {
-        return string.IsNullOrEmpty(this._privateKey) ? SAMPLE_PRIVATE_KEY : this._privateKey;
+        if (!string.IsNullOrEmpty(this._apiKey))
+        {
+            return this._apiKey;
+        }
+
+        return GetSamplePrivateKey();
+    }
+
+    public string GetSamplePrivateKey()
+    {
+        if (this.GetEnv() == Profile.ProdMainnet)
+        {
+            return PM_SAMPLE_PRIVATE_KEY;
+        }
+        return SAMPLE_PRIVATE_KEY;
     }
     
     public override string GetMultiStageId()
