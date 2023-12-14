@@ -61,12 +61,15 @@ public class UISectionDevConnectNetwork : MonoBehaviour
             b => this._blockchainDropdown.options.Add(new TMP_Dropdown.OptionData(b.ToString())));
         this._blockchainDropdown.captionText.text = this._blockchainDropdown.options[0].text;
         
-        this._apiKeyInputField.text = this._appState.GetApiKey();
+        this._apiKeyInputField.text = this._appState.GetSampleApiKey();
+        this._privateKeyInputField.text = this._appState.GetSamplePrivateKey();
     }
 
     private void OnEnvChanges(int dropdownIndex)
     {
         this._changeProfile.RaiseEvent(this._envDropdown.options[dropdownIndex].text);
+        this._apiKeyInputField.text = this._appState.GetSampleApiKey();
+        this._privateKeyInputField.text = this._appState.GetSamplePrivateKey();
     }
 
     private void OnBlockchainChanges(int dropdownIndex)
