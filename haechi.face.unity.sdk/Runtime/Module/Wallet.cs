@@ -149,12 +149,19 @@ namespace haechi.face.unity.sdk.Runtime.Module
             Blockchain originalBlockchain = FaceSettings.Instance.Blockchain();
             Blockchain switchedBlockchain = Blockchains.OfBlockchainNetwork(network);
             FaceRpcRequest<SwitchNetworkRequest> rpcRequest = new FaceRpcRequest<SwitchNetworkRequest>(originalBlockchain, FaceRpcMethod.face_switchNetwork, new SwitchNetworkRequest(switchedBlockchain.ToString()));
+
+            Debug.Log("Switching network... to " + network + " from " + originalBlockchain + " ...");
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
+            Debug.Log("Switched network to " + network + " from " + originalBlockchain + " ...");
             if (!response.CastResult<string>().Equals(switchedBlockchain.ToString()))
             {
+                Debug.Log("response is " + response);
+                Debug.Log("response is " + response.CastResult<string>());
+                Debug.Log("switched is " + switchedBlockchain.ToString());
                 throw new SwitchNetworkFailedException();
             }
             FaceSettings.Instance.SetNetwork(network);
+            Debug.Log("Set network to " + network + " ... " + FaceSettings.Instance.Network());
             return response;
         }
 

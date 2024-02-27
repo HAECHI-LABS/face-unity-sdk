@@ -145,6 +145,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             FaceRpcRequest<object> request = new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
+            Debug.Log("login response: " + response.ToString());
 
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
             FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;

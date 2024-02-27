@@ -19,6 +19,7 @@ using Nethereum.Contracts.Standards.ERC20.ContractDefinition;
 using Nethereum.Hex.HexTypes;
 using Nethereum.JsonRpc.Client;
 using Nethereum.JsonRpc.Client.RpcMessages;
+using Nethereum.Model;
 using Nethereum.Unity.Rpc;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -134,19 +135,36 @@ namespace haechi.face.unity.sdk.Runtime.Client
 
                 void OnCloseWebview(SafeWebviewController _, CloseWebviewArgs args)
                 {
+                    Debug.Log("In Callback Webview Closed " + args);
                     webviewClosedPromise.TrySetResult(args.Response);
                     this._provider._webview.OnCloseWebview -= OnCloseWebview;
                 }
 
                 this._provider._webview.OnCloseWebview += OnCloseWebview;
-                this._provider._webview.SendMessage(request, response => rpcResponsePromise.TrySetResult(response));
+                this._provider._webview.SendMessage(request, response =>
+                {
+                    Debug.Log("In Callback Received response from webview " + response);
+                    try
+                    {
+                        bool setResult = rpcResponsePromise.TrySetResult(response);
+                        Debug.Log("In Callback Set Result " + setResult);
+                        return setResult;
+                    }
+                    catch (System.Exception e)
+                    {
+                        Debug.Log("In Callback Exception " + e);
+                        throw e;
+                    }
+                });
                 
                 Task<FaceRpcResponse> doneTask = await Task.WhenAny(new List<Task<FaceRpcResponse>>
                 {
                     rpcResponsePromise.Task,
                     webviewClosedPromise.Task
                 });
+                Debug.Log("In Callback before waining Done Task " + doneTask);
                 RpcResponseMessage response = await doneTask;
+                Debug.Log("In Callback Done Task " + response);
                 return response;
             }
         }
