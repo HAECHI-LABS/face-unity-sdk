@@ -650,6 +650,8 @@ public class FaceWalletManager : MonoBehaviour
     
     private void _defaultExceptionHandler(Exception ex)
     {
+        Debug.LogError(ex.Message);
+        Debug.LogException(ex);
         this._exceptionOccurred.RaiseEvent(ex.Message);
     }
 
