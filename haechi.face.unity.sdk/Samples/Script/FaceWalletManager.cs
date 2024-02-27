@@ -652,4 +652,32 @@ public class FaceWalletManager : MonoBehaviour
     {
         this._exceptionOccurred.RaiseEvent(ex.Message);
     }
+
+    public class LoginResult
+    {
+        public string balance;
+        public string userId;
+        public string userAddress;
+        public string userVerificationToken;
+
+        public LoginResult(string balance, FaceLoginResponse response)
+        {
+            this.balance = balance;
+            this.userId = response.faceUserId;
+            this.userAddress = response.wallet.Address;
+            this.userVerificationToken = response.userVerificationToken;
+        }
+    }
+
+    public class TransactionResult
+    {
+        public string balance;
+        public string result;
+
+        public TransactionResult(string balance, string result)
+        {
+            this.balance = balance;
+            this.result = result;
+        }
+    }
 }
