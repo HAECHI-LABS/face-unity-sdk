@@ -143,6 +143,15 @@
         "com.unity.2d.aseprite": "1.1.6"
       }
     },
+    "com.unity.ide.cursor": {
+      "version": "https://github.com/boxqkrtm/com.unity.ide.cursor.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.9"
+      },
+      "hash": "5eab27e315296530f9c66ff7795273394a6464b6"
+    },
     "com.unity.ide.rider": {
       "version": "3.0.31",
       "depth": 0,
