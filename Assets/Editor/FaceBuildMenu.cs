@@ -45,4 +45,37 @@ public class FaceBuildMenu : MonoBehaviour
         Debug.Log("Build success " + buildAndroidAndroidAPK);
         EditorUtility.RevealInFinder(buildAndroidAndroidAPK);
     }
+
+    [MenuItem("FaceWallet/Build iOS")]
+    static void BuildIOS()
+    {
+        BuildAndRunIOSInner(false);
+    }
+
+    [MenuItem("FaceWallet/Build and Run iOS")]
+    static void BuildAndRunIOS()
+    {
+        BuildAndRunIOSInner(true);
+    }
+
+    static void BuildAndRunIOSInner(bool run)
+    {
+        // TroubleShot
+        // 1. Run "Assets/External Dependency Manager/iOS Resolver/Install CoacoaPods
+        BuildScript.CustomizeForFace(FaceDeployEnvironment.Stage);
+
+        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
+        buildPlayerOptions.options = BuildOptions.None;
+        buildPlayerOptions.target = BuildTarget.iOS;
+        if (run)
+        {
+            buildPlayerOptions.options |= BuildOptions.AutoRunPlayer;
+        }
+
+        var buildIOS = "build/IOS";
+        buildPlayerOptions.locationPathName = buildIOS;
+
+        BuildPipeline.BuildPlayer(buildPlayerOptions);
+        EditorUtility.RevealInFinder(buildIOS);
+    }
 }
