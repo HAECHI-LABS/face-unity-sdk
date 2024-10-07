@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using haechi.face.unity.sdk.Runtime.Type;
 using UnityEngine;
 
@@ -41,8 +42,8 @@ public class AppStateSO : ReadOnlyAppState
     [Tooltip("All blockchains that can be seen in the Connect page")]
     [SerializeField] private List<Blockchain> _blockchains;
     
-    [Tooltip("Current selected blockchain")] 
-    [SerializeField] private Blockchain _currentBlockchain;
+    [Tooltip("Current selected network")] 
+    [SerializeField] private BlockchainNetwork _currentNetwork;
 
     [SerializeField] private string _apiKey;
     [SerializeField] private string _privateKey;
@@ -55,7 +56,6 @@ public class AppStateSO : ReadOnlyAppState
 
     [Header("Listening on")] 
     [SerializeField] private StringEventChannelSO _onProfileChange;
-    [SerializeField] private StringEventChannelSO _onBlockchainChange;
     [SerializeField] private StringEventChannelSO _onApiKeyChange;
     [SerializeField] private StringEventChannelSO _onPrivateKeyChange;
     [SerializeField] private StringEventChannelSO _onMultiStageIdChange;
@@ -76,7 +76,6 @@ public class AppStateSO : ReadOnlyAppState
     {
         Debug.Log("OnEnable");
         this._onProfileChange.OnEventRaised += this.SetCurrentProfile;
-        this._onBlockchainChange.OnEventRaised += this.SetCurrentBlockchain;
         this._onApiKeyChange.OnEventRaised += this.SetCurrentApiKey;
         this._onPrivateKeyChange.OnEventRaised += this.SetCurrentPrivateKey;
         this._onMultiStageIdChange.OnEventRaised += this.SetCurrentMultiStageId;
@@ -91,7 +90,6 @@ public class AppStateSO : ReadOnlyAppState
     private void OnDisable()
     {
         this._onProfileChange.OnEventRaised -= this.SetCurrentProfile;
-        this._onBlockchainChange.OnEventRaised -= this.SetCurrentBlockchain;
         this._onApiKeyChange.OnEventRaised -= this.SetCurrentApiKey;
         this._onPrivateKeyChange.OnEventRaised -= this.SetCurrentPrivateKey;
         this._onMultiStageIdChange.OnEventRaised -= this.SetCurrentMultiStageId;
@@ -109,10 +107,9 @@ public class AppStateSO : ReadOnlyAppState
         this._profileUpdated.RaiseEvent();
     }
 
-    private void SetCurrentBlockchain(string blockchain)
+    public void SetCurrentNetwork(BlockchainNetwork network)
     {
-        this._currentBlockchain = Blockchains.ValueOf(blockchain);
-        this._blockchainUpdated.RaiseEvent();
+        this._currentNetwork = network;
     }
 
     private void SetCurrentApiKey(string value)
@@ -220,12 +217,12 @@ public class AppStateSO : ReadOnlyAppState
     
     public override Blockchain GetBlockchain()
     {
-        return this._currentBlockchain;
+        return BlockchainNetworks.Properties[this._currentNetwork].Blockchain;
     }
 
     public override BlockchainNetwork GetBlockchainNetwork()
     {
-        return BlockchainNetworks.GetNetwork(this._currentBlockchain, this._currentProfile);
+        return this._currentNetwork;
     }
 
     public override string GetScheme()

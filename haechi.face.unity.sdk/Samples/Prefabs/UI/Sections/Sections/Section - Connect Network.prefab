@@ -198,7 +198,6 @@ MonoBehaviour:
   _appState: {fileID: 11400000, guid: 4a78ec3eec3af4eef88d48276d7101b3, type: 2}
   _blockchainDropdown: {fileID: 4143877699697646035}
   _connectButton: {fileID: 5272876550459924592}
-  _changeBlockchain: {fileID: 11400000, guid: 211a2dc0a77074be7bbb1749a9b4e0fb, type: 2}
   _connect: {fileID: 11400000, guid: 826bf1e20101c4d85b5c3baed398f84f, type: 2}
   _switchNetwork: {fileID: 11400000, guid: 2958cd5861edd45fabe41e2762944269, type: 2}
   _onLogoutEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}

@@ -24,6 +24,10 @@ public class FaceWalletManager : MonoBehaviour
     private ActionQueue _actionQueue;
 
     [SerializeField] private ReadOnlyAppState _appState;
+    public AppStateSO appStateSO { 
+        get { return this._appState as AppStateSO; }
+        set { this._appState = value; }
+    }
     
     [Header("Listening on")]
     /** Connect & Login */

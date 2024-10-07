@@ -203,7 +203,6 @@ MonoBehaviour:
   _multiStageIdInputField: {fileID: 8988222448735028466}
   _connectButton: {fileID: 5272876550459924592}
   _changeProfile: {fileID: 11400000, guid: 0985badaa4749434d96e1512b77a927f, type: 2}
-  _changeBlockchain: {fileID: 11400000, guid: 211a2dc0a77074be7bbb1749a9b4e0fb, type: 2}
   _changeApiKey: {fileID: 11400000, guid: b7a612418ad00416b82369dfcf8db4b9, type: 2}
   _changePrivateKey: {fileID: 11400000, guid: 2454854534ea54a4092188f8c25951bf, type: 2}
   _changeMultiStageId: {fileID: 11400000, guid: 3e53cf0a30d6419bc980bb1a161feb86, type: 2}

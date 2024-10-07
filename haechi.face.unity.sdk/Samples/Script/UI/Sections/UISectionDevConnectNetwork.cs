@@ -1,4 +1,5 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Type;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,6 @@ public class UISectionDevConnectNetwork : MonoBehaviour
     
     [Header("Broadcast to")]
     [SerializeField] private StringEventChannelSO _changeProfile;
-    [SerializeField] private StringEventChannelSO _changeBlockchain;
     [SerializeField] private StringEventChannelSO _changeApiKey;
     [SerializeField] private StringEventChannelSO _changePrivateKey;
     [SerializeField] private StringEventChannelSO _changeMultiStageId;
@@ -57,8 +57,7 @@ public class UISectionDevConnectNetwork : MonoBehaviour
             e => this._envDropdown.options.Add(new TMP_Dropdown.OptionData(e)));
         this._envDropdown.captionText.text = this._envDropdown.options[0].text;
         
-        this._appState.GetAllBlockchains().ForEach(
-            b => this._blockchainDropdown.options.Add(new TMP_Dropdown.OptionData(b.ToString())));
+        BlockchainNetworks.GetAllNetworks().ForEach(n => this._blockchainDropdown.options.Add(new TMP_Dropdown.OptionData(n.ToString())));
         this._blockchainDropdown.captionText.text = this._blockchainDropdown.options[0].text;
         
         this._apiKeyInputField.text = this._appState.GetSampleApiKey();
@@ -74,7 +73,7 @@ public class UISectionDevConnectNetwork : MonoBehaviour
 
     private void OnBlockchainChanges(int dropdownIndex)
     {
-        this._changeBlockchain.RaiseEvent(this._blockchainDropdown.options[dropdownIndex].text);
+        this._appState.SetCurrentNetwork(BlockchainNetworks.ValueOf(this._blockchainDropdown.options[dropdownIndex].text));
     }
 
     private void OnApiKeyChanges(string value)

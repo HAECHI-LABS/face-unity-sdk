@@ -1,4 +1,6 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Type;
+using NBitcoin;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +14,6 @@ public class UISectionConnectNetwork : MonoBehaviour
     [SerializeField] private UIButton _connectButton;
     
     [Header("Broadcast to")]
-    [SerializeField] private StringEventChannelSO _changeBlockchain;
     [SerializeField] private VoidEventChannelSO _connect;
     [SerializeField] private VoidEventChannelSO _switchNetwork;
     
@@ -41,14 +42,14 @@ public class UISectionConnectNetwork : MonoBehaviour
     
     private void Initialize()
     {
-        this._appState.GetAllBlockchains().ForEach(
-            b => this._blockchainDropdown.options.Add(new TMP_Dropdown.OptionData(b.ToString())));
+        BlockchainNetworks.GetAllNetworks().ForEach(n => this._blockchainDropdown.options.Add(new TMP_Dropdown.OptionData(n.ToString())));
         this._blockchainDropdown.captionText.text = this._blockchainDropdown.options[0].text;
     }
 
     private void OnBlockchainChanges(int dropdownIndex)
     {
-        this._changeBlockchain.RaiseEvent(this._blockchainDropdown.options[dropdownIndex].text);
+        BlockchainNetwork blockchainNetwork = BlockchainNetworks.ValueOf(this._blockchainDropdown.options[dropdownIndex].text);
+        this._appState.SetCurrentNetwork(blockchainNetwork);
     }
 
     private void ConnectOrSwitchNetwork()
