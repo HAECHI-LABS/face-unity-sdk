@@ -175,8 +175,8 @@ namespace haechi.face.unity.sdk.Runtime.Client.WalletConnect
                 {
                     await this.Connect();
                 }
-                Debug.Log("Wallet Connect Error");
-                Debug.Log(e);
+                UnityEngine.Debug.LogError("Wallet Connect Error");
+                UnityEngine.Debug.LogError(e);
             }
         }
     }

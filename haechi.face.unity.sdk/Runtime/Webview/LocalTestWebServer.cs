@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Webview
 {
@@ -54,7 +55,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
             HttpListenerRequest httpRequest = httpContext.Request;
             HttpListenerResponse httpResponse = httpContext.Response;
-            UnityEngine.Debug.Log("HandleHttpRequest " + httpRequest.Url.LocalPath + " " + httpRequest.Url.Query);
+            DebugLogging.DebugLog("HandleHttpRequest " + httpRequest.Url.LocalPath + " " + httpRequest.Url.Query);
             if (httpRequest.Url.LocalPath == "/complete/")
             {
                 httpListener.BeginGetContext(this.HandleHttpRequest, httpListener);

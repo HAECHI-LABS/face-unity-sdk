@@ -29,7 +29,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                     KeyValuePair<string, string> response = (KeyValuePair<string, string>)argsNewItem;
                     if (!this._handlerDictionary.TryGetValue(response.Key, out Func<FaceRpcResponse, bool> callback))
                     {
-                        Debug.Log($"Cannot find handler by id: {response.Key}");
+                        DebugLogging.DebugLog($"Cannot find handler by id: {response.Key}");
                         return;
                     }
                     FaceRpcResponse rpcResponse = JsonConvert.DeserializeObject<FaceRpcResponse>(response.Value);
@@ -127,7 +127,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             {
                 Query = queryParams
             };
-            Debug.Log($"URL: {uriBuilder}");
+            DebugLogging.DebugLog($"URL: {uriBuilder}");
 
             // Launch browser
             LaunchUrl(uriBuilder.ToString(), this.gameObject.name);
@@ -169,9 +169,9 @@ namespace haechi.face.unity.sdk.Runtime.Webview
         private void _handleDeepLink(Uri uri)
         {
 #if !UNITY_WEBGL
-            Debug.Log($"URI Receive: {uri}");
+            DebugLogging.DebugLog($"URI Receive: {uri}");
             FaceRpcContext context = SafeWebviewProtocol.DecodeQueryParams(uri);
-            Debug.Log($"Data received from webview: {JsonConvert.SerializeObject(context)}");
+            DebugLogging.DebugLog($"Data received from webview: {JsonConvert.SerializeObject(context)}");
 
             if (context.WebviewRequest())
             {
@@ -188,7 +188,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             FaceRpcResponse response = context.Response;
             if (!this._handlerDictionary.TryGetValue(response.Id.ToString(), out Func<FaceRpcResponse, bool> callback))
             {
-                Debug.Log($"Cannot find handler by id: {response.Id}");
+                DebugLogging.DebugLog($"Cannot find handler by id: {response.Id}");
                 return;
             }
 

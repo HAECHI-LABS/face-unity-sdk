@@ -99,8 +99,8 @@ namespace haechi.face.unity.sdk.Runtime.Module
             }
             catch (System.Exception e)
             {
-                Debug.Log(e.Message);
-                Debug.Log(e.StackTrace);
+                Debug.LogError(e.Message);
+                Debug.LogError(e.StackTrace);
                 
                 /*
                  * TO-BE-FIXED:

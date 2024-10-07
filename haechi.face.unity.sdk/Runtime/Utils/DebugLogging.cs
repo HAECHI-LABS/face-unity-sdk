@@ -1,18 +1,22 @@
+using UnityEngine;
 
-public static class DebugLogging
+namespace haechi.face.unity.sdk.Runtime.Utils
 {
-    public enum LogLevel
+    public static class DebugLogging
     {
-        Debug,
-        Info,
-        Warning,
-        Error
-    }
+        public enum LogLevel
+        {
+            Debug,
+            Info,
+            Warning,
+            Error
+        }
 
-    public static LogLevel logLevel = LogLevel.Info;
+        public static LogLevel logLevel = LogLevel.Info;
 
-    public static void DebugLog(string message)
-    {
-        UnityEngine.Debug.Log(message);
+        public static void DebugLog(string message)
+        {
+            UnityEngine.Debug.Log(message);
+        }
     }
 }

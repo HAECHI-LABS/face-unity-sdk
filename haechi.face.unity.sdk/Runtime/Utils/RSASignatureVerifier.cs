@@ -19,7 +19,7 @@ namespace haechi.face.unity.sdk.Runtime.Utils
             }
             catch (System.Exception e)
             {
-                Debug.Log($"{e.Message}:\n{e.StackTrace}");
+                DebugLogging.DebugLog($"{e.Message}:\n{e.StackTrace}");
                 return false;
             }
         }
