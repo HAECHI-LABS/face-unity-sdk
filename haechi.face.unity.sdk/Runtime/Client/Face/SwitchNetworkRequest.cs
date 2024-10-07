@@ -13,7 +13,7 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
 
         public SwitchNetworkRequest(BlockchainNetwork network)
         {
-            this.Network = network.ToString();
+            this.Network = network.ToNetworkString();
         }
     }
 }
