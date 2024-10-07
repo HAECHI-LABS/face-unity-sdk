@@ -74,6 +74,7 @@ public class AppStateSO : ReadOnlyAppState
     
     private void OnEnable()
     {
+        Debug.Log("OnEnable");
         this._onProfileChange.OnEventRaised += this.SetCurrentProfile;
         this._onBlockchainChange.OnEventRaised += this.SetCurrentBlockchain;
         this._onApiKeyChange.OnEventRaised += this.SetCurrentApiKey;
