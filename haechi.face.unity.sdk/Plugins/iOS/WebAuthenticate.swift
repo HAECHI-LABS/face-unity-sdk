@@ -15,6 +15,7 @@ import UIKit
                 } else if let callbackURL = callbackURL, authError == nil {
                     self.unity?.sendMessageToGO(withName: objectName, functionName: "OnDeepLinkActivated", message: callbackURL.absoluteString)
                 } else {
+                    print("authError: \(authError)")
                     return
                 }
         }
