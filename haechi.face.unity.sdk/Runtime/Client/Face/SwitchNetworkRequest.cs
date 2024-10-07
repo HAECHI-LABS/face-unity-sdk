@@ -1,4 +1,5 @@
 using System;
+using haechi.face.unity.sdk.Runtime.Type;
 using Newtonsoft.Json;
 
 namespace haechi.face.unity.sdk.Runtime.Client.Face
@@ -7,12 +8,12 @@ namespace haechi.face.unity.sdk.Runtime.Client.Face
     [JsonObject]
     public class SwitchNetworkRequest
     {
-        [JsonProperty("blockchain", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
-        public string Blockchain { get; private set; }
+        [JsonProperty("network", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
+        public string Network { get; private set; }
 
-        public SwitchNetworkRequest(string blockchain)
+        public SwitchNetworkRequest(BlockchainNetwork network)
         {
-            this.Blockchain = blockchain;
+            this.Network = network.ToString();
         }
     }
 }
