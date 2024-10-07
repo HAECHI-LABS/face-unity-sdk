@@ -10,10 +10,10 @@ public class UIBlockchainCheckbox : MonoBehaviour
     [Header("UI References")] 
     [SerializeField] private Text _label;
     
-    private Blockchain _blockchain;
+    private BlockchainNetwork _blockchainNetwork;
     private Toggle _toggle;
 
-    public UnityAction<bool, Blockchain> OnValueChanged; 
+    public UnityAction<bool, BlockchainNetwork> OnValueChanged; 
 
     private void Awake()
     {
@@ -21,15 +21,15 @@ public class UIBlockchainCheckbox : MonoBehaviour
         this._toggle.onValueChanged.AddListener(this.ToggleChanged);
     }
 
-    public void Initialize(Blockchain blockchain)
+    public void Initialize(BlockchainNetwork blockchainNetwork)
     {
-        this._blockchain = blockchain;
+        this._blockchainNetwork = blockchainNetwork;
         this._toggle.isOn = false;
-        this._label.text = blockchain.ToString();
+        this._label.text = blockchainNetwork.ToString();
     }
     
     private void ToggleChanged(bool enabled)
     {
-        this.OnValueChanged?.Invoke(enabled, this._blockchain);
+        this.OnValueChanged?.Invoke(enabled, this._blockchainNetwork);
     }
 }

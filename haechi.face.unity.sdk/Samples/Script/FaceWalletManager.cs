@@ -339,15 +339,8 @@ public class FaceWalletManager : MonoBehaviour
         }, this._defaultExceptionHandler);
     }
 
-    public void OpenWalletHome(List<Blockchain> blockchains)
+    public void OpenWalletHome(List<BlockchainNetwork> blockchainNetworks)
     {
-        Profile profile = this._appState.GetEnv();
-            
-        List<BlockchainNetwork> blockchainNetworks = blockchains.ConvertAll(blockchain =>
-        {
-            return BlockchainNetworks.GetNetwork(blockchain, profile);
-        });
-            
         Task<FaceRpcResponse> responseTask = this._face.Wallet().OpenHome(OpenHomeOption.Of(blockchainNetworks));
             
         this._actionQueue.Enqueue(responseTask, response =>

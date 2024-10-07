@@ -22,7 +22,7 @@ public class UISectionWalletHome : MonoBehaviour
     [SerializeField] private VoidEventChannelSO _onLogoutSuccessEvent;
 
     private List<UIBlockchainCheckbox> _uiBlockchainCheckboxList = new List<UIBlockchainCheckbox>();
-    private List<Blockchain> _selectedBlockchain = new List<Blockchain>();
+    private List<BlockchainNetwork> _selectedBlockchainNetwork = new List<BlockchainNetwork>();
 
     private void OnEnable()
     {
@@ -63,7 +63,7 @@ public class UISectionWalletHome : MonoBehaviour
     {
         this.ClearAllUIBlockchainCheckbox();
         
-        this.InitializeUIBlockchainCheckbox(EnumUtils.AllEnumAsList<Blockchain>());
+        this.InitializeUIBlockchainCheckbox(BlockchainNetworks.GetAllNetworks());
     }
     
     private void MakeButtonsInteractable()
@@ -80,7 +80,7 @@ public class UISectionWalletHome : MonoBehaviour
 
     private void ClearAllUIBlockchainCheckbox()
     {
-        this._selectedBlockchain.Clear();
+        this._selectedBlockchainNetwork.Clear();
         this._uiBlockchainCheckboxList.ForEach(uiBlockchainCheckbox =>
         {
             uiBlockchainCheckbox.OnValueChanged -= this.OnToggleUpdated;
@@ -89,14 +89,14 @@ public class UISectionWalletHome : MonoBehaviour
         this._uiBlockchainCheckboxList.Clear();
     }
 
-    private void InitializeUIBlockchainCheckbox(List<Blockchain> blockchains)
+    private void InitializeUIBlockchainCheckbox(List<BlockchainNetwork> blockchainNetworks)
     {
-        blockchains.ForEach(blockchain =>
+        blockchainNetworks.ForEach(blockchainNetwork =>
         {
             UIBlockchainCheckbox uiBlockchainCheckbox = Instantiate(this._uiBlockchainCheckboxPrefab, this._checkboxContentTransform)
                 .GetComponent<UIBlockchainCheckbox>();
             
-            uiBlockchainCheckbox.Initialize(blockchain);
+            uiBlockchainCheckbox.Initialize(blockchainNetwork);
             
             uiBlockchainCheckbox.OnValueChanged += this.OnToggleUpdated;
             
@@ -104,22 +104,22 @@ public class UISectionWalletHome : MonoBehaviour
         });
     }
 
-    private void OnToggleUpdated(bool enabled, Blockchain blockchain)
+    private void OnToggleUpdated(bool enabled, BlockchainNetwork blockchainNetwork)
     {
-        if (enabled && !this._selectedBlockchain.Contains(blockchain))
+        if (enabled && !this._selectedBlockchainNetwork.Contains(blockchainNetwork))
         {
-            this._selectedBlockchain.Add(blockchain);
+            this._selectedBlockchainNetwork.Add(blockchainNetwork);
             return;
         }
         
         // condition: enabled = false
         
-        if (!this._selectedBlockchain.Contains(blockchain))
+        if (!this._selectedBlockchainNetwork.Contains(blockchainNetwork))
         {
             return;
         }
         
-        this._selectedBlockchain.Remove(blockchain);
+        this._selectedBlockchainNetwork.Remove(blockchainNetwork);
     }
     
     private void OnOpenAllBlockchainWalletHome()
@@ -129,6 +129,6 @@ public class UISectionWalletHome : MonoBehaviour
     
     private void OnOpenSelectedBlockchainWalletHome()
     {
-        FaceWalletManager.Instance.OpenWalletHome(this._selectedBlockchain);
+        FaceWalletManager.Instance.OpenWalletHome(this._selectedBlockchainNetwork);
     }
 }

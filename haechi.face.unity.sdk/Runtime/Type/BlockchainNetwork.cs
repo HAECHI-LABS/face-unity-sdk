@@ -108,5 +108,10 @@ namespace haechi.face.unity.sdk.Runtime.Type
         {
             return ValueOf(network).GetChainId();
         }
+
+        internal static List<BlockchainNetwork> GetAllNetworks()
+        {
+            return EnumUtils.AllEnumAsList<BlockchainNetwork>();
+        }
     }
 }
