@@ -46,7 +46,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
             : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method), 
                 _parameterize(parameterList))
         {
-            this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
+            this.BlockchainNetwork = Enum.GetName(typeof(BlockchainNetwork), blockchain);
 #if UNITY_WEBGL
             this.From = "FACE_SDK";
 #else
@@ -58,7 +58,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         public FaceRpcRequest(Blockchain blockchain, string method, params T[] parameterList) 
             : base(_generateId(), method, _parameterize(parameterList))
         {
-            this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
+            this.BlockchainNetwork = Enum.GetName(typeof(BlockchainNetwork), blockchain);
 #if UNITY_WEBGL
             this.From = "FACE_SDK";
 #else
@@ -70,7 +70,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         public FaceRpcRequest(Blockchain blockchain, RpcRequestMessage message) 
             : base(_generateId(), message.Method, _parameterize(message.RawParameters))
         {
-            this.Blockchain = Enum.GetName(typeof(Blockchain), blockchain);
+            this.BlockchainNetwork = Enum.GetName(typeof(Blockchain), blockchain);
         }
 
         [JsonProperty("from", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
@@ -79,7 +79,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
         [JsonProperty("to", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]
         public string To { get; private set; }
         
-        [JsonProperty("blockchain", NullValueHandling = NullValueHandling.Ignore)]
-        public string Blockchain { get; private set; }
+        [JsonProperty("blockchainNetwork", NullValueHandling = NullValueHandling.Ignore)]
+        public string BlockchainNetwork { get; private set; }
     }
 }
