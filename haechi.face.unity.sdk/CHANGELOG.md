@@ -1,3 +1,8 @@
+<a name="1.5.2"></a>
+## Release: [1.5.2](https://github.com/HAECHI-LABS/core/releases/tag/1.5.2)
+### Features
+- Add DM2VERSE support
+- Use testnet and mainnet in Prod mainnet environment
 
 <a name="1.3.16"></a>
 ## Release: [1.3.16](https://github.com/HAECHI-LABS/core/releases/tag/1.3.16)
