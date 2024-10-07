@@ -54,6 +54,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
 
             HttpListenerRequest httpRequest = httpContext.Request;
             HttpListenerResponse httpResponse = httpContext.Response;
+            UnityEngine.Debug.Log("HandleHttpRequest " + httpRequest.Url.LocalPath + " " + httpRequest.Url.Query);
             if (httpRequest.Url.LocalPath == "/complete/")
             {
                 httpListener.BeginGetContext(this.HandleHttpRequest, httpListener);
