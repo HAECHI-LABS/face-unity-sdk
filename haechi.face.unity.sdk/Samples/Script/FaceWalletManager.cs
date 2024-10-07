@@ -35,10 +35,6 @@ public class FaceWalletManager : MonoBehaviour
     [SerializeField] private VoidEventChannelSO _onLogout;
     [SerializeField] private VoidEventChannelSO _onSwitchNetwork;
     
-    /** Wallet Home */
-    [SerializeField] private VoidEventChannelSO _onOpenAllBlockchainWalletHome;
-    [SerializeField] private BlockchainsEventChannelSO _onOpenSelectedBlockchainWalletHome;
-
     /** FT */
     [SerializeField] private FTTransactionDataChannelSO _onSendPlatformCoin;
     [SerializeField] private FTTransactionDataChannelSO _onSendERC20;
@@ -75,10 +71,20 @@ public class FaceWalletManager : MonoBehaviour
     
     [SerializeField] private StringEventChannelSO _updateERC20Balance;
 
+    public static FaceWalletManager Instance { get; private set; }
+
     private void Awake()
     {
         this._face = this.GetComponent<Face>();
         this._actionQueue = this.GetComponent<ActionQueue>();
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("FaceWalletManager instance already exists!");
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
     private void OnEnable()
@@ -90,8 +96,6 @@ public class FaceWalletManager : MonoBehaviour
         this._onGetBalance.OnEventRaised += this.GetBalance;
         this._onLogout.OnEventRaised += this.Logout;
         this._onSwitchNetwork.OnEventRaised += this.SwitchNetwork;
-        this._onOpenAllBlockchainWalletHome.OnEventRaised += this.OpenWalletHome;
-        this._onOpenSelectedBlockchainWalletHome.OnEventRaised += this.OpenWalletHome;
         this._onSendPlatformCoin.OnEventRaised += this.SendPlatformCoin;
         this._onSendERC20.OnEventRaised += this.SendERC20;
         this._onGetBalanceERC20.OnEventRaised += this.GetERC20Balance;
@@ -124,8 +128,6 @@ public class FaceWalletManager : MonoBehaviour
         this._onGetBalance.OnEventRaised -= this.GetBalance;
         this._onLogout.OnEventRaised -= this.Logout;
         this._onSwitchNetwork.OnEventRaised -= this.SwitchNetwork;
-        this._onOpenAllBlockchainWalletHome.OnEventRaised -= this.OpenWalletHome;
-        this._onOpenSelectedBlockchainWalletHome.OnEventRaised -= this.OpenWalletHome;
         this._onSendPlatformCoin.OnEventRaised -= this.SendPlatformCoin;
         this._onSendERC20.OnEventRaised -= this.SendERC20;
         this._onGetBalanceERC20.OnEventRaised -= this.GetERC20Balance;
@@ -326,7 +328,7 @@ public class FaceWalletManager : MonoBehaviour
         }, this._defaultExceptionHandler);
     }
     
-    private void OpenWalletHome()
+    public void OpenWalletHome()
     {
         Task<FaceRpcResponse> responseTask = this._face.Wallet().OpenHome();
             
@@ -337,7 +339,7 @@ public class FaceWalletManager : MonoBehaviour
         }, this._defaultExceptionHandler);
     }
 
-    private void OpenWalletHome(List<Blockchain> blockchains)
+    public void OpenWalletHome(List<Blockchain> blockchains)
     {
         Profile profile = this._appState.GetEnv();
             

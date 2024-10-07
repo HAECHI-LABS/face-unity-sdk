@@ -79,8 +79,6 @@ MonoBehaviour:
   _onGetBalance: {fileID: 11400000, guid: d0c64531d5d874699974298f3c8c6333, type: 2}
   _onLogout: {fileID: 11400000, guid: b904ba7da383d47318caea4dd296d482, type: 2}
   _onSwitchNetwork: {fileID: 11400000, guid: 2958cd5861edd45fabe41e2762944269, type: 2}
-  _onOpenAllBlockchainWalletHome: {fileID: 11400000, guid: 077f6529e13f6422ab8c2b66bb8bd972, type: 2}
-  _onOpenSelectedBlockchainWalletHome: {fileID: 11400000, guid: cae47eff6c75549f38b6e90c8362ebad, type: 2}
   _onSendPlatformCoin: {fileID: 11400000, guid: 109d2f0744852410995910c0d6e87782, type: 2}
   _onSendERC20: {fileID: 11400000, guid: caf0bab00951649ec9b8ef3c35b45bba, type: 2}
   _onGetBalanceERC20: {fileID: 11400000, guid: dc66f4356c3244d6fa38bd92797b43b7, type: 2}
@@ -90,7 +88,6 @@ MonoBehaviour:
   _onCheckIsConnectedBora: {fileID: 11400000, guid: f116ad2254f9944149b402321fb59ffc, type: 2}
   _onBoraLogin: {fileID: 11400000, guid: 28a2d540a275676539e9fdbbd4ad26c4, type: 2}
   _onBoraDirectSocialLogin: {fileID: 11400000, guid: d4c374124c6247ae7862de6de82eabe6, type: 2}
-  _onBoraLoginWithIdtoken: {fileID: 11400000, guid: eb08a68119e44c68f9ce1cb8216d5c1d, type: 2}
   _onSignMessage: {fileID: 11400000, guid: 008cc03b50da941848c94b69995350f7, type: 2}
   _onWalletConnect: {fileID: 11400000, guid: 07a610d8601a845ae9a4c5694d09f3e6, type: 2}
   _connected: {fileID: 11400000, guid: 08131f71d7e144975a1b797ca47a9c38, type: 2}

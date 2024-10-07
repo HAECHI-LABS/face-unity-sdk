@@ -310,8 +310,6 @@ MonoBehaviour:
   _onPageLoaded: {fileID: 11400000, guid: 0d0df9b2f32504425a1db630aa52100b, type: 2}
   _onLoginSuccessEvent: {fileID: 11400000, guid: e32dd4249bde54ad2bb959f352c61c8e, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 10cbde83a4f2b4cb182add5690db5406, type: 2}
-  _openAllBlockchainWalletHome: {fileID: 11400000, guid: 077f6529e13f6422ab8c2b66bb8bd972, type: 2}
-  _openSelectedBlockchainWalletHome: {fileID: 11400000, guid: cae47eff6c75549f38b6e90c8362ebad, type: 2}
 --- !u!1 &4032054868572122728
 GameObject:
   m_ObjectHideFlags: 0

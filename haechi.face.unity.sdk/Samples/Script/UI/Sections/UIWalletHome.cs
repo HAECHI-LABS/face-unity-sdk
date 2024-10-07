@@ -16,10 +16,6 @@ public class UIWalletHome : MonoBehaviour
     [SerializeField] private Button _openWalletHomeAllBlockchainButton;
     [SerializeField] private Button _openWalletHomeSelectedBlockchainButton;
 
-    [Header("Broadcasting to")] 
-    [SerializeField] private VoidEventChannelSO _openAllBlockchainWalletHome;
-    [SerializeField] private BlockchainsEventChannelSO _openSelectedBlockchainWalletHome;
-
     [Header("Listening on")] 
     [SerializeField] private VoidEventChannelSO _onPageLoaded;
     [SerializeField] private VoidEventChannelSO _onLoginSuccessEvent;
@@ -127,11 +123,11 @@ public class UIWalletHome : MonoBehaviour
     
     private void OnOpenAllBlockchainWalletHome()
     {
-        this._openAllBlockchainWalletHome.RaiseEvent();
+        FaceWalletManager.Instance.OpenWalletHome();
     }
     
     private void OnOpenSelectedBlockchainWalletHome()
     {
-        this._openSelectedBlockchainWalletHome.RaiseEvent(this._selectedBlockchain);
+        FaceWalletManager.Instance.OpenWalletHome(this._selectedBlockchain);
     }
 }

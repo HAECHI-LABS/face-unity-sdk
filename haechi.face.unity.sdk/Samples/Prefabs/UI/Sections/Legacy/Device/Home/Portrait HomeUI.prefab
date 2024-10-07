@@ -435,12 +435,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28074bb4debe4947b47281cc00c8a627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _appState: {fileID: 0}
   _checkboxContentTransform: {fileID: 4807601628214401228}
   _uiBlockchainCheckboxPrefab: {fileID: 1578453009838683647, guid: 9473e05671aaf42ccb96f1436b6bb51c, type: 3}
   _openWalletHomeAllBlockchainButton: {fileID: 7554903399213470625}
   _openWalletHomeSelectedBlockchainButton: {fileID: 8362733736145607773}
-  _openAllBlockchainWalletHome: {fileID: 11400000, guid: 077f6529e13f6422ab8c2b66bb8bd972, type: 2}
-  _openSelectedBlockchainWalletHome: {fileID: 11400000, guid: cae47eff6c75549f38b6e90c8362ebad, type: 2}
+  _onPageLoaded: {fileID: 0}
   _onLoginSuccessEvent: {fileID: 11400000, guid: aeac97b2c785340b39b1001ed8a89ebf, type: 2}
   _onLogoutSuccessEvent: {fileID: 11400000, guid: 877b80a03e8814866b13a622c79c3c25, type: 2}
 --- !u!114 &8606247735114765347
