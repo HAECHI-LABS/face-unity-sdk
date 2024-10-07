@@ -20,9 +20,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private readonly Wallet _wallet;
         private readonly WalletConnectClient _walletConnectClient;
         
-        // Later, will add Aptos, Near, Solana in this array
-        private readonly Blockchain[] unsupportedBlockchains = new Blockchain[] { };
-        
         private static Regex WC_URI_V2_REGEX = new Regex(@"wc:([^@]+)@2\?relay-protocol=([^&])+&symKey=(\w+)");
         
         public WalletConnect(FaceRpcProvider provider, Wallet wallet)
@@ -77,10 +74,6 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         private async Task<DappMetadata> _connectDappWithWalletConnect(string address, string dappName, string dappUrl, bool invalid = false)
         {
-            if (unsupportedBlockchains.Contains(FaceSettings.Instance.Blockchain()))
-            {
-                throw new NotSupportedException();
-            }
             FaceRpcResponse response = await this._openWalletConnect(dappName, dappUrl, invalid);
 #if !UNITY_WEBGL
             string encodedWcUri = response.Result.Value<string>("uri");
