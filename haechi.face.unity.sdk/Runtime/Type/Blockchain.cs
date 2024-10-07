@@ -5,6 +5,7 @@ using face_unity.haechi.face.unity.sdk.Runtime.Utils;
 
 namespace haechi.face.unity.sdk.Runtime.Type
 {
+    [System.Obsolete("This enum is deprecated. you should use BlockchainNetwork instead.")]
     public enum Blockchain
     {
         ETHEREUM,
@@ -14,6 +15,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
         MEVERSE,
         DEFI_VERSE,
         BORA,
+        DM2VERSE,
     }
 
     public static class Blockchains
@@ -43,6 +45,9 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 case BlockchainNetwork.BORA:
                 case BlockchainNetwork.BORA_TESTNET:
                     return Blockchain.BORA;
+                case BlockchainNetwork.DM2VERSE:
+                case BlockchainNetwork.DM2VERSE_TESTNET:
+                    return Blockchain.DM2VERSE;
                 default:
                     throw new InvalidEnumArgumentException();
             }
@@ -78,11 +83,13 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 case Blockchain.MEVERSE:
                 case Blockchain.DEFI_VERSE:
                 case Blockchain.BORA:
+                case Blockchain.DM2VERSE:
                 default:
                     return 18;
             }
         }
 
+        [System.Obsolete("This method is deprecated. you should not rely on Blockchain type")]
         public static Dictionary<Blockchain, Dictionary<Profile, BlockchainNetwork>> Map =
             new Dictionary<Blockchain, Dictionary<Profile, BlockchainNetwork>>
             {
@@ -161,6 +168,17 @@ namespace haechi.face.unity.sdk.Runtime.Type
                         { Profile.StageMainnet, BlockchainNetwork.BORA },
                         { Profile.ProdTest, BlockchainNetwork.BORA_TESTNET },
                         { Profile.ProdMainnet, BlockchainNetwork.BORA }
+                    }
+                },
+                {
+                    Blockchain.DM2VERSE, new Dictionary<Profile, BlockchainNetwork>
+                    {
+                        { Profile.Local, BlockchainNetwork.DM2VERSE_TESTNET },
+                        { Profile.Dev, BlockchainNetwork.DM2VERSE_TESTNET },
+                        { Profile.StageTest, BlockchainNetwork.DM2VERSE_TESTNET },
+                        { Profile.StageMainnet, BlockchainNetwork.DM2VERSE },
+                        { Profile.ProdTest, BlockchainNetwork.DM2VERSE_TESTNET },
+                        { Profile.ProdMainnet, BlockchainNetwork.DM2VERSE }
                     }
                 }
             };

@@ -20,7 +20,9 @@ namespace haechi.face.unity.sdk.Runtime.Type
         DEFI_VERSE,
         DEFI_VERSE_TESTNET,
         BORA,
-        BORA_TESTNET
+        BORA_TESTNET,
+        DM2VERSE,
+        DM2VERSE_TESTNET,
     }
 
     public static class EnumExtensions {
@@ -69,6 +71,8 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 // BORA
                 { BlockchainNetwork.BORA, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 77001, Blockchain = Blockchain.BORA }},
                 { BlockchainNetwork.BORA_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 99001, Blockchain = Blockchain.BORA }},
+                { BlockchainNetwork.DM2VERSE, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 68770, Blockchain = Blockchain.DM2VERSE }},
+                { BlockchainNetwork.DM2VERSE_TESTNET, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 68775, Blockchain = Blockchain.DM2VERSE }},
             };
 
         public static BlockchainNetwork ValueOf(string network)
