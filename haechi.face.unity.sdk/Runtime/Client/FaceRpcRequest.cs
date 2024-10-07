@@ -67,10 +67,10 @@ namespace haechi.face.unity.sdk.Runtime.Client
             this.To = "FACE_IFRAME";
         }  
         
-        public FaceRpcRequest(Blockchain blockchain, RpcRequestMessage message) 
+        public FaceRpcRequest(BlockchainNetwork blockchainNetwork, RpcRequestMessage message) 
             : base(_generateId(), message.Method, _parameterize(message.RawParameters))
         {
-            this.BlockchainNetwork = Enum.GetName(typeof(Blockchain), blockchain);
+            this.BlockchainNetwork = Enum.GetName(typeof(BlockchainNetwork), blockchainNetwork);
         }
 
         [JsonProperty("from", Required = Required.Always, NullValueHandling = NullValueHandling.Ignore)]

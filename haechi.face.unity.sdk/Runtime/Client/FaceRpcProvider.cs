@@ -166,7 +166,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 if (requestMessage.GetType() != typeof(FaceRpcRequest<>))
                 {
                     requestMessage =
-                        new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), request);
+                        new FaceRpcRequest<object>(FaceSettings.Instance.Network(), request);
                 }
             
                 TaskCompletionSource<RpcResponseMessage> promise = new TaskCompletionSource<RpcResponseMessage>();
