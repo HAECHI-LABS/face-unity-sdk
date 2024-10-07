@@ -109,6 +109,10 @@ public class FaceWalletManager : MonoBehaviour
     {
         Application.targetFrameRate = 60;
         this._appState.Initialize();
+        if (this._appState.GetEnv() == Profile.StageTest)
+        {
+            DebugLogging.logLevel = DebugLogging.LogLevel.Debug;
+        }
     }
 
     private void OnDisable()
