@@ -117,7 +117,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
                 Request = message,
                 ApiKey = FaceSettings.Instance.ApiKey(),
                 Env = FaceSettings.Instance.Environment(),
-                Blockchain = FaceSettings.Instance.Blockchain(),
+                Network = FaceSettings.Instance.Network(),
                 RedirectUrl = redirectUri,
                 Hostname = this._hostname(),
                 Version = SdkInfo.UNITY_SDK_VERSION,

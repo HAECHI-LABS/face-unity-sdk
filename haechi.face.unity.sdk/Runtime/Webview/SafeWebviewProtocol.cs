@@ -28,7 +28,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             return $"request={encodedRequest}&" +
                    $"api_key={parameters.ApiKey}&" +
                    $"env={parameters.Env}&" +
-                   $"blockchain={parameters.Blockchain}&" +
+                   $"network={parameters.Network}&" +
                    $"hostname={parameters.Hostname}&" +
                    (!string.IsNullOrEmpty(parameters.RedirectUrl) ? $"redirectUrl={parameters.RedirectUrl}&" : "") +
                    $"webview_version={Face.WEBVIEW_VERSION}&" +
@@ -77,7 +77,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             public RpcRequestMessage Request;
             public string ApiKey;
             public Profile Env;
-            public Blockchain Blockchain;
+            public BlockchainNetwork Network;
             public string Hostname;
             [CanBeNull] public string RedirectUrl;
             [CanBeNull] public string Version;
