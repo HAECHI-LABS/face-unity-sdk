@@ -115,24 +115,12 @@ namespace haechi.face.unity.sdk.Runtime.Module
             
             if (option == null)
             {
-                option = OpenHomeOption.Of(EnumUtils.AllEnumAsList<BlockchainNetwork>()
-                    .FindAll(n => n.MatchWithProfile(currentEnv)));
+                option = OpenHomeOption.Of(BlockchainNetworks.GetAllNetworks());
             }
             
             if (option.networks.Count == 0)
             {
                 throw new InvalidOpenHomeArguments("The 'networks' should select at least one network.");
-            }
-            
-            string currentInitializedNetwork = currentEnv.IsMainNet() ? "Mainnet" : "Testnet";
-            foreach (string networkStr in option.networks)
-            {
-                BlockchainNetwork blockchainNetwork = BlockchainNetworks.ValueOf(networkStr);
-                if (!blockchainNetwork.MatchWithProfile(currentEnv))
-                {
-                    throw new InvalidOpenHomeArguments($"You initialized the Face SDK with {currentInitializedNetwork}." +
-                                                       $"Please open the wallet home in the same environment as the initialized network.");
-                }
             }
 
             FaceRpcRequest<OpenHomeOption> request = new FaceRpcRequest<OpenHomeOption>(FaceSettings.Instance.Network(), FaceRpcMethod.face_openHome, option);

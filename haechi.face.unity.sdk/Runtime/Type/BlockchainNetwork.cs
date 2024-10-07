@@ -96,11 +96,6 @@ namespace haechi.face.unity.sdk.Runtime.Type
             return network;
         }
 
-        public static bool MatchWithProfile(this BlockchainNetwork blockchainNetwork, Profile profile)
-        {
-            return Properties[blockchainNetwork].IsTestnet == !profile.IsMainNet();
-        }
-
         public static string String(this BlockchainNetwork network)
         {
             return network.ToNetworkString();
