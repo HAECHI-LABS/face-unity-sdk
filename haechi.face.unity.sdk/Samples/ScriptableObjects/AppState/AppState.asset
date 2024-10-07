@@ -26,10 +26,10 @@ MonoBehaviour:
   - StageMainnet
   - ProdTest
   - ProdMainnet
-  _currentProfile: 5
+  _currentProfile: 2
   _blockchains: 000000000100000002000000030000000400000005000000
   _currentBlockchain: 0
-  _apiKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFhGcETETTZVrysoeadS_HGjY3p_jxFkZMR3aE2Sy-d7kjn_WJLYd5f3voEK9mbmLvglt3SGLw08xh_mVFD3rP8QoCNmjkyCbMIeszpCtudAAq1Ar37ZWCKQArWlhXB9EtTU9e3E4FBcBW9vqaPxiT8sk2MBFkCeinNSDHTdQ2uwIDAQAB
+  _apiKey: 
   _privateKey: 
   _multiStageId: 
   _erc20Balance: 
