@@ -26,7 +26,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 case BlockchainNetwork.SEPOLIA:
                     return Blockchain.ETHEREUM;
                 case BlockchainNetwork.POLYGON:
-                case BlockchainNetwork.MUMBAI:
+                case BlockchainNetwork.AMOY:
                     return Blockchain.POLYGON;
                 case BlockchainNetwork.BNB_SMART_CHAIN:
                 case BlockchainNetwork.BNB_SMART_CHAIN_TESTNET:
@@ -122,11 +122,11 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 {
                     Blockchain.POLYGON, new Dictionary<Profile, BlockchainNetwork>
                     {
-                        { Profile.Local, BlockchainNetwork.MUMBAI },
-                        { Profile.Dev, BlockchainNetwork.MUMBAI },
-                        { Profile.StageTest, BlockchainNetwork.MUMBAI },
+                        { Profile.Local, BlockchainNetwork.AMOY },
+                        { Profile.Dev, BlockchainNetwork.AMOY },
+                        { Profile.StageTest, BlockchainNetwork.AMOY },
                         { Profile.StageMainnet, BlockchainNetwork.POLYGON },
-                        { Profile.ProdTest, BlockchainNetwork.MUMBAI },
+                        { Profile.ProdTest, BlockchainNetwork.AMOY },
                         { Profile.ProdMainnet, BlockchainNetwork.POLYGON }
                     }
                 },

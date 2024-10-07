@@ -10,7 +10,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
         ETHEREUM,
         SEPOLIA,
         POLYGON,
-        MUMBAI,
+        AMOY,
         BNB_SMART_CHAIN,
         BNB_SMART_CHAIN_TESTNET,
         KLAYTN,
@@ -41,7 +41,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
                 
                 // Polygon
                 { BlockchainNetwork.POLYGON, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 137, Blockchain = Blockchain.POLYGON }},
-                { BlockchainNetwork.MUMBAI, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 80001, Blockchain = Blockchain.POLYGON }},
+                { BlockchainNetwork.AMOY, new BlockchainNetworkProperty() { IsTestnet = true, ChainId = 80002, Blockchain = Blockchain.POLYGON }},
                 
                 // BSC
                 { BlockchainNetwork.BNB_SMART_CHAIN, new BlockchainNetworkProperty() { IsTestnet = false, ChainId = 56, Blockchain = Blockchain.BNB_SMART_CHAIN }},
