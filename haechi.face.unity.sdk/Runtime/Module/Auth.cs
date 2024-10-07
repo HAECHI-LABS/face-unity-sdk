@@ -146,14 +146,20 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcRequest<object> request = new FaceRpcRequest<object>(FaceSettings.Instance.Network(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
 
-            FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
-            FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
-            
-            // TODO: Temporally disable verification
-            // if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
-            // {
-            //     throw new AddressVerificationFailedException();
-            // }
+            FaceLoginResponse faceLoginResponse = null;
+            try {
+                faceLoginResponse = response.CastResult<FaceLoginResponse>();
+                FaceLoginResponse.Wallet wallet = faceLoginResponse.wallet;
+                
+                // TODO: Temporally disable verification
+                // if (!RSASignatureVerifier.Verify(wallet.Address, wallet.SignedAddress, FaceSettings.Instance.ApiKey()))
+                // {
+                //     throw new AddressVerificationFailedException();
+                // }
+            } catch (System.Exception e) {
+                DebugLogging.DebugError(e);
+                throw e;
+            }
 
             this.CurrentUser = faceLoginResponse;
             return this.CurrentUser;
