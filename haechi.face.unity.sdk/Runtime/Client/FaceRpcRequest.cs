@@ -42,11 +42,11 @@ namespace haechi.face.unity.sdk.Runtime.Client
             return result;
         }
 
-        public FaceRpcRequest(Blockchain blockchain, FaceRpcMethod method, params T[] parameterList) 
+        public FaceRpcRequest(BlockchainNetwork blockchainNetwork, FaceRpcMethod method, params T[] parameterList) 
             : base(_generateId(), Enum.GetName(typeof(FaceRpcMethod), method), 
                 _parameterize(parameterList))
         {
-            this.BlockchainNetwork = Enum.GetName(typeof(BlockchainNetwork), blockchain);
+            this.BlockchainNetwork = Enum.GetName(typeof(BlockchainNetwork), blockchainNetwork);
 #if UNITY_WEBGL
             this.From = "FACE_SDK";
 #else

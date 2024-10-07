@@ -31,12 +31,11 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// </returns>
         public async Task<FaceRpcResponse> Connect(BoraPortalConnectRequest request)
         {
-            Blockchain blockchain = FaceSettings.Instance.Blockchain();
-            if (!Blockchain.BORA.Equals(blockchain))
+            if (!Blockchain.BORA.Equals(FaceSettings.Instance.Blockchain()))
             {
                 throw new BoraConnectInvalidBlockchainException();
             }
-            FaceRpcRequest<BoraPortalConnectRequest> rpcRequest = new FaceRpcRequest<BoraPortalConnectRequest>(blockchain, FaceRpcMethod.bora_connect, request);
+            FaceRpcRequest<BoraPortalConnectRequest> rpcRequest = new FaceRpcRequest<BoraPortalConnectRequest>(FaceSettings.Instance.Network(), FaceRpcMethod.bora_connect, request);
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         

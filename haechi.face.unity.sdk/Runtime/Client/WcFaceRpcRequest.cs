@@ -10,8 +10,8 @@ namespace haechi.face.unity.sdk.Runtime.Client
     public class WcFaceRpcRequest<T> : FaceRpcRequest<T>
     {
 
-        public WcFaceRpcRequest(Blockchain blockchain, FaceRpcMethod method, WcFaceMetadata metadata, params T[] parameterList) :
-            base(blockchain, method, parameterList)
+        public WcFaceRpcRequest(BlockchainNetwork blockchainNetwork, FaceRpcMethod method, WcFaceMetadata metadata, params T[] parameterList) :
+            base(blockchainNetwork, method, parameterList)
         {
             this.Metadata = metadata;
         }

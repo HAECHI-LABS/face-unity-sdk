@@ -199,7 +199,7 @@ namespace haechi.face.unity.sdk.Runtime.Client
                 }
                 RawTransaction modifiedTransaction = await this._modifyTransactionValue(this._rawTransactionFromParams(request));
                 FaceRpcRequest<RawTransaction> newRequest =
-                    new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, modifiedTransaction);
+                    new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Network(), FaceRpcMethod.eth_estimateGas, modifiedTransaction);
                 return await base.SendRequest(newRequest);
             }
 

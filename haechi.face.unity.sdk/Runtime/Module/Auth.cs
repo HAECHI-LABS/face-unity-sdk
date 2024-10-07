@@ -143,7 +143,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         private async Task<FaceLoginResponse> _login(FaceRpcMethod method, object[] parameterList)
         {
-            FaceRpcRequest<object> request = new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), method, parameterList);
+            FaceRpcRequest<object> request = new FaceRpcRequest<object>(FaceSettings.Instance.Network(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
 
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
@@ -162,7 +162,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private async Task<FaceLoginResponse> _loginWithIdToken(FaceRpcMethod method, FaceLoginIdTokenRequest parameter, [CanBeNull] BoraPortalConnectRequest boraPortalConnectRequest)
         {
             object[] parameterList = boraPortalConnectRequest != null ? new object[] {parameter, boraPortalConnectRequest} : new object[] {parameter};
-            FaceRpcRequest<object> request = new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), method, parameterList);
+            FaceRpcRequest<object> request = new FaceRpcRequest<object>(FaceSettings.Instance.Network(), method, parameterList);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
 
             FaceLoginResponse faceLoginResponse = response.CastResult<FaceLoginResponse>();
@@ -184,7 +184,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is boolean value.</returns>
         public async Task<FaceRpcResponse> Logout()
         {
-            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
+            FaceRpcRequest<string> request = new FaceRpcRequest<string>(FaceSettings.Instance.Network(),
                 FaceRpcMethod.face_logOut);
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(request);
             this.CurrentUser = null;

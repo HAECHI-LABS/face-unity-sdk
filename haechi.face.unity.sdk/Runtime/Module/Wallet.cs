@@ -37,7 +37,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns>Rpc call response. Result is hex string balance.</returns>
         public async Task<FaceRpcResponse> GetBalance(string account)
         {
-            return await this._provider.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+            return await this._provider.SendFaceRpcAsync(new FaceRpcRequest<string>(FaceSettings.Instance.Network(), 
                 FaceRpcMethod.eth_getBalance, 
                 account.ToLower(),
                 "latest"));
@@ -52,7 +52,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         {
             string requestId = string.Format($"unity-{Guid.NewGuid().ToString()}");
             FaceRpcRequest<object> rpcRequest =
-                new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_sendTransaction, request, requestId);
+                new FaceRpcRequest<object>(FaceSettings.Instance.Network(), FaceRpcMethod.eth_sendTransaction, request, requestId);
             
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
             return await this._getTransactionRequestId(requestId, response);
@@ -65,7 +65,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is given string value from blockchain.</returns>
         public async Task<FaceRpcResponse> Call(RawTransaction request)
         {
-            FaceRpcRequest<object> rpcRequest = new FaceRpcRequest<object>(FaceSettings.Instance.Blockchain(), 
+            FaceRpcRequest<object> rpcRequest = new FaceRpcRequest<object>(FaceSettings.Instance.Network(), 
                 FaceRpcMethod.eth_call, request, "latest");
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
@@ -77,7 +77,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is signed message in string value.</returns>
         public async Task<FaceRpcResponse> SignMessage(string message)
         {
-            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.personal_sign,
+            FaceRpcRequest<string> rpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Network(), FaceRpcMethod.personal_sign,
                 string.Format($"0x{string.Join("", message.Select(c => ((int)c).ToString("X2")))}"));
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
@@ -90,7 +90,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         public async Task<FaceRpcResponse> EstimateGas(RawTransaction transaction)
         {
             FaceRpcRequest<RawTransaction> rpcRequest =
-                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.eth_estimateGas, transaction);
+                new FaceRpcRequest<RawTransaction>(FaceSettings.Instance.Network(), FaceRpcMethod.eth_estimateGas, transaction);
             return await this._provider.SendFaceRpcAsync(rpcRequest);
         }
         
@@ -135,7 +135,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
                 }
             }
 
-            FaceRpcRequest<OpenHomeOption> request = new FaceRpcRequest<OpenHomeOption>(FaceSettings.Instance.Blockchain(), FaceRpcMethod.face_openHome, option);
+            FaceRpcRequest<OpenHomeOption> request = new FaceRpcRequest<OpenHomeOption>(FaceSettings.Instance.Network(), FaceRpcMethod.face_openHome, option);
             return await this._provider.SendFaceRpcAsync(request);
         }
 
@@ -146,9 +146,9 @@ namespace haechi.face.unity.sdk.Runtime.Module
         /// <returns><a href="https://unity.api-reference.facewallet.xyz/api/haechi.face.unity.sdk.Runtime.Client.FaceRpcResponse.html">FaceRpcResponse</a>. Result is given string value from blockchain.</returns>
         public async Task<FaceRpcResponse> SwitchNetwork(BlockchainNetwork network)
         {
-            Blockchain originalBlockchain = FaceSettings.Instance.Blockchain();
+            BlockchainNetwork originalBlockchainNetwork = FaceSettings.Instance.Network();
             Blockchain switchedBlockchain = Blockchains.OfBlockchainNetwork(network);
-            FaceRpcRequest<SwitchNetworkRequest> rpcRequest = new FaceRpcRequest<SwitchNetworkRequest>(originalBlockchain, FaceRpcMethod.face_switchNetwork, new SwitchNetworkRequest(switchedBlockchain.ToString()));
+            FaceRpcRequest<SwitchNetworkRequest> rpcRequest = new FaceRpcRequest<SwitchNetworkRequest>(originalBlockchainNetwork, FaceRpcMethod.face_switchNetwork, new SwitchNetworkRequest(switchedBlockchain.ToString()));
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
             if (!response.CastResult<string>().Equals(switchedBlockchain.ToString()))
             {

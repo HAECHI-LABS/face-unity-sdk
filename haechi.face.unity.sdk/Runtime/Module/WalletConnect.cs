@@ -116,7 +116,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         private async Task<FaceRpcResponse> _openWalletConnect(string dappName, string dappUrl, bool invalid = false)
         {
-            FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Blockchain(),
+            FaceRpcRequest<string> faceRpcRequest = new FaceRpcRequest<string>(FaceSettings.Instance.Network(),
                 FaceRpcMethod.face_openWalletConnect, dappName, dappUrl, (invalid ? "invalid" : null));
             
             return await this._provider.SendFaceRpcAsync(faceRpcRequest);
@@ -124,7 +124,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
 
         private async Task<FaceRpcResponse> _confirmWalletConnectDapp<T>(T dappMetadata)
         {
-            FaceRpcRequest<T> faceRpcRequest = new FaceRpcRequest<T>(FaceSettings.Instance.Blockchain(),
+            FaceRpcRequest<T> faceRpcRequest = new FaceRpcRequest<T>(FaceSettings.Instance.Network(),
                 FaceRpcMethod.face_confirmWalletConnectDapp, dappMetadata);
 
             return await this._provider.SendFaceRpcAsync(faceRpcRequest);
@@ -164,7 +164,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
         private async Task<FaceRpcResponse> _signMessageWithMetadata(string message, WcFaceMetadata metadata)
         {
             WcFaceRpcRequest<string> rpcRequest = 
-                new WcFaceRpcRequest<string>(FaceSettings.Instance.Blockchain(), 
+                new WcFaceRpcRequest<string>(FaceSettings.Instance.Network(), 
                     FaceRpcMethod.personal_sign,
                     metadata,
                     message);
