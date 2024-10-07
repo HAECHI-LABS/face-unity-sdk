@@ -172,13 +172,13 @@ namespace haechi.face.unity.sdk.Runtime
             {
                 return this._parameters._iframeUrl;
             }
-            return this._webviewHostMap.GetValueOrDefault(this.Environment(), this._webviewHostMap[Profile.Dev]);
+            return this._webviewHostMap.GetValueOrDefault(this.Environment(), this._webviewHostMap[Profile.StageTest]);
         }
         
         /// <returns>Returns server host url.</returns>
         public string ServerHostURL()
         {
-            return this._serverHostMap.GetValueOrDefault(this.Environment(), this._serverHostMap[Profile.Dev]);
+            return this._serverHostMap.GetValueOrDefault(this.Environment(), this._serverHostMap[Profile.StageTest]);
         }
         
         /// <returns>Returns iframe host url.</returns>
@@ -189,7 +189,7 @@ namespace haechi.face.unity.sdk.Runtime
                 return this._parameters._iframeUrl;
             }
             return string.Format(
-                $"{this._iframeHostMap.GetValueOrDefault(this.Environment(), this._iframeHostMap[Profile.Dev])}/?api_key={this.ApiKey()}&blockchain={this.Blockchain()}&env={this.Environment()}&version={SdkInfo.UNITY_SDK_VERSION}&type={SdkInfo.UNITY_SDK_TYPE}");
+                $"{this._iframeHostMap.GetValueOrDefault(this.Environment(), this._iframeHostMap[Profile.StageTest])}/?api_key={this.ApiKey()}&blockchain={this.Blockchain()}&env={this.Environment()}&version={SdkInfo.UNITY_SDK_VERSION}&type={SdkInfo.UNITY_SDK_TYPE}");
         }
     }
 }
