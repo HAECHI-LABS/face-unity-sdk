@@ -8,6 +8,7 @@ using haechi.face.unity.sdk.Runtime.Client;
 using haechi.face.unity.sdk.Runtime.Client.Face;
 using haechi.face.unity.sdk.Runtime.Exception;
 using haechi.face.unity.sdk.Runtime.Type;
+using haechi.face.unity.sdk.Runtime.Utils;
 using UnityEngine;
 
 namespace haechi.face.unity.sdk.Runtime.Module
@@ -139,6 +140,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
             if (!response.CastResult<string>().Equals(network.ToNetworkString()))
             {
+                DebugLogging.DebugLog($"Failed to switch network to {network.ToNetworkString()}, received {response.CastResult<string>()}");
                 throw new SwitchNetworkFailedException();
             }
             FaceSettings.Instance.SetNetwork(network);
