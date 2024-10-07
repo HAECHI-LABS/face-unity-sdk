@@ -1,6 +1,6 @@
 {
   "name": "haechi.face.unity.sdk",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "displayName": "Face Unity SDK",
   "description": "Face Unity SDK that helps integrating Face Wallet on the Unity platform",
   "documentationUrl": "https://docs.facewallet.xyz/docs/overview-1",
