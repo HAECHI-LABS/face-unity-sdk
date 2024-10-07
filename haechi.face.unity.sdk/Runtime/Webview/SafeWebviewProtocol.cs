@@ -28,7 +28,7 @@ namespace haechi.face.unity.sdk.Runtime.Webview
             return $"request={encodedRequest}&" +
                    $"api_key={parameters.ApiKey}&" +
                    $"env={parameters.Env}&" +
-                   $"network={parameters.Network}&" +
+                   $"network={parameters.Network.ToNetworkString()}&" +
                    $"hostname={parameters.Hostname}&" +
                    (!string.IsNullOrEmpty(parameters.RedirectUrl) ? $"redirectUrl={parameters.RedirectUrl}&" : "") +
                    $"webview_version={Face.WEBVIEW_VERSION}&" +

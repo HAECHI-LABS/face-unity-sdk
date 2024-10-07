@@ -20,7 +20,14 @@ namespace haechi.face.unity.sdk.Runtime.Type
         DEFI_VERSE,
         DEFI_VERSE_TESTNET,
         BORA,
-        BORA_TESTNET,
+        BORA_TESTNET
+    }
+
+    public static class EnumExtensions {
+        public static string ToNetworkString(this BlockchainNetwork blockchainNetwork)
+        {
+            return Enum.GetName(typeof(BlockchainNetwork), blockchainNetwork).ToLower();
+        }
     }
 
     public class BlockchainNetworkProperty
@@ -96,7 +103,7 @@ namespace haechi.face.unity.sdk.Runtime.Type
 
         public static string String(this BlockchainNetwork network)
         {
-            return network.ToString().ToLower();
+            return network.ToNetworkString();
         }
 
         public static int GetChainId(this BlockchainNetwork blockchainNetwork)

@@ -149,7 +149,7 @@ namespace haechi.face.unity.sdk.Runtime.Module
             BlockchainNetwork originalBlockchainNetwork = FaceSettings.Instance.Network();
             FaceRpcRequest<SwitchNetworkRequest> rpcRequest = new FaceRpcRequest<SwitchNetworkRequest>(originalBlockchainNetwork, FaceRpcMethod.face_switchNetwork, new SwitchNetworkRequest(network));
             FaceRpcResponse response = await this._provider.SendFaceRpcAsync(rpcRequest);
-            if (!response.CastResult<string>().Equals(network.ToString()))
+            if (!response.CastResult<string>().Equals(network.ToNetworkString()))
             {
                 throw new SwitchNetworkFailedException();
             }
