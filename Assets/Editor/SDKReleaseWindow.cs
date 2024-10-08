@@ -22,8 +22,10 @@ public class SDKReleaseWindow : EditorWindow
     private void OnGUI()
     {
         GUILayout.Label("SDK Release", EditorStyles.boldLabel);
-        // show current version
-        // find file
+
+        GUILayout.Label("This window updates and pushes the version related files and tags the release.");
+        GUILayout.Label("The tagging process is done in the tagging.yaml file of the github action.");
+
         string packageJsonPath = "./haechi.face.unity.sdk/package.json";
         if (!File.Exists(packageJsonPath))
         {
