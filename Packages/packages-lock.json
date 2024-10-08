@@ -308,7 +308,9 @@
       "version": "file:../haechi.face.unity.sdk",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      }
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
