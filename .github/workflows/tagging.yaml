@@ -2,10 +2,7 @@ name: Tagging
 run-name: Tagging ${{ github.event.inputs.semver }}
 on:
   workflow_dispatch:
-    inputs:
-      semver:
-        description: "Semantic version of release"
-        required: true
+
 jobs:
   tagging:
     runs-on: ubuntu-latest
@@ -18,13 +15,18 @@ jobs:
           cd android-dependency-generator/Assets/Plugins/Android
           zip -r android-libraries.zip *.jar *.aar
           cd ../../../../
+      - name: Get version
+        id: get_version
+        run: |
+          echo "VERSION=$(cat haechi.face.unity.sdk/package.json | jq -r .version)" >> $GITHUB_OUTPUT
+
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.HAECHI_GITHUB_PAT }}
         with:
-          tag_name: ${{ github.event.inputs.semver }}
-          release_name: ${{ github.event.inputs.semver }}
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: ${{ steps.get_version.outputs.VERSION }}
           draft: false
           prerelease: false
           body_path: ./RELEASE_NOTE.md
