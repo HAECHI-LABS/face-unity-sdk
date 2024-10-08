@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class BuildUnityPackages : MonoBehaviour
 {
+    // check https://www.notion.so/haechilabs/SDK-434b5866d95f497582aff125326033b0
     [MenuItem("HaechiLabs/Build Unity Packages")]
     static void Build()
     {
