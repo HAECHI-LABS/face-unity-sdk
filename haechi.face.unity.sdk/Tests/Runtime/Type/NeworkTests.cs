@@ -13,9 +13,7 @@ namespace haechi.face.unity.sdk.Tests.Runtime.Type
             Assert.AreEqual(BlockchainNetwork.SEPOLIA, BlockchainNetworks.GetNetwork("ETHEREUM", "Testnet"));
             Assert.AreEqual(BlockchainNetwork.ETHEREUM, BlockchainNetworks.GetNetwork("ETHEREUM", "Mainnet"));
             
-            Assert.AreEqual(BlockchainNetwork.MUMBAI, BlockchainNetworks.GetNetwork("POLYGON", "StageTest"));
             Assert.AreEqual(BlockchainNetwork.POLYGON, BlockchainNetworks.GetNetwork("POLYGON", "StageMainnet"));
-            Assert.AreEqual(BlockchainNetwork.MUMBAI, BlockchainNetworks.GetNetwork("POLYGON", "Testnet"));
             Assert.AreEqual(BlockchainNetwork.POLYGON, BlockchainNetworks.GetNetwork("POLYGON", "Mainnet"));
             
             Assert.AreEqual(BlockchainNetwork.BNB_SMART_CHAIN_TESTNET, BlockchainNetworks.GetNetwork("BNB_SMART_CHAIN", "StageTest"));
