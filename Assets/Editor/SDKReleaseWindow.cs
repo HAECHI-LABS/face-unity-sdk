@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
@@ -15,6 +16,8 @@ public class SDKReleaseWindow : EditorWindow
     }
 
     private string newVersion = "";
+
+    private List<string> logs = new List<string>();
 
     private void OnGUI()
     {
@@ -64,7 +67,24 @@ public class SDKReleaseWindow : EditorWindow
             sdkInfoContent = sdkInfoRegex.Replace(sdkInfoContent, $"public static readonly string UNITY_SDK_VERSION = \"{newVersion}\"");
             File.WriteAllText(sdkInfoPath, sdkInfoContent);
 
-            EditorGUILayout.LabelField("Version changed");
+            logs.Add($"Version changed to {newVersion}");
+        }
+
+        if (GUILayout.Button("Add CHANGELOG.md"))
+        {
+            string changelogPath = "./haechi.face.unity.sdk/CHANGELOG.md";
+            string changelogContent = File.ReadAllText(changelogPath);
+            string aTag = $"<a name=\"{newVersion}\"></a>\n";
+            string newChangelogContent = $"## Release: [{newVersion}](https://github.com/HAECHI-LABS/core/releases/tag/{newVersion})\n\n";
+            File.WriteAllText(changelogPath, aTag + newChangelogContent + changelogContent);
+
+            logs.Add($"CHANGELOG.md updated, please add features and bug fixes");
+        }
+
+        GUILayout.Label("Logs", EditorStyles.boldLabel);
+        foreach (var log in logs)
+        {
+            EditorGUILayout.LabelField(log);
         }
     }
 }
