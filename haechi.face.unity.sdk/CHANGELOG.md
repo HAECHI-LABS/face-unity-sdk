@@ -1,3 +1,6 @@
+<a name="1.5.4"></a>
+## Release: [1.5.4](https://github.com/HAECHI-LABS/core/releases/tag/1.5.4)
+
 <a name="1.5.3"></a>
 ## Release: [1.5.3](https://github.com/HAECHI-LABS/core/releases/tag/1.5.3)
 ### Features
