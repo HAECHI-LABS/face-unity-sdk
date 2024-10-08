@@ -8,21 +8,15 @@ using UnityEngine;
 public class BuildUnityPackages : MonoBehaviour
 {
     // check https://www.notion.so/haechilabs/SDK-434b5866d95f497582aff125326033b0
-    [MenuItem("HaechiLabs/Build Unity Packages")]
+    [MenuItem("HaechiLabs/Import Face SDK")]
     static void Build()
     {
         Debug.Log("Current Directory: " + Directory.GetCurrentDirectory());
 
-        if (Directory.Exists("./Assets/HaechiLabs/HaechiFaceUnitySDK"))
+        if (Directory.Exists("./Assets/haechi.face.unity.sdk"))
         {
-            Directory.Delete("./Assets/HaechiLabs/HaechiFaceUnitySDK", true);
-            Debug.Log("Deleted ./Assets/HaechiLabs/HaechiFaceUnitySDK");
-        }
-
-        if (!Directory.Exists("./Assets/HaechiLabs"))
-        {
-            Directory.CreateDirectory("./Assets/HaechiLabs");
-            Debug.Log("Created ./Assets/HaechiLabs");
+            Directory.Delete("./Assets/haechi.face.unity.sdk", true);
+            Debug.Log("Deleted ./Assets/haechi.face.unity.sdk");
         }
 
         string packageJson = File.ReadAllText("../haechi.face.unity.sdk/package.json");
@@ -58,21 +52,18 @@ public class BuildUnityPackages : MonoBehaviour
         }
 
 
-        FileUtil.CopyFileOrDirectory("../haechi.face.unity.sdk", "./Assets/HaechiLabs/haechi.face.unity.sdk");
-        Debug.Log("Copied ../haechi.face.unity.sdk to ./Assets/HaechiLabs/haechi.face.unity.sdk");
+        FileUtil.CopyFileOrDirectory("../haechi.face.unity.sdk", "./Assets/haechi.face.unity.sdk");
+        Debug.Log("Copied ../haechi.face.unity.sdk to ./Assets/haechi.face.unity.sdk");
 
-        AssetDatabase.ImportAsset("./Assets/HaechiLabs/haechi.face.unity.sdk", ImportAssetOptions.ForceUpdate);
-        Debug.Log("Imported ../haechi.face.unity.sdk to ./Assets/HaechiLabs/haechi.face.unity.sdk");
-
-        UnityEditor.AssetDatabase.ExportPackage("Assets/HaechiLabs/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage");
-        Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
+        AssetDatabase.ImportAsset("./Assets/haechi.face.unity.sdk", ImportAssetOptions.ForceUpdate);
+        Debug.Log("Imported ../haechi.face.unity.sdk to ./Assets/haechi.face.unity.sdk");
     }
 
-    [MenuItem("HaechiLabs/Export Package(Debug)")]
+    [MenuItem("HaechiLabs/Export Package")]
     static void ExportPackage()
     {
         // Only works after the build
-        UnityEditor.AssetDatabase.ExportPackage("Assets/HaechiLabs/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage", ExportPackageOptions.Recurse);
+        UnityEditor.AssetDatabase.ExportPackage("Assets/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage", ExportPackageOptions.Recurse);
         Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
     }
 }
