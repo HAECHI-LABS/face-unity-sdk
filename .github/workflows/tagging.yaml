@@ -29,6 +29,5 @@ jobs:
           release_name: ${{ steps.get_version.outputs.VERSION }}
           draft: false
           prerelease: false
-          body_path: ./RELEASE_NOTE.md
           files: |
             android-dependency-generator/Assets/Plugins/Android/android-libraries.zip
