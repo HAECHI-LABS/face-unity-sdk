@@ -61,11 +61,22 @@ public class BuildUnityPackages : MonoBehaviour
         }
 
 
-        // FileUtil.CopyFileOrDirectory("../haechi.face.unity.sdk", "./Assets/HaechiLabs/haechi.face.unity.sdk");
-        // Debug.Log("Copied ../haechi.face.unity.sdk to ./Assets/HaechiLabs/haechi.face.unity.sdk");
+        FileUtil.CopyFileOrDirectory("../haechi.face.unity.sdk", "./Assets/HaechiLabs/haechi.face.unity.sdk");
+        Debug.Log("Copied ../haechi.face.unity.sdk to ./Assets/HaechiLabs/haechi.face.unity.sdk");
+
+        AssetDatabase.ImportAsset("./Assets/HaechiLabs/haechi.face.unity.sdk", ImportAssetOptions.ForceUpdate);
+        Debug.Log("Imported ../haechi.face.unity.sdk to ./Assets/HaechiLabs/haechi.face.unity.sdk");
 
         // Debug.Log("Exporting package...");
-        // UnityEditor.AssetDatabase.ExportPackage("./Assets/HaechiLabs/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage");
-        // Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
+        UnityEditor.AssetDatabase.ExportPackage("Assets/HaechiLabs/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage");
+        Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
+    }
+
+    [MenuItem("HaechiLabs/Export Package")]
+    static void ExportPackage()
+    {
+        // Only works after the build
+        UnityEditor.AssetDatabase.ExportPackage("Assets/HaechiLabs/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage", ExportPackageOptions.Recurse);
+        Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
     }
 }
