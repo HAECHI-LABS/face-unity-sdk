@@ -5,7 +5,9 @@
   "description": "Face Unity SDK that helps integrating Face Wallet on the Unity platform",
   "documentationUrl": "https://docs.facewallet.xyz/docs/overview-1",
   "unity": "2021.3",
-  "dependencies": {},
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  },
   "samples": [
     {
       "displayName": "Face Unity Sample",
