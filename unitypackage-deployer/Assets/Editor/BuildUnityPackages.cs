@@ -24,10 +24,7 @@ public class BuildUnityPackages : MonoBehaviour
             Debug.Log("Created ./Assets/HaechiLabs");
         }
 
-        // read ../haechi.face.unity.sdk/package.json
         string packageJson = File.ReadAllText("../haechi.face.unity.sdk/package.json");
-        // read depedencies
-        // deserialize packagejson and read dependencies using SimpleJSONUnity
         var packageJsonObj = SimpleJSON.JSON.Parse(packageJson);
         var dependencies = packageJsonObj["dependencies"];
         Debug.Log("Dependencies: " + dependencies.AsObject + " " + dependencies.Count);
@@ -38,7 +35,6 @@ public class BuildUnityPackages : MonoBehaviour
             Debug.Log("Dependency: " + kv.Key + " " + kv.Value);
         }
 
-        // install dependencies
         foreach (var dependency in dependencies.AsObject)
         {
             var kv = (KeyValuePair<string, SimpleJSON.JSONNode>)dependency;
@@ -67,7 +63,6 @@ public class BuildUnityPackages : MonoBehaviour
         AssetDatabase.ImportAsset("./Assets/HaechiLabs/haechi.face.unity.sdk", ImportAssetOptions.ForceUpdate);
         Debug.Log("Imported ../haechi.face.unity.sdk to ./Assets/HaechiLabs/haechi.face.unity.sdk");
 
-        // Debug.Log("Exporting package...");
         UnityEditor.AssetDatabase.ExportPackage("Assets/HaechiLabs/haechi.face.unity.sdk", "../haechi.face.unity.sdk.unitypackage");
         Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
     }
