@@ -72,7 +72,7 @@ public class BuildUnityPackages : MonoBehaviour
         Debug.Log("Exported package at ../haechi.face.unity.sdk.unitypackage");
     }
 
-    [MenuItem("HaechiLabs/Export Package")]
+    [MenuItem("HaechiLabs/Export Package(Debug)")]
     static void ExportPackage()
     {
         // Only works after the build
